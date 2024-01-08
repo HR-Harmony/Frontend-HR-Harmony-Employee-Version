@@ -1,0 +1,16 @@
+.header {
+    display: flex;
+    padding: 10px;
+    background-color: #8763E9;
+    width: 173vh;
+    border-radius: 5px;
+    height: 10vh;
+    margin-top: auto;
+}
+
+.nav-buttons {
+    margin-top: auto;
+    margin-bottom: auto;
+    display: flex;
+    align-items: center;
+}
