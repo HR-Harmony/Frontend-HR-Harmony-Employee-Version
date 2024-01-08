@@ -34,8 +34,7 @@ function App() {
 function DashboardLayout() {
     return ( <
         div style = {
-            { display: "flex" }
-        } >
+            { display: "flex" } } >
         <
         SideBar / >
         <
