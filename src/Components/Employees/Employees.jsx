@@ -1,8 +1,11 @@
 import React from 'react';
 import './Employees.css';
+import Header from '../Header/Header';
 
 const Employees = () => {
   return (
+    <div>
+    <Header />
     <div className="employees-container">
       <div className="sub-features">
         <button className="sub-feature-button">Employees</button>
@@ -17,6 +20,7 @@ const Employees = () => {
         </div>
         {/* Add table or list component here */}
       </div>
+    </div>
     </div>
   );
 };
