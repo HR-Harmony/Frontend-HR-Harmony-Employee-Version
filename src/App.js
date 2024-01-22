@@ -9,60 +9,36 @@ import Payroll from "./Components/Payroll/Payroll";
 import Attendances from './Components/Attendances/Attendances';
 import Tasks from './Components/Tasks/Tasks';
 import Performances from './Components/Performances/Performances';
-import corehr from './Components/corehr/corehr';
+import CoreHR from './Components/corehr/corehr';
+import AttendancesRouter from './Components/Attendances/AttendancesRouter';
 
+// eslint-disable-next-line
 function App() {
-    return ( <
-        Router >
-        <
-        Routes >
-        <
-        Route path = "/"
-        element = { < LandingPage / > }
-        />  <
-        Route path = "/loginsignup"
-        element = { < LoginSignup / > }
-        />  <
-        Route path = "/*"
-        element = { < DashboardLayout / > }
-        />  < /
-        Routes > <
-        /Router>
+    return ( 
+        <Router>
+            <Routes >
+            <Route path = "/" element = { < LandingPage / > }/>  
+            <Route path = "/loginsignup" element = { < LoginSignup / > }/>  
+            <Route path = "/*" element = { < DashboardLayout / > }/>  
+            </Routes > 
+        </Router>
     );
 }
 
 function DashboardLayout() {
-    return ( <
-        div style = {
-            { display: "flex" } } >
-        <
-        SideBar / >
-        <
-        Routes >
-        <
-        Route path = "/dashboard"
-        element = { < Dashboard / > }
-        />   <
-        Route path = "/employees"
-        element = { < Employees / > }
-        />   <
-        Route path = "/payroll"
-        element = { < Payroll / > }
-        />  <
-        Route path = "/attendances"
-        element = { < Attendances / > }
-        />  <
-        Route path = "/tasks"
-        element = { < Tasks / > }
-        />  <
-        Route path = "/performances"
-        element = { < Performances / > }
-        /> <
-        Route path = "/corehr"
-        element = { < corehr / > }
-        />   < /
-        Routes > <
-        /div>
+    return ( 
+        <div style = {{ display: "flex" } } >
+        <SideBar / >
+            <Routes >
+            <Route path = "/dashboard" element = { < Dashboard / > }/>   
+            <Route path = "/employees" element = { < Employees / > }/>   
+            <Route path = "/payroll" element = { < Payroll / > }/>  
+            <Route path = "/attendances/*" element = { < Attendances / > }/> {} 
+            <Route path = "/tasks" element = { < Tasks / > }/>   
+            <Route path = "/performances" element = { < Performances / > }/> 
+            <Route path = "/corehr" element = { <CoreHR/> }/>  
+            </Routes > 
+        </div>
     );
 }
 export default App;

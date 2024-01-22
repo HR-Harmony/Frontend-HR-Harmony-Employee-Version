@@ -1,38 +1,15 @@
 import React from 'react';
-import { FaCalendar, FaUserClock, FaClipboardList, FaClock } from 'react-icons/fa';
 import './Attendances.css';
-import Header from '../Header/Header';
+import AttendancesRouter from './AttendancesRouter';
 
 const Attendances = () => {
 
   const tableData = [
     { name: 'Fakhrity', absentStatus: 'Present', clockIn: '09:00 AM', clockOut: '05:00 PM', late: '0 minutes', earlyLeaving: '0 minutes', totalWorkHours: '8 hours' },
   ];
-
   return (
     <div>
-      <Header />
-      <div className="attendances-container">
-        <div className="feature">
-          <FaCalendar className="icon" />
-          <span>Attendances</span>
-        </div>
-      
-        <div className="feature">
-          <FaUserClock className="icon" />
-          <span>Manual Attendances</span>
-        </div>
-        
-        <div className="feature">
-          <FaClipboardList className="icon" />
-          <span>Monthly Report</span>
-        </div>
-      
-        <div className="feature">
-          <FaClock className="icon" />
-          <span>Overtime Request</span>
-        </div>
-      </div>
+      <AttendancesRouter/>
       <div>
           <h1>Daily Attendances Report</h1>
         </div>
