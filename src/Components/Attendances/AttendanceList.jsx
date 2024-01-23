@@ -1,15 +1,13 @@
 import React from 'react';
-import './Attendances.css';
-import AttendancesRouter from './AttendancesRouter';
+import './AttendanceList.css';
 
-const Attendances = () => {
+const AttendanceList = () => {
 
   const tableData = [
     { name: 'Fakhrity', absentStatus: 'Present', clockIn: '09:00 AM', clockOut: '05:00 PM', late: '0 minutes', earlyLeaving: '0 minutes', totalWorkHours: '8 hours' },
   ];
   return (
     <div>
-      <AttendancesRouter/>
       <div>
           <h1>Daily Attendances Report</h1>
         </div>
@@ -45,4 +43,4 @@ const Attendances = () => {
   );
 };
 
-export default Attendances;
+export default AttendanceList;

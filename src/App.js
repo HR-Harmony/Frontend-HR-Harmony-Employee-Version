@@ -6,11 +6,10 @@ import SideBar from "./Components/Sidebar/Sidebar";
 import Dashboard from "./Components/Dashboard/Dashboard";
 import Employees from "./Components/Employees/Employees";
 import Payroll from "./Components/Payroll/Payroll";
-import Attendances from './Components/Attendances/Attendances';
 import Tasks from './Components/Tasks/Tasks';
 import Performances from './Components/Performances/Performances';
-import CoreHR from './Components/corehr/corehr';
 import AttendancesRouter from './Components/Attendances/AttendancesRouter';
+import CoreHRRouter from './Components/CoreHR/CoreHRRouter';
 
 // eslint-disable-next-line
 function App() {
@@ -33,10 +32,10 @@ function DashboardLayout() {
             <Route path = "/dashboard" element = { < Dashboard / > }/>   
             <Route path = "/employees" element = { < Employees / > }/>   
             <Route path = "/payroll" element = { < Payroll / > }/>  
-            <Route path = "/attendances/*" element = { < Attendances / > }/> {} 
+            <Route path = "/attendances/*" element = { < AttendancesRouter / > }/>  
             <Route path = "/tasks" element = { < Tasks / > }/>   
             <Route path = "/performances" element = { < Performances / > }/> 
-            <Route path = "/corehr" element = { <CoreHR/> }/>  
+            <Route path = "/corehr/*" element = { < CoreHRRouter /> }/>  
             </Routes > 
         </div>
     );
