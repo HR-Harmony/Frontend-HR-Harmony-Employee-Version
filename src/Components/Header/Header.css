@@ -1,0 +1,34 @@
+.header {
+    display: flex;
+    padding: 10px;
+    background-color: #8763E9;
+    width: 100vw;
+    border-radius: 5px;
+    height: 10vh;
+    margin-top: auto;
+}
+
+.nav-buttons {
+    margin-top: auto;
+    margin-bottom: auto;
+    display: flex;
+    align-items: center;
+}
+
+.nav-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    margin-right: 20px;
+    color: #fff;
+}
+
+.nav-buttons {
+    margin-right: auto;
+    margin-left: 50px;
+}
+
+.nav-button:hover {
+    color: #000000;
+}

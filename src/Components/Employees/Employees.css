@@ -1,0 +1,40 @@
+.employees-container {
+  padding: 20px;
+}
+
+.sub-features {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.sub-feature-button {
+  padding: 10px 20px;
+  background-color: #4B49AC;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+}
+
+.employee-list-container {
+  background-color: #F3F3F3;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.employee-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.add-new-button {
+  background-color: #8763E9;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
