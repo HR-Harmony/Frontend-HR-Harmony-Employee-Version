@@ -1,10 +1,20 @@
 import React from 'react';
-import Header from '../Header/Header';
+import './MonthlyReport.css';
 
 const MonthlyReport = () => {
   return (
     <div>
-      <p>ini harusnya page MonthlyReport</p>
+      <div className="monthly-report-heading">
+        <h2>Monthly Reports</h2>
+      </div>
+      <div className='input-box'>
+        <label htmlFor="employee">Employee</label>
+        <select id="employee" name="employee">
+        </select>  
+        <label htmlFor="month">Month</label>
+        <input type="month" id="month" name="month" />
+        <button>Show</button>
+      </div> 
     </div>
     );
 };
