@@ -1,7 +1,5 @@
-/* SideBar.css */
-
 .sidebar-container {
-    width: 200px;
+    width: 250px;
     transition: width 0.3s ease;
     height: 100vh;
     background-color: #ffffff;
@@ -30,6 +28,7 @@
 }
 
 .nav-link {
+    width: 165px;
     text-decoration: none;
     color: rgb(0, 0, 0);
     display: flex;
@@ -48,10 +47,15 @@
 }
 
 .subnav-link {
-    background-color: #F4F4F4;
-    color: #333;
-    padding-left: 40px;
-    display: block;
+    text-decoration: none;
+    width: 150px;
+    background-color: #ffffff;
+    color: #000000;
+    padding-left: 35px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    display: flex;
+    border-radius: 5px;
 }
 
 .subnav-link:hover {
@@ -59,8 +63,8 @@
 }
 
 .sub-active {
-    background-color: #D4D4F5;
-    color: #FFF; 
+    background-color: #E0E0E0;
+    color: #000000; 
 }
 
 .active {
