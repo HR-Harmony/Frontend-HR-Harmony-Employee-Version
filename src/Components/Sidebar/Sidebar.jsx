@@ -1,4 +1,3 @@
-// SideBar.jsx
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import SideBarData from "./SidebarData";
@@ -22,6 +21,7 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
                 to={item.path}
                 className={({ isActive }) => ["nav-link", isActive ? "active" : null].join(" ")}
                 onClick={item.subNav && (() => showSubnav(index))}
+                on
               >
                 <div className="nav-link-icon">{item.icon}</div>
                 <span>{item.title}</span>
