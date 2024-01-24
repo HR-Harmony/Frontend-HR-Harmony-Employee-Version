@@ -1,0 +1,32 @@
+.monthly-report-heading {
+    text-align: left;
+    margin-bottom: 20px;
+  }
+  
+  .input-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 600px;
+  }
+  
+  .input-box label {
+    flex:0;
+  }
+  
+  .input-box select,
+  .input-box input {
+    flex: 2;
+    padding: 8px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  
+  .input-box button {
+    flex: 1;
+    padding: 8px;
+    background-color: #8763E9;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+  }

@@ -1,0 +1,51 @@
+.overtime-request {
+    max-width: 100vh;
+  }
+  
+  .overtime-request-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .overtime-request-header h2 {
+    margin: 0;
+  }
+  
+  .add-new-button {
+    background-color: #8763E9;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+  }
+  
+  .overtime-request-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  .overtime-request-table th, .overtime-request-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .overtime-request-table th {
+    background-color: #f2f2f2;
+  }
+  
+  .search-bar {
+    margin-bottom: 20px;
+  }
+  
+  .search-bar input {
+    width: 50%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  

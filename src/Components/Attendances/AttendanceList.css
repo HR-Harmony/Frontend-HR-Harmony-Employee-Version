@@ -6,6 +6,7 @@
     background-color: #ffffff;
     cursor: pointer;
     flex-direction: row;
+    width: 100%;
 }
 
 .feature {
