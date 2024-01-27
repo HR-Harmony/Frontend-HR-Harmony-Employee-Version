@@ -3,6 +3,7 @@
     padding: 10px;
     background-color: #8763E9;
     width: 100vw;
+    max-width: 1080px;
     border-radius: 5px;
     height: 10vh;
     margin-top: auto;

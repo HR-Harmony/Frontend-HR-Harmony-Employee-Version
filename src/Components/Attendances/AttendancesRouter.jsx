@@ -1,5 +1,6 @@
 // AttendancesRouter.jsx
 import React from 'react';
+import './AttendancesRouter.css';
 import { FaCalendar, FaUserClock, FaClipboardList, FaClock } from 'react-icons/fa';
 import './AttendanceList';
 import { Route, Routes, useNavigate } from 'react-router-dom';
