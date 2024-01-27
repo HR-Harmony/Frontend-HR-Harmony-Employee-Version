@@ -38,8 +38,9 @@
     transition: background-color 0.3s ease;
 }
 
-.nav-link:hover {
+.nav-link:hover, .parent-active {
     background-color: #8763E9;
+    color: white;
 }
 
 .nav-link-icon {
@@ -49,24 +50,20 @@
 .subnav-link {
     text-decoration: none;
     width: 150px;
-    background-color: #ffffff;
     color: #000000;
     padding-left: 35px;
     padding-top: 5px;
     padding-bottom: 5px;
     display: flex;
+    align-items: center;
     border-radius: 5px;
 }
 
-.subnav-link:hover {
+.subnav-link:hover, .sub-active {
     background-color: #E0E0E0;
 }
 
 .sub-active {
-    background-color: #E0E0E0;
-    color: #000000; 
-}
-
-.active {
     background-color: #8763E9;
+    color: white;
 }

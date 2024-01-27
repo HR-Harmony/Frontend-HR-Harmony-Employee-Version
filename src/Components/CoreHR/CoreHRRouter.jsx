@@ -13,7 +13,7 @@ const CoreHRRouter = () => {
   const navigate = useNavigate();
     return (
       <div>
-        <Header />
+        <Header /> 
         <div className="corehr-container">
           <div className="feature" onClick={() => navigate('/corehr/departments-list')}>
               <FaCalendar className="icon" />
