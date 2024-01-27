@@ -69,8 +69,28 @@ const SideBarData = [
     },
     {
         title: "Payroll",
-        path: "/payroll",
-        icon: < MdPayments />
+        path: "#",
+        icon: < MdPayments />,
+        iconClosed: <MdKeyboardArrowDown />,
+        iconOpened: <MdKeyboardArrowUp />,
+        subNav: [
+            {
+                title: "Payroll",
+                path: "/payroll/payroll-list"
+            },
+            {
+                title: "Pasyslip History",
+                path: "/payroll/payslip-history"
+            },
+            {
+                title: "Advance Salary",
+                path: "/payroll/advance-salary"
+            },
+            {
+                title: "Request Loan",
+                path: "/payroll/request-loan"
+            },
+        ]
     },
     {
         title: "Tasks",

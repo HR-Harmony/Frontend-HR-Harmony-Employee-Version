@@ -1,4 +1,4 @@
-.corehr-container {
+.attendances-container {
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -16,6 +16,12 @@
     border: 1px solid #ddd;
     border-radius: 8px;
     margin: 0 5px;
+    transition: background-color 0.3s ease;
+}
+
+.feature:hover{
+    background-color: #8763E9;
+    color: #ffffff;
 }
 
 .icon {

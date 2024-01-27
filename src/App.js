@@ -5,7 +5,7 @@ import LandingPage from './Components/LandingPage/LandingPage';
 import SideBar from "./Components/Sidebar/Sidebar";
 import Dashboard from "./Components/Dashboard/Dashboard";
 import Employees from "./Components/Employees/Employees";
-import Payroll from "./Components/Payroll/Payroll";
+import PayrollRouter from './Components/Payroll/PayrollRouter';
 import Tasks from './Components/Tasks/Tasks';
 import Performances from './Components/Performances/Performances';
 import AttendancesRouter from './Components/Attendances/AttendancesRouter';
@@ -31,7 +31,7 @@ function DashboardLayout() {
             <Routes >
             <Route path = "/dashboard" element = { < Dashboard / > }/>   
             <Route path = "/employees" element = { < Employees / > }/>   
-            <Route path = "/payroll" element = { < Payroll / > }/>  
+            <Route path = "/payroll/*" element = { < PayrollRouter / > }/>  
             <Route path = "/attendances/*" element = { < AttendancesRouter / > }/>  
             <Route path = "/tasks" element = { < Tasks / > }/>   
             <Route path = "/performances" element = { < Performances / > }/> 
