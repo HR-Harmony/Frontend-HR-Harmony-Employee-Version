@@ -2,42 +2,62 @@ import React from 'react';
 import './AttendanceList.css';
 
 const AttendanceList = () => {
-
-  const tableData = [
-    { name: 'Fakhrity', absentStatus: 'Present', clockIn: '09:00 AM', clockOut: '05:00 PM', late: '0 minutes', earlyLeaving: '0 minutes', totalWorkHours: '8 hours' },
-  ];
   return (
-    <div>
-      <div>
-          <h1>Daily Attendances Report</h1>
+    <div className="AttendanceList-card">
+      <h2>Daily Attendance Report</h2>
+      <div className="AttendanceList-controls">
+        <div className="AttendanceList-entries">
+          Show <select><option value="10">10</option></select> entries
         </div>
-      <div className="table-container">
-        <table className="attendance-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Absent Status</th>
-              <th>Clock In</th>
-              <th>Clock Out</th>
-              <th>Late</th>
-              <th>Early Leaving</th>
-              <th>Total Work Hours</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tableData.map((entry, index) => (
-              <tr key={index}>
-                <td>{entry.name}</td>
-                <td>{entry.absentStatus}</td>
-                <td>{entry.clockIn}</td>
-                <td>{entry.clockOut}</td>
-                <td>{entry.late}</td>
-                <td>{entry.earlyLeaving}</td>
-                <td>{entry.totalWorkHours}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="AttendanceList-search">
+          Search <input type="text" />
+        </div>
+      </div>
+      <table className="AttendanceList-table">
+        <thead>
+          <tr>
+            <th>EMPLOYEE</th>
+            <th>DATE</th>
+            <th>STATUS</th>
+            <th>CLOCK IN</th>
+            <th>CLOCK OUT</th>
+            <th>LATE</th>
+            <th>EARLY LEAVING</th>
+            <th>TOTAL WORK</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Fakhrity H</td>
+            <td>2024-01-29</td>
+            <td>Present</td>
+            <td>09:00 AM</td>
+            <td>05:00 PM</td>
+            <td>No</td>
+            <td>No</td>
+            <td>8h</td>
+          </tr>
+          <tr>
+            <td>Arfara Y</td>
+            <td>2024-01-29</td>
+            <td>Present</td>
+            <td>09:15 AM</td>
+            <td>05:15 PM</td>
+            <td>Yes</td>
+            <td>No</td>
+            <td>8h</td>
+          </tr>
+        </tbody>
+      </table>
+      <div className="AttendanceList-footer">
+        <div className="AttendanceList-showing">
+          Showing 1 to 2 of 2 entries
+        </div>
+        <div className="AttendanceList-pagination">
+          <button>Previous</button>
+          <span>1</span>
+          <button>Next</button>
+        </div>
       </div>
     </div>
   );

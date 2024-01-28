@@ -1,12 +1,12 @@
-// Employees.jsx
+// ShiftScheduling.jsx
 import React from 'react';
-import './Employees.css';
+import './ShiftScheduling.css';
 
-const Employees = () => {
+const ShiftScheduling = () => {
   return (
     <div className="employees-card">
       <div className="employees-card-header">
-        <h2>List All Employees</h2>
+        <h2>List All Office Shifts</h2>
         <button className="btn-add-new">Add New</button>
       </div>
       <div className="employees-card-body">
@@ -15,9 +15,7 @@ const Employees = () => {
             Show
             <select>
               <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
+              {/* ... other options */}
             </select>
             entries
           </label>
@@ -26,24 +24,29 @@ const Employees = () => {
         <table>
           <thead>
             <tr>
-              <th>NAME</th>
-              <th>DESIGNATION</th>
-              <th>CONTACT NUMBER</th>
-              <th>GENDER</th>
-              <th>COUNTRY</th>
-              <th>ROLE</th>
-              <th>STATUS</th>
+              <th>SHIFT</th>
+              <th>MONDAY</th>
+              <th>TUESDAY</th>
+              <th>WEDNESDAY</th>
+              <th>THURSDAY</th>
+              <th>FRIDAY</th>
+              <th>SATURDAY</th>
+              <th>SUNDAY</th>
             </tr>
           </thead>
           <tbody>
-            {/* Employee rows will go here */}
+            {/* Shift rows will go here */}
             <tr>
-              <td colSpan="7">No records available</td>
+              <td>Normal Weekdays</td>
+              {/* ... other days */}
+              <td>Holiday</td>
             </tr>
+            {/* Add more rows as needed */}
           </tbody>
         </table>
         <div className="table-pagination">
           <button>Previous</button>
+          {/* Page numbers */}
           <button>Next</button>
         </div>
       </div>
@@ -51,4 +54,4 @@ const Employees = () => {
   );
 };
 
-export default Employees;
+export default ShiftScheduling;

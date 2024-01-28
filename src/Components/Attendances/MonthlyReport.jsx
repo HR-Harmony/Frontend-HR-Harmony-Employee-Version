@@ -3,20 +3,21 @@ import './MonthlyReport.css';
 
 const MonthlyReport = () => {
   return (
-    <div>
-      <div className="monthly-report-heading">
-        <h2>Monthly Reports</h2>
-      </div>
-      <div className='input-box'>
+    <div className="MonthlyReport-card">
+      <div className="form-group">
         <label htmlFor="employee">Employee</label>
-        <select id="employee" name="employee">
-        </select>  
-        <label htmlFor="month">Month</label>
-        <input type="month" id="month" name="month" />
-        <button>Show</button>
-      </div> 
+        <select id="employee" className="form-control">
+          <option value="">-- Select Employee --</option>
+          {/* Add employee options here */}
+        </select>
+      </div>
+      <div className="form-group">
+        <label htmlFor="monthSelect">Select Month</label>
+        <input type="month" id="monthSelect" className="form-control" defaultValue="2024-01" />
+      </div>
+      <button type="submit" className="search-button">Search</button>
     </div>
-    );
+  );
 };
 
 export default MonthlyReport;

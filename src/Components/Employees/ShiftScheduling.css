@@ -1,3 +1,5 @@
+/* ShiftScheduling.css */
+/* This will be the same as Employees.css, with any necessary adjustments for your new structure. */
 .employees-card {
     border: 1px solid #e1e4e8;
     border-radius: 4px;
@@ -84,4 +86,9 @@ table tbody td {
     border: 1px solid #e1e4e8;
     border-radius: 3px;
 }
-  
+
+/* You might need to add styles for holiday cells or other specific cell types */
+table tbody td.holiday {
+    color: red;
+    /* Add other styles for holiday cells here */
+}

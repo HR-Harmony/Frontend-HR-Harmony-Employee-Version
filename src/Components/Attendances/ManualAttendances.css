@@ -1,88 +1,136 @@
-.filter-section {
-    background-color: #f9f9f9;
+.ManualAttendances-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+}
+
+.ManualAttendances-card {
+    background: #fff;
     padding: 20px;
-    border-radius: 8px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    width: 50%;
+}
+
+.ManualAttendances-filter-card {
     margin-bottom: 20px;
 }
 
-.filter-section h2,
-.attendance-table h2 {
-    margin-bottom: 20px;
-    color: #333;
+.ManualAttendances-view-card {
+    width: 100%;
 }
 
-.filter-section label {
+.ManualAttendances-card h2 {
+    margin-bottom: 20px;
+    color: #4e73df;
+    font-size: 1.25rem;
+}
+
+.ManualAttendances-card form label {
     display: block;
-    margin: 10px 0 5px;
+    margin-bottom: 10px;
+    color: #5a5c69;
+    font-size: 0.8rem;
 }
 
-.filter-section input[type="date"],
-.filter-section select {
+.ManualAttendances-card form label input,
+.ManualAttendances-card form label select {
     width: 100%;
     padding: 10px;
-    margin-bottom: 20px;
+    margin-top: 5px;
     border: 1px solid #ddd;
     border-radius: 4px;
 }
 
-.filter-section button {
+.ManualAttendances-card form button {
     background-color: #4e73df;
     color: white;
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-}
-
-.attendance-table {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-}
-
-.attendance-table table {
+    display: block;
     width: 100%;
-    border-collapse: collapse;
     margin-top: 10px;
 }
 
-.attendance-table th,
-.attendance-table td {
-    border: 1px solid #ddd;
+.list-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.search-box input {
     padding: 10px;
-    text-align: left;
+    border: 1px solid #ddd;
+    border-radius: 4px;
 }
 
-.attendance-table th {
-    background-color: #f2f2f2;
+.table-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9em;
+    color: #5a5c69;
+    margin-top: 20px;
 }
 
-.attendance-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.add-new-button {
-    background-color: #1cc88a;
+.navigation-buttons button {
+    background-color: #4e73df;
     color: white;
-    padding: 10px 20px;
+    padding: 5px 10px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 16px;
-    float: right;
-    margin: 20px 0;
+    margin-right: 5px;
 }
 
-.attendance-table::after {
-    content: "";
-    display: table;
-    clear: both;
+.navigation-buttons button:not(:last-child) {
+    margin-right: 10px;
 }
 
-@media (max-width: 768px) {
-    .filter-section input[type="date"],
-    .filter-section select,
-    .filter-section button {
-        width: 100%;
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border: 1px solid #e3e6f0;
+}
+
+table thead th {
+    text-align: left;
+    padding: 12px;
+    background-color: #f8f9fc;
+    border-bottom: 2px solid #e3e6f0;
+}
+
+table tbody td {
+    padding: 12px;
+    border-bottom: 1px solid #e3e6f0;
+}
+
+table tbody tr:nth-child(odd) {
+    background-color: #fff;
+}
+
+.entries-showing,
+.table-navigation {
+    font-size: 0.9em;
+    color: #5a5c69;
+}
+
+.entries-showing select,
+.navigation-buttons button {
+    height: 38px;
+}
+
+@media screen and (max-width: 768px) {
+    .ManualAttendances-container {
+        flex-direction: column;
+    }
+
+    .ManualAttendances-card {
+        width: 90%;
     }
 }

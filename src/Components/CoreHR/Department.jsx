@@ -1,57 +1,69 @@
 import React from 'react';
-import './Department.css'; // Import your custom styles if needed
+import './Department.css';
 
 const Department = () => {
   return (
-    <div className="container mx-auto p-5">
-      <div className="flex flex-col md:flex-row gap-5">
-        <div className="flex-1">
-          <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-                Name *
-              </label>
-              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" placeholder="Name" />
-            </div>
-            <div className="mb-6">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="department-head">
-                Department Head
-              </label>
-              <select className="shadow border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="department-head">
-                <option>Select a head</option>
-                {/* Options should be populated here */}
-              </select>
-            </div>
-            <div className="flex items-center justify-between">
-              <button className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
-                Save
-              </button>
-            </div>
+    <div className="department-container">
+      <div className="department-card add-department-card">
+        <h2>Add New Department</h2>
+        <form>
+          <label>
+            Name *
+            <input type="text" name="name" placeholder="Name" />
+          </label>
+          <label>
+            Department Head
+            <select name="departmentHead">
+              <option value="">Department Head</option>
+              {/* Add department head options here */}
+            </select>
+          </label>
+          <button type="submit">Save</button>
+        </form>
+      </div>
+      <div className="department-card list-department-card">
+        <h2>List All Departments</h2>
+        <div className="list-controls">
+          <div className="entries-showing">
+            Show
+            <select>
+              <option value="10">10</option>
+              {/* Add more options if needed */}
+            </select>
+            entries
+          </div>
+          <div className="search-box">
+            <input type="text" placeholder="Search" />
           </div>
         </div>
-        <div className="flex-1">
-          <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="search">
-                Search
-              </label>
-              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="search" type="text" placeholder="Search" />
-            </div>
-            <div className="mb-4">
-              <table className="table-auto w-full">
-                <thead>
-                  <tr>
-                    <th className="px-4 py-2 text-left">Department Name</th>
-                    <th className="px-4 py-2 text-left">Department Head</th>
-                    <th className="px-4 py-2 text-left">Created At</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {/* Rows will be populated here */}
-                </tbody>
-              </table>
-            </div>
-            {/* Pagination would go here */}
+        <table>
+          <thead>
+            <tr>
+              <th>DEPARTMENT NAME</th>
+              <th>DEPARTMENT HEAD</th>
+              <th>CREATED AT</th>
+            </tr>
+          </thead>
+          <tbody>
+            {/* Dummy data rows */}
+            <tr>
+              <td>Marketing</td>
+              <td>Jane Doe</td>
+              <td>09-01-2024</td>
+            </tr>
+            <tr>
+              <td>Finance</td>
+              <td>John Smith</td>
+              <td>09-01-2024</td>
+            </tr>
+          </tbody>
+        </table>
+        <div className="table-navigation">
+          <span>Showing 1 to 2 of 2 records</span>
+          <div className="navigation-buttons">
+            <button>Previous</button>
+            <button>1</button>
+            <button>Next</button>
           </div>
         </div>
       </div>

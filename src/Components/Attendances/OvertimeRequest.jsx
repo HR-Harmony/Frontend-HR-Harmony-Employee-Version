@@ -2,23 +2,32 @@ import React from 'react';
 import './OvertimeRequest.css';
 
 const OvertimeRequest = () => {
-    const tableData = [
-      { name: 'Fakhrity', date: '2024-01-24', clockIn: '09:00 AM', clockOut: '05:00 PM', totalHours: '8 hours', status:'Accepted' },
-    ];
   return (
-    <div>
-      <div className="overtime-request">
-        <div className="overtime-request-header">
-          <h2>Overtime Request</h2>
-          <button className="add-new-button">+ Add New</button>
+    <div className="OvertimeRequest-card">
+      <div className="card-header">
+        <button className="btn btn-primary">Add New</button>
+        <div className="search-container">
+          <input type="text" className="search-input" placeholder="Search" />
         </div>
-
-        <div className='search-bar'>
-          <input type="text" placeholder="Search Employee" />
+      </div>
+      <div className="card-body">
+        <div className="table-options">
+          <div className="show-entries">
+            Show
+            <select name="entries" className="entries-select">
+              <option value="10">10</option>
+              <option value="25">25</option>
+            </select>
+            entries
+          </div>
+          <div className="table-pagination">
+            Showing 1 to 7
+            <button className="btn-pagination">Previous</button>
+            <button className="btn-pagination active">1</button>
+            <button className="btn-pagination">Next</button>
+          </div>
         </div>
-        
-        <div className="overtime-request-table">
-        <table>
+        <table className="table">
           <thead>
             <tr>
               <th>EMPLOYEE</th>
@@ -30,22 +39,32 @@ const OvertimeRequest = () => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map((data, index) => (
-              <tr key={index}>
-                <td>{data.name}</td>
-                <td>{data.date}</td>
-                <td>{data.clockIn}</td>
-                <td>{data.clockOut}</td>
-                <td>{data.totalHours}</td>
-                <td>{data.status}</td>
-              </tr>
-            ))}
+            {/* Add your dummy data here */}
+            <tr>
+              <td>User removed</td>
+              <td>28-06-2023</td>
+              <td>06:32 am</td>
+              <td>09:32 am</td>
+              <td>3:0</td>
+              <td>Accepted</td>
+            </tr>
+            <tr>
+              <td>User removed</td>
+              <td>29-06-2023</td>
+              <td>06:00 am</td>
+              <td>07:00 am</td>
+              <td>1:0</td>
+              <td>Accepted</td>
+            </tr>
+            {/* ... more rows ... */}
           </tbody>
         </table>
       </div>
+      <div className="card-footer">
+        <button className="btn-save">Save</button>
       </div>
     </div>
-    );
+  );
 };
 
 export default OvertimeRequest;

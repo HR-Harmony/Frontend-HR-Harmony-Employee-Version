@@ -1,32 +1,65 @@
-.monthly-report-heading {
-    text-align: left;
-    margin-bottom: 20px;
+.MonthlyReport-card {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+}
+
+.MonthlyReport-card .form-group {
+  margin-bottom: 0;
+}
+
+.MonthlyReport-card label {
+  display: block;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.MonthlyReport-card .form-control {
+  display: block;
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.MonthlyReport-card .search-button {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+  padding: 10px 20px;
+  border-radius: 0.25rem;
+  font-size: 16px;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.MonthlyReport-card .search-button:hover {
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
+
+@media (max-width: 768px) {
+  .MonthlyReport-card {
+    flex-direction: column;
   }
-  
-  .input-box {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    max-width: 600px;
+
+  .MonthlyReport-card .form-group {
+    width: 100%;
+    margin-bottom: 15px;
   }
-  
-  .input-box label {
-    flex:0;
+
+  .MonthlyReport-card .search-button {
+    width: 100%;
   }
-  
-  .input-box select,
-  .input-box input {
-    flex: 2;
-    padding: 8px;
-    margin-left: 10px;
-    margin-right: 10px;
-  }
-  
-  .input-box button {
-    flex: 1;
-    padding: 8px;
-    background-color: #8763E9;
-    color: #fff;
-    border-radius: 5px;
-    cursor: pointer;
-  }
+}

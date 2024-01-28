@@ -1,12 +1,11 @@
-// Employees.jsx
 import React from 'react';
-import './Employees.css';
+import './RolesPrivileges.css';
 
-const Employees = () => {
+const RolesPrivileges = () => {
   return (
     <div className="employees-card">
       <div className="employees-card-header">
-        <h2>List All Employees</h2>
+        <h2>List All Roles</h2>
         <button className="btn-add-new">Add New</button>
       </div>
       <div className="employees-card-body">
@@ -15,9 +14,7 @@ const Employees = () => {
             Show
             <select>
               <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
+              {/* other options */}
             </select>
             entries
           </label>
@@ -26,24 +23,26 @@ const Employees = () => {
         <table>
           <thead>
             <tr>
-              <th>NAME</th>
-              <th>DESIGNATION</th>
-              <th>CONTACT NUMBER</th>
-              <th>GENDER</th>
-              <th>COUNTRY</th>
-              <th>ROLE</th>
-              <th>STATUS</th>
+              <th>ROLE NAME</th>
+              <th>MENU PERMISSION</th>
+              <th>ADDED DATE</th>
             </tr>
           </thead>
           <tbody>
-            {/* Employee rows will go here */}
+            {/* Roles rows will go here */}
+            {/* Example row */}
             <tr>
-              <td colSpan="7">No records available</td>
+              <td>Admin & Log</td>
+              <td>All Menu Access</td>
+              <td>07-08-2023</td>
             </tr>
+            {/* Add more rows as needed */}
           </tbody>
         </table>
         <div className="table-pagination">
+          {/* Pagination controls */}
           <button>Previous</button>
+          {/* Page numbers */}
           <button>Next</button>
         </div>
       </div>
@@ -51,4 +50,4 @@ const Employees = () => {
   );
 };
 
-export default Employees;
+export default RolesPrivileges;

@@ -2,24 +2,38 @@ import React from 'react';
 import './ManualAttendances.css';
 
 const ManualAttendances = () => {
-  const tableData = [
-    { name: 'Fakhrity', date: '2024-01-24', clockIn: '09:00 AM', clockOut: '05:00 PM', totalWork: '8 hours' },
-  ];
-
   return (
-    <div>
-      <div className="filter-section">
+    <div className="ManualAttendances-container">
+      <div className="ManualAttendances-card ManualAttendances-filter-card">
         <h2>Filter Attendance</h2>
-        <label htmlFor="date">Date</label>
-        <input type="date" id="date" name="date" />
-        <label htmlFor="employee">Employee</label>
-        <select id="employee" name="employee">
-
-        </select>
-        <button>Filter</button>
+        <form>
+          <label>
+            Date
+            <input type="date" name="date" />
+          </label>
+          <label>
+            Employee
+            <select name="employee">
+              {/* Option elements for employees */}
+            </select>
+          </label>
+          <button type="submit">Filter</button>
+        </form>
       </div>
-      <div className="attendance-table">
-        <h2>View Attendance</h2>
+      <div className="ManualAttendances-card ManualAttendances-view-card">
+        <div className="list-controls">
+          <div className="entries-showing">
+            Show
+            <select>
+              <option value="10">10</option>
+              {/* Add more options if needed */}
+            </select>
+            entries
+          </div>
+          <div className="search-box">
+            <input type="text" placeholder="Search" />
+          </div>
+        </div>
         <table>
           <thead>
             <tr>
@@ -31,19 +45,32 @@ const ManualAttendances = () => {
             </tr>
           </thead>
           <tbody>
-            {tableData.map((data, index) => (
-              <tr key={index}>
-                <td>{data.name}</td>
-                <td>{data.date}</td>
-                <td>{data.clockIn}</td>
-                <td>{data.clockOut}</td>
-                <td>{data.totalWork}</td>
-              </tr>
-            ))}
+            {/* Dummy data rows */}
+            <tr>
+              <td>Fakhrity H</td>
+              <td>2024-01-28</td>
+              <td>08:00</td>
+              <td>17:00</td>
+              <td>9h</td>
+            </tr>
+            <tr>
+              <td>Arfara Y</td>
+              <td>2024-01-28</td>
+              <td>09:00</td>
+              <td>18:00</td>
+              <td>8h</td>
+            </tr>
           </tbody>
         </table>
+        <div className="table-navigation">
+          <span>Showing 1 to 2 of 2 records</span>
+          <div className="navigation-buttons">
+            <button>Previous</button>
+            <button>1</button>
+            <button>Next</button>
+          </div>
+        </div>
       </div>
-      <button className="add-new-button">+ Add New</button>
     </div>
   );
 };

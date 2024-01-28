@@ -1,3 +1,5 @@
+/* EmployeesExit.css */
+/* This will be very similar to Employees.css, with the addition of the Exit Type button. */
 .employees-card {
     border: 1px solid #e1e4e8;
     border-radius: 4px;
@@ -17,16 +19,27 @@
 .employees-card-header h2 {
     margin: 0;
 }
-  
-.btn-add-new {
+
+.employees-card-header div {
+    display: flex;
+    align-items: center;
+}
+
+.btn-add-new, .btn-exit-type {
     padding: 5px 15px;
+    margin-left: 5px;
     background-color: blue;
     color: white;
     border: none;
     border-radius: 3px;
     cursor: pointer;
 }
-  
+
+/* Style the Exit Type button to be distinct or similar to the Add New button, depending on your design preference. */
+.btn-exit-type {
+    background-color: #5cb85c; /* Different color for distinction */
+}
+
 .employees-card-body {
     padding: 20px;
 }
@@ -84,4 +97,3 @@ table tbody td {
     border: 1px solid #e1e4e8;
     border-radius: 3px;
 }
-  

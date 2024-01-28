@@ -1,31 +1,31 @@
-.department-container {
+.designation-container {
   display: flex;
   justify-content: space-between;
   margin: 20px;
 }
 
-.department-card {
+.designation-card {
   background: #fff;
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
-.add-department-card {
+.add-designation-card {
   width: 30%; 
 }
 
-.list-department-card {
+.list-designation-card {
   width: 65%;
 }
 
-.department-card h2 {
+.designation-card h2 {
   margin-bottom: 20px;
   color: #4e73df;
   font-size: 1.25rem;
 }
 
-.department-card form label {
+.designation-card form label {
   display: block;
   margin-bottom: 10px;
   font-weight: normal;
@@ -33,9 +33,9 @@
   font-size: 0.8rem;
 }
 
-.department-card form label input,
-.department-card form label select,
-.department-card form label textarea {
+.designation-card form label input,
+.designation-card form label select,
+.designation-card form label textarea {
   width: 100%;
   padding: 10px;
   margin-top: 5px;
@@ -44,30 +44,20 @@
   height: 38px;
 }
 
-.department-card form label input[type="file"] {
+.designation-card form label input[type="file"] {
   border: none;
   padding: 0;
 }
 
-.department-card form button,
-.navigation-buttons button {
+.designation-card form button {
   background-color: #4e73df;
   color: white;
-  padding: 10px 15px;
+  padding: 10px 20px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   margin-top: 10px;
   margin-right: 5px;
-}
-
-.navigation-buttons button:not(:last-child) {
-  margin-right: 10px;
-}
-
-.department-card form button[type="submit"] {
-  display: block;
-  width: 100%;
 }
 
 .list-controls {
@@ -99,6 +89,7 @@
   border-radius: 4px;
   cursor: pointer;
   margin-top: 10px;
+  margin-right: 10px;
 }
 
 table {

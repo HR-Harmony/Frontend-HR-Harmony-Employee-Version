@@ -10,8 +10,28 @@ const SideBarData = [
     },
     {
         title: "Employees",
-        path: "/employees",
-        icon: <FaUsers />
+        path: "#",
+        icon: <FaUsers />,
+        iconClosed: <MdKeyboardArrowDown />,
+        iconOpened: <MdKeyboardArrowUp />,
+        subNav: [
+            {
+                title: "Employees",
+                path: "/employees/staff-list"
+            },
+            {
+                title: "Roles & Privileges",
+                path: "/employees/roles-privileges"
+            },
+            {
+                title: "Shift Scheduling",
+                path: "/employees/shift-scheduling"
+            },
+            {
+                title: "Employees Exit",
+                path: "/employees/employees-exit"
+            },
+        ]
     },
     {
         title: "Core HR",
