@@ -1,0 +1,16 @@
+.payslip-history-container {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+.payslip-history-label {
+    display: flex;
+}
+.payslip-history-label input[type="search"] {
+    padding: 5px;
+    border: 1px solid #e1e4e8;
+    border-radius: 3px;
+    margin-left:auto;
+}
