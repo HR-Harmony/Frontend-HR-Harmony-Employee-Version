@@ -118,9 +118,37 @@ const SideBarData = [
         icon: < FaTasks />
     },
     {
-        title: "Performances",
-        path: "/performances",
-        icon: < MdAutoGraph />
+        title: "Performance",
+        path: "#",
+        icon: < MdPayments />,
+        iconClosed: <MdKeyboardArrowDown />,
+        iconOpened: <MdKeyboardArrowUp />,
+        subNav: [
+            {
+                title: "KPI (Indicator)",
+                path: "/performance/performance-indicator"
+            },
+            {
+                title: "KPA (Appraisal)",
+                path: "/performance/performance-appraisal"
+            },
+            {
+                title: "Track Goals (OKRs)",
+                path: "/performance/track-goals"
+            },
+            {
+                title: "Calendar",
+                path: "/performance/goals-calendar"
+            },
+            {
+                title: "Competencies",
+                path: "/performance/competencies"
+            },
+            {
+                title: "Goal Type",
+                path: "/performance/goal-type"
+            },
+        ]
     },
 ];
 
