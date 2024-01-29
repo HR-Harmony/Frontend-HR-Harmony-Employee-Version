@@ -4,30 +4,29 @@ import './OvertimeRequest.css';
 const OvertimeRequest = () => {
   return (
     <div className="OvertimeRequest-card">
-      <div className="card-header">
-        <button className="btn btn-primary">Add New</button>
-        <div className="search-container">
-          <input type="text" className="search-input" placeholder="Search" />
+      <div className="OvertimeRequest-header">
+        <h1 className="OvertimeRequest-title">Overtime Request</h1>
+        <div className="OvertimeRequest-headerRight">
+          <button className="OvertimeRequest-btn OvertimeRequest-btn-primary">Add New</button>
         </div>
       </div>
-      <div className="card-body">
-        <div className="table-options">
-          <div className="show-entries">
-            Show
-            <select name="entries" className="entries-select">
-              <option value="10">10</option>
-              <option value="25">25</option>
-            </select>
-            entries
-          </div>
-          <div className="table-pagination">
-            Showing 1 to 7
-            <button className="btn-pagination">Previous</button>
-            <button className="btn-pagination active">1</button>
-            <button className="btn-pagination">Next</button>
-          </div>
+      <hr className="OvertimeRequest-divider" />
+      <div className="OvertimeRequest-controls">
+        <div className="OvertimeRequest-entries">
+          Show
+          <select name="entries" className="OvertimeRequest-entries-select">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+          </select>
+          entries
         </div>
-        <table className="table">
+        <div className="OvertimeRequest-search-container">
+          <input type="text" className="OvertimeRequest-search-input" placeholder="Search" />
+        </div>
+      </div>
+      <div className="OvertimeRequest-body">
+        <table className="OvertimeRequest-table">
           <thead>
             <tr>
               <th>EMPLOYEE</th>
@@ -39,7 +38,7 @@ const OvertimeRequest = () => {
             </tr>
           </thead>
           <tbody>
-            {/* Add your dummy data here */}
+            {/* Dummy data row 1 */}
             <tr>
               <td>User removed</td>
               <td>28-06-2023</td>
@@ -48,6 +47,7 @@ const OvertimeRequest = () => {
               <td>3:0</td>
               <td>Accepted</td>
             </tr>
+            {/* Dummy data row 2 */}
             <tr>
               <td>User removed</td>
               <td>29-06-2023</td>
@@ -56,12 +56,16 @@ const OvertimeRequest = () => {
               <td>1:0</td>
               <td>Accepted</td>
             </tr>
-            {/* ... more rows ... */}
           </tbody>
         </table>
       </div>
-      <div className="card-footer">
-        <button className="btn-save">Save</button>
+      <div className="OvertimeRequest-footer">
+        <div className="OvertimeRequest-showing">Showing 1 to 2 of 10 records</div>
+        <div className="OvertimeRequest-pagination">
+          <button className="OvertimeRequest-btn-pagination">Previous</button>
+          <button className="OvertimeRequest-btn-pagination OvertimeRequest-active">1</button>
+          <button className="OvertimeRequest-btn-pagination">Next</button>
+        </div>
       </div>
     </div>
   );
