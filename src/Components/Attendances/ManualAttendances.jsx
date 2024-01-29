@@ -21,6 +21,10 @@ const ManualAttendances = () => {
         </form>
       </div>
       <div className="ManualAttendances-card ManualAttendances-view-card">
+        <div className="view-header">
+          <h2>View Attendance</h2>
+          <button className="add-new-btn">+ Add New</button>
+        </div>
         <div className="list-controls">
           <div className="entries-showing">
             Show
@@ -45,17 +49,16 @@ const ManualAttendances = () => {
             </tr>
           </thead>
           <tbody>
-            {/* Dummy data rows */}
             <tr>
-              <td>Fakhrity H</td>
-              <td>2024-01-28</td>
+              <td>Fakhrity Hikmawan</td>
+              <td>2024-01-30</td>
               <td>08:00</td>
               <td>17:00</td>
               <td>9h</td>
             </tr>
             <tr>
-              <td>Arfara Y</td>
-              <td>2024-01-28</td>
+              <td>Arfara Yema</td>
+              <td>2024-01-30</td>
               <td>09:00</td>
               <td>18:00</td>
               <td>8h</td>
@@ -63,10 +66,9 @@ const ManualAttendances = () => {
           </tbody>
         </table>
         <div className="table-navigation">
-          <span>Showing 1 to 2 of 2 records</span>
+          <span>No records available</span>
           <div className="navigation-buttons">
             <button>Previous</button>
-            <button>1</button>
             <button>Next</button>
           </div>
         </div>
