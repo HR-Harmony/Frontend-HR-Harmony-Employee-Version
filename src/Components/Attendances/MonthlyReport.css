@@ -3,13 +3,21 @@
   border-radius: 4px;
   padding: 20px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   background: white;
+  max-width: 800px;
+  margin: auto;
 }
 
 .MonthlyReport-card .form-group {
   margin-bottom: 0;
+  flex-grow: 1;
+  margin-right: 20px;
+}
+
+.MonthlyReport-card .form-group:last-child {
+  margin-right: 20px;
 }
 
 .MonthlyReport-card label {
@@ -37,11 +45,12 @@
   color: #fff;
   background-color: #007bff;
   border-color: #007bff;
-  padding: 10px 20px;
+  padding: 10px 16px;
   border-radius: 0.25rem;
   font-size: 16px;
   line-height: 1.5;
   cursor: pointer;
+  margin-top: 20px;
 }
 
 .MonthlyReport-card .search-button:hover {

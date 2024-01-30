@@ -1,0 +1,30 @@
+.performance-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px;
+    background-color: #ffffff;
+    cursor: pointer;
+    flex-direction: row;
+    width: 100%;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 0 5px;
+}
+
+.icon {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

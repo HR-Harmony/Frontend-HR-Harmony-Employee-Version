@@ -1,25 +1,50 @@
 .ManualAttendances-container {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: space-between;
+    align-items: flex-start;
     margin: 20px;
 }
 
 .ManualAttendances-card {
     background: #fff;
     padding: 20px;
-    margin-bottom: 20px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    width: 50%;
 }
 
 .ManualAttendances-filter-card {
-    margin-bottom: 20px;
+    width: 30%; 
+    margin-right: 5%;
 }
 
 .ManualAttendances-view-card {
-    width: 100%;
+    width: 65%;
+    position: relative;
+}
+
+.view-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e3e6f0;
+}
+
+.view-header h2 {
+    color: #4e73df;
+    font-size: 1.25rem;
+    padding-bottom: 10px;
+}
+
+.add-new-btn {
+    background-color: #4e73df;
+    color: white;
+    padding: 5px 15px;
+    font-size: 0.9rem;
+    margin-top: -0.375rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 .ManualAttendances-card h2 {
@@ -125,12 +150,24 @@ table tbody tr:nth-child(odd) {
     height: 38px;
 }
 
+@media screen and (max-width: 992px) {
+    .ManualAttendances-container {
+        flex-direction: column;
+    }
+
+    .ManualAttendances-filter-card,
+    .ManualAttendances-view-card {
+        width: 90%;
+        margin-bottom: 20px;
+    }
+}
+
 @media screen and (max-width: 768px) {
     .ManualAttendances-container {
         flex-direction: column;
     }
 
     .ManualAttendances-card {
-        width: 90%;
+        width: 100%;
     }
 }

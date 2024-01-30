@@ -28,21 +28,21 @@ const AttendanceList = () => {
         </thead>
         <tbody>
           <tr>
-            <td>Fakhrity H</td>
-            <td>2024-01-29</td>
+            <td>Fakhrity Hikmawan</td>
+            <td>2024-01-30</td>
             <td>Present</td>
-            <td>09:00 AM</td>
-            <td>05:00 PM</td>
+            <td>08:00 AM</td>
+            <td>04:00 PM</td>
             <td>No</td>
             <td>No</td>
             <td>8h</td>
           </tr>
           <tr>
-            <td>Arfara Y</td>
-            <td>2024-01-29</td>
+            <td>Arfara Yema</td>
+            <td>2024-01-30</td>
             <td>Present</td>
-            <td>09:15 AM</td>
-            <td>05:15 PM</td>
+            <td>08:15 AM</td>
+            <td>04:15 PM</td>
             <td>Yes</td>
             <td>No</td>
             <td>8h</td>
@@ -55,7 +55,7 @@ const AttendanceList = () => {
         </div>
         <div className="AttendanceList-pagination">
           <button>Previous</button>
-          <span>1</span>
+          <button className="page-number">1</button>
           <button>Next</button>
         </div>
       </div>
