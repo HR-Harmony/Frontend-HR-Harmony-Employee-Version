@@ -114,8 +114,24 @@ const SideBarData = [
     },
     {
         title: "Tasks",
-        path: "/tasks",
-        icon: < FaTasks />
+        path: "#",
+        icon: < FaTasks />,
+        iconClosed: <MdKeyboardArrowDown />,
+        iconOpened: <MdKeyboardArrowUp />,
+        subNav: [
+            {
+                title: "Tasks",
+                path: "/tasks/tasks-list"
+            },
+            {
+                title:"Projects",
+                path:"/tasks/project"
+            },
+            {
+                title:"Calendar",
+                path:"/tasks/calendar"
+            }
+        ]
     },
     {
         title: "Performances",

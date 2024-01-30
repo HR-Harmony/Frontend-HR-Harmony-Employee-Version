@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginSignup from './Components/LoginSignup/LoginSignup'
 import LandingPage from './Components/LandingPage/LandingPage';
 import SideBar from "./Components/Sidebar/Sidebar";
 import Dashboard from "./Components/Dashboard/Dashboard";
 import PayrollRouter from './Components/Payroll/PayrollRouter';
-import Tasks from './Components/Tasks/Tasks';
+import TasksRouter from './Components/Tasks/TasksRouter';
 import Performances from './Components/Performances/Performances';
 import AttendancesRouter from './Components/Attendances/AttendancesRouter';
 import CoreHRRouter from './Components/CoreHR/CoreHRRouter';
@@ -33,7 +33,7 @@ function DashboardLayout() {
             <Route path = "/employees/*" element = { < EmployeesRouter / > }/>   
             <Route path = "/payroll/*" element = { < PayrollRouter / > }/>  
             <Route path = "/attendances/*" element = { < AttendancesRouter / > }/>  
-            <Route path = "/tasks" element = { < Tasks / > }/>   
+            <Route path = "/tasks/*" element = { < TasksRouter / > }/>   
             <Route path = "/performances" element = { < Performances / > }/> 
             <Route path = "/corehr/*" element = { < CoreHRRouter /> }/>  
             </Routes > 
