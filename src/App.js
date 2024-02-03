@@ -10,6 +10,9 @@ import AttendancesRouter from './Components/Attendances/AttendancesRouter';
 import CoreHRRouter from './Components/CoreHR/CoreHRRouter';
 import EmployeesRouter from './Components/Employees/EmployeesRouter';
 import PerformanceRouter from './Components/Performances/PerformanceRouter';
+import RecruitmentRouter from './Components/Recruitment/RecruitmentRouter';
+import TrainingRouter from './Components/Training/TrainingRouter';
+import Helpdesk from './Components/Helpdesk/Helpdesk';
 
 // eslint-disable-next-line
 function App() {
@@ -36,6 +39,9 @@ function DashboardLayout() {
             <Route path = "/tasks/*" element = { < TasksRouter / > }/>    
             <Route path = "/performance/*" element = { < PerformanceRouter / > }/> 
             <Route path = "/corehr/*" element = { < CoreHRRouter /> }/>  
+            <Route path = "/recruitment/*" element = { < RecruitmentRouter/> } />
+            <Route path = "/training/*" element = { < TrainingRouter /> } />
+            <Route path = "/helpdesk" element = { < Helpdesk/> } />
             </Routes > 
         </div>
     );

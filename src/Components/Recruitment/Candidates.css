@@ -1,0 +1,29 @@
+.candidates-list-container {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+.candidates-list-header {
+    padding: 10px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e1e4e8;
+}
+
+.candidates-list-header h2 {
+    font-weight: bold;
+}
+
+
+.candidates-list-label {
+    display: flex;
+    padding: 10px;
+}
+
+.candidates-list-label input {
+    padding: 5px;
+    border: 1px solid #e1e4e8;
+    border-radius: 3px;
+    margin-left:auto;
+}

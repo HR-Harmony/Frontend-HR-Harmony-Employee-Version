@@ -1,0 +1,99 @@
+.new-opening-container {
+    max-width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    background: #FFFF;
+}
+
+.job-listing-header {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    margin-bottom: 30px;
+}
+
+.job-listing-header h2 {
+    font-weight: bold;
+}
+
+.job-listing-header button {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    padding: 10px 20px;
+    border-radius: 0.25rem;
+    font-size: 16px;
+    line-height: 1.5;
+    cursor: pointer;
+}
+
+.job-listing-header button:hover {
+    background-color: #0069d9;
+    border-color: #0062cc; 
+}
+
+.job-listing-container {
+    display: flex;
+    margin-right: auto;
+    border-radius: 4px;
+    padding: 0px;
+    overflow: hidden;
+    width: 100%;
+}
+
+.job-listing-card {
+    border: 1px solid #e1e4e8;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-right: auto;
+    border-radius: 4px;
+    padding: 10px;
+    overflow: hidden;
+    width: 30%;
+}
+
+.job-listing-card-header { 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e1e4e8;
+}
+
+.job-listing-card-header button {
+    color: #04ff00;
+    border: 1px solid #04ff00;
+    padding: 5px;
+    border-radius: 0.25rem;
+    font-size: 16px;
+    line-height: 1.5;
+    cursor: pointer;
+}
+
+.job-listing-card-body {
+    padding: 5px;
+}
+
+.job-listing-card-footer {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #ffffff;
+    border-top: 1px solid #e1e4e8;
+}
+
+.job-listing-card-icon {
+    font-size: 20px;
+}
+
+.job-listing-card-icon:hover {
+    color: #0062cc;
+    transition: 0.2s ease-in-out;
+    cursor: pointer;
+}

@@ -1,0 +1,27 @@
+.interviews-list-container {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+.interviews-list-header {
+    padding: 10px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e1e4e8;
+}
+
+.interviews-list-header h2 {
+    font-weight: bold;
+}
+
+.interviews-list-label {
+    display: flex;
+    padding: 10px;
+}
+.interviews-list-label input[type="search"] {
+    padding: 5px;
+    border: 1px solid #e1e4e8;
+    border-radius: 3px;
+    margin-left:auto;
+}
