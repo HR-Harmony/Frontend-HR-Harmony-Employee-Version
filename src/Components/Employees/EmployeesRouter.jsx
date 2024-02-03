@@ -13,7 +13,7 @@ const EmployeesRouter = () => {
     return (
       <div>
         <Header /> 
-        <div className="employees-container">
+        <div className="employees-router-container">
           <div className="feature" onClick={() => navigate('/employees/staff-list')}>
               <FaCalendar className="icon" />
               <span>Employees</span>
