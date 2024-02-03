@@ -136,29 +136,6 @@ table thead th, table tbody td {
     font-size: 0.8rem;
 }
 
-table {
-    margin-top: 20px;
-    border: 1px solid #e3e6f0;
-    thead {
-        background-color: #f8f9fc;
-        th {
-        padding: 12px;
-        border-bottom: 2px solid #e3e6f0;
-        }
-    }
-    tbody {
-        tr {
-        &:nth-child(odd) {
-            background-color: #fff;
-        }
-        td {
-            padding: 12px;
-            border-bottom: 1px solid #e3e6f0;
-        }
-        }
-    }
-}
-
 .search-box input {
     width: 200px;
 }
@@ -179,4 +156,26 @@ table {
     color: #4e73df;
     font-size: 1.25rem;
 }
-  
+
+table {
+    margin-top: 20px;
+    border: 1px solid #e3e6f0;
+}
+
+table thead {
+    background-color: #f8f9fc;
+}
+
+table thead th {
+    padding: 12px;
+    border-bottom: 2px solid #e3e6f0;
+}
+
+table tbody tr:nth-child(odd) {
+    background-color: #fff;
+}
+
+table tbody td {
+    padding: 12px;
+    border-bottom: 1px solid #e3e6f0;
+}
