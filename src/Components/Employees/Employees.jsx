@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const Employees = () => {
   const [showAddForm, setShowAddForm] = useState(false);
+  const [hoveredEmployeeId, setHoveredEmployeeId] = useState(null);
 
   const handleAddNewClick = () => {
     setShowAddForm(true);
@@ -15,13 +16,29 @@ const Employees = () => {
     setShowAddForm(false);
   }; 
 
+  const handleMouseEnter = (employeeId) => {
+    setHoveredEmployeeId(employeeId);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredEmployeeId(null);
+  };
+
+  const handleDelete = (employeeId) => {
+
+  };
+
+  const handleEditClick = (employee) => {
+
+  };
+
   return (
     <div className="flex flex-col items-center w-full">
       {showAddForm && (
-        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-5xl">
-          <div className="flex justify-between items-center bg-gray-200 px-4 py-2 rounded-t">
+        <div className="bg-white shadow-md rounded-lg mb-4 w-full max-w-5xl">
+          <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
             <h2 className="text-xl font-bold text-gray-700">Add New Employee</h2>
-            <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none" onClick={handleHideClick}>Hide</button>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none" onClick={handleHideClick}>Hide</button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4 py-2">
             {/* Form fields */}
@@ -163,9 +180,9 @@ const Employees = () => {
           </div>
         </div>
       )}
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-5xl"> {/* Sesuaikan ukuran card List All Employees */}
-        <div className="flex justify-between items-center bg-gray-200 px-4 py-2 rounded-t">
-          <h2>List All Employees</h2>
+      <div className="bg-white shadow-md rounded-lg w-full max-w-5xl"> {/* Sesuaikan ukuran card List All Employees */}
+        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200 font-bold">
+          <h2 className="text-xl font-bold text-gray-700">List All Employees</h2>
           <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none" onClick={handleAddNewClick}>Add New</button>
         </div>
         <div className="px-4 py-2">
@@ -183,71 +200,57 @@ const Employees = () => {
               <input type="text" placeholder="Search" className="rounded border border-gray-300 p-2" />
             </div>
           </div>
-          <div className="flex flex-col">
-            <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Name
-                        </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Designation
-                        </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Contact Number
-                        </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Gender
-                        </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Country
-                        </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Role
-                        </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Status
-                        </th>
-                        <th scope="col" className="relative px-6 py-3">
-                          <span className="sr-only">Edit</span>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      <tr>
-                        <td className="px-6 py-4 whitespace-nowrap">Fakhrity</td>
-                        <td className="px-6 py-4 whitespace-nowrap">Software Engineer</td>
-                        <td className="px-6 py-4 whitespace-nowrap">123-456-7890</td>
-                        <td className="px-6 py-4 whitespace-nowrap">Female</td>
-                        <td className="px-6 py-4 whitespace-nowrap">Indonesia</td>
-                        <td className="px-6 py-4 whitespace-nowrap">Engineering</td>
-                        <td className="px-6 py-4 whitespace-nowrap">Active</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <a href="#" className="text-indigo-600 hover:text-indigo-900">Edit</a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="px-6 py-4 whitespace-nowrap">Random Name</td>
-                        <td className="px-6 py-4 whitespace-nowrap">Product Manager</td>
-                        <td className="px-6 py-4 whitespace-nowrap">987-654-3210</td>
-                        <td className="px-6 py-4 whitespace-nowrap">Male</td>
-                        <td className="px-6 py-4 whitespace-nowrap">Indonesia</td>
-                        <td className="px-6 py-4 whitespace-nowrap">Management</td>
-                        <td className="px-6 py-4 whitespace-nowrap">Active</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <a href="#" className="text-indigo-600 hover:text-indigo-900">Edit</a>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-            <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
-              No records available
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Designation</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact Number</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gender</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Country</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th className="relative px-6 py-3">
+                    <span className="sr-only">Actions</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {/* Dummy data for demonstration */}
+                {[{ id: 1, name: 'Fakhrity', designation: 'Software Engineer', contactNumber: '123-456-7890', gender: 'Female', country: 'Indonesia', role: 'Engineering', status: 'Active' },
+                  { id: 2, name: 'Random Name', designation: 'Product Manager', contactNumber: '987-654-3210', gender: 'Male', country: 'Indonesia', role: 'Management', status: 'Active' }].map((employee) => (
+                  <tr key={employee.id}
+                      onMouseEnter={() => handleMouseEnter(employee.id)}
+                      onMouseLeave={handleMouseLeave}
+                      className="hover:bg-gray-100">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex justify-between">
+                        <span className="text-sm font-medium text-gray-900">{employee.name}</span>
+                        {hoveredEmployeeId === employee.id && (
+                          <div className="flex-shrink-0">
+                            <button className="text-blue-600 hover:text-blue-900 focus:outline-none mr-2 ml-6" onClick={() => handleEditClick(employee)}>Edit</button>
+                            <button className="text-red-600 hover:text-red-900 focus:outline-none ml-2" onClick={() => handleDelete(employee.id)}>Delete</button>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">{employee.designation}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{employee.contactNumber}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{employee.gender}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{employee.country}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{employee.role}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{employee.status}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      {/* Actions like Edit and Delete buttons */}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
+              Showing 1 to 2 of 2 records
               <div>
                 <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
                   Previous
@@ -257,7 +260,6 @@ const Employees = () => {
                 </button>
               </div>
             </div>
-          </div>
         </div>
       </div>
     </div>
