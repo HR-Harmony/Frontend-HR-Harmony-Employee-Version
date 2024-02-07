@@ -1,4 +1,4 @@
-.ManualAttendances-container {
+/* .ManualAttendances-container {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -170,4 +170,4 @@ table tbody tr:nth-child(odd) {
     .ManualAttendances-card {
         width: 100%;
     }
-}
+} */
