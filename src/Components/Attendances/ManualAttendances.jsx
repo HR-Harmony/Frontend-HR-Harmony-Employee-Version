@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 
 const ManualAttendances = () => {
   const [isModalOpen, setModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('')
+  const [isModalEditOpen, setModalEditOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [hoveredEmployeeId, setHoveredEmployeeId] = useState(null);
+
 
   const openModal = () => {
     setModalOpen(true);
@@ -11,6 +14,26 @@ const ManualAttendances = () => {
   const closeModal = () => {
     setModalOpen(false);
   };
+
+  const closeEditModal = () => {
+    setModalEditOpen(false);
+  }
+
+  const handleMouseEnter = (employeeId) => {
+    setHoveredEmployeeId(employeeId);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredEmployeeId(null);
+  };
+
+  const handleDelete = (employeeId) => {
+  };
+
+  const handleEditClick = (employee) => {
+    setModalEditOpen(true);
+  };
+
 
   return (
     <div className="flex flex-col lg:flex-row justify-between items-start m-20">
@@ -34,7 +57,7 @@ const ManualAttendances = () => {
         </form>
       </div>
       <div className="lg:w-65 relative bg-white p-4 rounded shadow-md">
-        <div className="flex justify-between items-center mb-4 border-b-2 border-gray-300">
+        <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-indigo-700 pb-2">View Attendance</h2>
           <button className="bg-indigo-700 text-white p-2 rounded text-sm" onClick={openModal}>
             + Add New
@@ -56,33 +79,49 @@ const ManualAttendances = () => {
             />
           </div>
         </div>
-        <table className="w-full border-collapse">
-          <thead>
-            <tr>
-              <th className="text-left p-4 bg-gray-200">EMPLOYEE</th>
-              <th className="text-left p-4 bg-gray-200">DATE</th>
-              <th className="text-left p-4 bg-gray-200">IN TIME</th>
-              <th className="text-left p-4 bg-gray-200">OUT TIME</th>
-              <th className="text-left p-4 bg-gray-200">TOTAL WORK</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Fakhrity Hikmawan</td>
-              <td>2024-01-30</td>
-              <td>08:00</td>
-              <td>17:00</td>
-              <td>9h</td>
-            </tr>
-            <tr>
-              <td>Arfara Yema</td>
-              <td>2024-01-30</td>
-              <td>09:00</td>
-              <td>18:00</td>
-              <td>8h</td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">In Time</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Out Time</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Work</th>
+                  <th className="relative px-6 py-3">
+                    <span className="sr-only">Actions</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {[{ id: 1, name: 'Fakhrity', date: '10-02-2024', inTime: '07.30', outTime: '15.30', totalWork: '8 Hours' },
+                  { id: 1, name: 'Arfara', date: '10-02-2024', inTime: '07.30', outTime: '15.30', totalWork: '8 Hours' }].map((employee) => (
+                  <tr key={employee.id}
+                      onMouseEnter={() => handleMouseEnter(employee.id)}
+                      onMouseLeave={handleMouseLeave}
+                      className="hover:bg-gray-100">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex justify-between">
+                        <span className="text-sm font-medium text-gray-900">{employee.name}</span>
+                        {hoveredEmployeeId === employee.id && (
+                          <div className="flex-shrink-0">
+                            <button className="text-blue-600 hover:text-blue-900 focus:outline-none mr-2 ml-6" onClick={() => handleEditClick(employee)}>Edit</button>
+                            <button className="text-red-600 hover:text-red-900 focus:outline-none ml-2" onClick={() => handleDelete(employee.id)}>Delete</button>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">{employee.date}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{employee.inTime}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{employee.outTime}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{employee.totalWork}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         <div className="flex justify-between items-center text-sm text-gray-700 mt-4">
           <span>No records available</span>
           <div className="flex">
@@ -173,6 +212,55 @@ const ManualAttendances = () => {
           </div>
         </div>
       )}
+
+      {isModalEditOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+          <div className="bg-white p-8 rounded shadow-md w-96">
+            <h2 className="text-2xl font-bold text-indigo-700 mb-4">Edit Attendance Data</h2>
+            <form>
+              <label className="block mb-4 text-sm text-gray-700">
+                Attendances Date
+                <input
+                  className="w-full p-2 border border-gray-300 rounded"
+                  type="date"
+                  name="attendancesDate"
+                />
+              </label>
+              <label className="block mb-4 text-sm text-gray-700">
+                In Time
+                <input
+                  className="w-full p-2 border border-gray-300 rounded"
+                  type="time"
+                  name="inTime"
+                />
+              </label>
+              <label className="block mb-4 text-sm text-gray-700">
+                Out Time
+                <input
+                  className="w-full p-2 border border-gray-300 rounded"
+                  type="time"
+                  name="outTime"
+                />
+              </label>
+              <div className="flex justify-end">
+                <button
+                  onClick={closeEditModal}
+                  className="bg-gray-300 text-gray-700 p-2 rounded mr-2"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-indigo-700 text-white p-2 rounded"
+                >
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
