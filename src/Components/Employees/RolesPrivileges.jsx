@@ -45,7 +45,7 @@ const RolesPrivileges = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full px-4 py-2">
+    <div className="border border-gray-200 rounded overflow-hidden mx-5 my-5 max-w-5xl">
       {showAddRole && (
         <div className="bg-white shadow-md rounded-lg mb-4 w-full max-w-5xl">
           <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
@@ -219,76 +219,74 @@ const RolesPrivileges = () => {
           </div>
         </div>
       )}
-      <div className="bg-white shadow-md rounded-lg w-full max-w-5xl">
-        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
-          <h2 className="text-xl font-bold text-gray-700">List All Roles</h2>
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none" onClick={handleAddNewRoleClick}>Add New</button>
+      <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
+        <h2 className="text-lg font-semibold text-gray-700">List All Roles</h2>
+        <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700" onClick={handleAddNewRoleClick}>Add New</button>
+      </div>
+      <div className="px-6 py-4">
+        <div className="flex justify-between mb-4">
+          <div className="flex">
+            <label htmlFor="entries" className="mr-2 self-center">Show</label>
+            <select id="entries" className="rounded border-gray-300">
+              <option value="10">10</option>
+              <option value="20">20</option>
+            </select>
+            <span className="ml-2 self-center">entries</span>
+          </div>
+          <div>
+            <input type="search" placeholder="Search" className="rounded border border-gray-300 p-2" />
+          </div>
         </div>
-        <div className="px-6 py-4">
-          <div className="flex justify-between mb-4">
-            <div className="flex">
-              <label htmlFor="entries" className="mr-2 self-center">Show</label>
-              <select id="entries" className="rounded border-gray-300">
-                <option value="10">10</option>
-                <option value="20">20</option>
-              </select>
-              <span className="ml-2 self-center">entries</span>
-            </div>
-            <div>
-              <input type="search" placeholder="Search" className="rounded border border-gray-300 p-2" />
-            </div>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ROLE NAME</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">MENU PERMISSION</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ADDED DATE</th>
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ROLE NAME</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">MENU PERMISSION</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ADDED DATE</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {/* Dummy data for demonstration */}
+              {[{ id: 1, name: 'Admin & Log', access: 'All Menu Access', addedDate: '07-08-2023' },
+                { id: 2, name: 'Dummy Role', access: 'Custom Menu Access', addedDate: '08-08-2023' }].map((role) => (
+                <tr key={role.id}
+                    onMouseEnter={() => handleMouseEnter(role.id)}
+                    onMouseLeave={handleMouseLeave}
+                    className="hover:bg-gray-100">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex justify-between">
+                      <span className="text-sm font-medium text-gray-900">{role.name}</span>
+                      {hoveredRoleId === role.id && (
+                        <div className="flex-shrink-0">
+                          <button className="text-blue-600 hover:text-blue-900 focus:outline-none mr-3" onClick={() => handleEditClick(role)}>Edit</button>
+                          <button className="text-red-600 hover:text-red-900 focus:outline-none" onClick={() => handleDelete(role.id)}>Delete</button>
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">{role.access}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{role.addedDate}</td>
                 </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {/* Dummy data for demonstration */}
-                {[{ id: 1, name: 'Admin & Log', access: 'All Menu Access', addedDate: '07-08-2023' },
-                  { id: 2, name: 'Dummy Role', access: 'Custom Menu Access', addedDate: '08-08-2023' }].map((role) => (
-                  <tr key={role.id}
-                      onMouseEnter={() => handleMouseEnter(role.id)}
-                      onMouseLeave={handleMouseLeave}
-                      className="hover:bg-gray-100">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex justify-between">
-                        <span className="text-sm font-medium text-gray-900">{role.name}</span>
-                        {hoveredRoleId === role.id && (
-                          <div className="flex-shrink-0">
-                            <button className="text-blue-600 hover:text-blue-900 focus:outline-none mr-3" onClick={() => handleEditClick(role)}>Edit</button>
-                            <button className="text-red-600 hover:text-red-900 focus:outline-none" onClick={() => handleDelete(role.id)}>Delete</button>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">{role.access}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{role.addedDate}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
+          <div>
+            Showing 1 to 2 of 2 records
           </div>
-          <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
-            <div>
-              Showing 1 to 2 of 2 records
-            </div>
-            <div>
-              <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
-                Previous
-              </button>
-              <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
-                Next
-              </button>
-            </div>
+          <div>
+            <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
+              Previous
+            </button>
+            <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
+              Next
+            </button>
           </div>
         </div>
       </div>
-    </div>
+  </div>
   );
 };
 
