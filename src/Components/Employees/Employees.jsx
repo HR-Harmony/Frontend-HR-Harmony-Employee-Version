@@ -33,7 +33,7 @@ const Employees = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full">
+    <div className="border border-gray-200 rounded overflow-hidden mx-5 my-5 max-w-5xl">
       {showAddForm && (
         <div className="bg-white shadow-md rounded-lg mb-4 w-full max-w-5xl">
           <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
@@ -174,93 +174,88 @@ const Employees = () => {
               <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="profile_picture" type="file" />
             </div>
           </div>
-          <div className="flex justify-end bg-gray-200 px-4 py-3 rounded-b">
+          <div className="flex justify-end bg-gray-200 px-4 py-3">
             <button className="bg-gray-400 hover:bg-gray-500 text-black font-bold py-2 px-4 rounded mr-2 focus:outline-none" onClick={handleReset}>Reset</button>
             <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none">Save</button>
           </div>
         </div>
       )}
-      <div className="bg-white shadow-md rounded-lg w-full max-w-5xl"> {/* Sesuaikan ukuran card List All Employees */}
-        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200 font-bold">
-          <h2 className="text-xl font-bold text-gray-700">List All Employees</h2>
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none" onClick={handleAddNewClick}>Add New</button>
+      <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
+        <h2 className="text-lg font-semibold text-gray-700">List All Employees</h2>
+        <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700" onClick={handleAddNewClick}>Add New</button>
+      </div>
+      <div className="p-5">
+        <div className="flex justify-between mb-4">
+          <label className="flex items-center">
+            Show
+            <select className="mx-2 rounded border border-gray-300">
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+            </select>
+            entries
+          </label>
+          <input type="search" placeholder="Search" className="rounded border border-gray-300 p-2" />
         </div>
-        <div className="px-4 py-2">
-          <div className="flex justify-between mb-4">
-            <div className="flex">
-              <label htmlFor="entries" className="mr-2 self-center">Show</label>
-              <select id="entries" className="rounded border-gray-300">
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
-              </select>
-              <span className="ml-2 self-center">entries</span>
-            </div>
-            <div>
-              <input type="text" placeholder="Search" className="rounded border border-gray-300 p-2" />
-            </div>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Designation</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact Number</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gender</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Country</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="relative px-6 py-3">
+        <div className="overflow-x-auto mb-4">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Designation</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact Number</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gender</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Country</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="relative px-6 py-3">
+                  <span className="sr-only">Actions</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {[{ id: 1, name: 'Fakhrity', designation: 'Software Engineer', contactNumber: '123-456-7890', gender: 'Female', country: 'Indonesia', role: 'Engineering', status: 'Active' },
+                { id: 2, name: 'Random Name', designation: 'Product Manager', contactNumber: '987-654-3210', gender: 'Male', country: 'Indonesia', role: 'Management', status: 'Active' }].map((employee) => (
+                <tr key={employee.id}
+                    onMouseEnter={() => handleMouseEnter(employee.id)}
+                    onMouseLeave={handleMouseLeave}
+                    className="hover:bg-gray-100">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <div className="flex justify-between">
+                      <span style={{ paddingRight: '20px' }}>{employee.name}</span>
+                      {hoveredEmployeeId === employee.id && (
+                        <div className="flex-shrink-0">
+                          <button className="mr-2 text-blue-600 hover:text-blue-900 focus:outline-none" onClick={() => handleEditClick(employee)}>Edit</button>
+                          <button className="text-red-600 hover:text-red-900 focus:outline-none" onClick={() => handleDelete(employee.id)}>Delete</button>
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.designation}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.contactNumber}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.gender}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.country}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.role}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.status}</td>
+                  <td className="relative px-6 py-3">
                     <span className="sr-only">Actions</span>
-                  </th>
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {/* Dummy data for demonstration */}
-                {[{ id: 1, name: 'Fakhrity', designation: 'Software Engineer', contactNumber: '123-456-7890', gender: 'Female', country: 'Indonesia', role: 'Engineering', status: 'Active' },
-                  { id: 2, name: 'Random Name', designation: 'Product Manager', contactNumber: '987-654-3210', gender: 'Male', country: 'Indonesia', role: 'Management', status: 'Active' }].map((employee) => (
-                  <tr key={employee.id}
-                      onMouseEnter={() => handleMouseEnter(employee.id)}
-                      onMouseLeave={handleMouseLeave}
-                      className="hover:bg-gray-100">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex justify-between">
-                        <span className="text-sm font-medium text-gray-900">{employee.name}</span>
-                        {hoveredEmployeeId === employee.id && (
-                          <div className="flex-shrink-0">
-                            <button className="text-blue-600 hover:text-blue-900 focus:outline-none mr-2 ml-6" onClick={() => handleEditClick(employee)}>Edit</button>
-                            <button className="text-red-600 hover:text-red-900 focus:outline-none ml-2" onClick={() => handleDelete(employee.id)}>Delete</button>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">{employee.designation}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{employee.contactNumber}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{employee.gender}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{employee.country}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{employee.role}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{employee.status}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      {/* Actions like Edit and Delete buttons */}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
-              Showing 1 to 2 of 2 records
-              <div>
-                <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
-                  Previous
-                </button>
-                <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
-                  Next
-                </button>
-              </div>
-            </div>
+              ))}
+            </tbody>
+          </table>
         </div>
+        <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
+            Showing 1 to 2 of 2 records
+            <div>
+              <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
+                Previous
+              </button>
+              <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
+                Next
+              </button>
+            </div>
+          </div>
       </div>
     </div>
   );
