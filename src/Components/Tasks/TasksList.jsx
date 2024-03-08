@@ -4,7 +4,6 @@ import { GrView } from "react-icons/gr";
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 
-
 const TasksList = () => {
   const [progress, setProgress] = useState(0);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -49,23 +48,23 @@ const TasksList = () => {
   };
 
   return (
-    <div className="tasks-container">
-      <div className="tasks-overview-container">
-        <div className="tasks-overview-item" style={{ backgroundColor: '#8D8D8D', color: 'white' }}>
-          <h3>Tasks in Progress</h3>
+    <div className='tasks-container'>
+      <div className='tasks-overview-container'>
+        <div className='tasks-overview-item' style={{backgroundColor:'#8763E9', color:'white'}}>
+          <h3>Projects in Progress</h3>
           <p>4</p>
         </div>
-        <div className="tasks-overview-item" style={{ backgroundColor: '#3D66F0', color: 'white' }}>
-          <h3>Tasks Completed</h3>
-          <p>4</p>
-        </div>
-        <div className="tasks-overview-item" style={{ backgroundColor: '#5FB549', color: 'white' }}>
-          <h3>Tasks On Hold</h3>
-          <p>5</p>
-        </div>
-        <div className="tasks-overview-item" style={{ backgroundColor: '#E9615C', color: 'white' }}>
-          <h3>Tasks Not Started</h3>
+        <div className='tasks-overview-item' style={{backgroundColor:'#8763E9', color:'white'}}>
+          <h3>Projects Completed</h3>
           <p>2</p>
+        </div>
+        <div className='tasks-overview-item' style={{backgroundColor:'#8763E9', color:'white'}}>
+          <h3>Projects On Hold</h3>
+          <p>1</p>
+        </div>
+        <div className='tasks-overview-item' style={{backgroundColor:'#8763E9', color:'white'}}>
+          <h3>Projects Not Started</h3>
+          <p>3</p>
         </div>
       </div>
 
@@ -195,42 +194,47 @@ const TasksList = () => {
                   type="input"
                   name="tasksTitle"/>
               </label>
-              <label className="block mb-4 text-sm text-gray-700">
-                Start Date
-                <input
-                  className="w-full p-2 border border-gray-300 rounded"
-                  type="date"
-                  name="startDate"
-                />
-              </label>
-              <label className="block mb-4 text-sm text-gray-700">
-                End Date
-                <input
-                  className="w-full p-2 border border-gray-300 rounded"
-                  type="date"
-                  name="endDate"
-                />
-              </label>
-              <label className="block mb-4 text-sm text-gray-700">
-                Estimated Hours
-                <input
-                  className="w-full p-2 border border-gray-300 rounded"
-                  type="input"
-                  name="estimatedHour"/>
-              </label>
-              <label className='block mb-4 text-sm text-gray-700'>
-                Select Project
-                <select
-                  className='w-full p-2 border border-gray-300 rounded'
-                  id="project"
-                  value={selectedProject}
-                  onChange={(e) => setSelectedProject(e.target.value)}>
-                  <option value="" disabled>Select Project</option>
-                  <option value="HR Harmony">HR Harmony</option>
-                  <option value="Project 1">Project 1</option>
-                  <option value="Project 2">Project 2</option>
-                </select>
-              </label>
+
+              <div className="grid grid-cols-2 gap-2">
+                <label className="block mb-4 text-sm text-gray-700">
+                  Start Date
+                  <input
+                    className="w-full p-2 border border-gray-300 rounded"
+                    type="date"
+                    name="startDate"
+                  />
+                </label>
+                <label className="block mb-4 text-sm text-gray-700">
+                  End Date
+                  <input
+                    className="w-full p-2 border border-gray-300 rounded"
+                    type="date"
+                    name="endDate"
+                  />
+                </label>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <label className="block mb-4 text-sm text-gray-700">
+                    Estimated Hours
+                    <input
+                      className="w-full p-2 border border-gray-300 rounded"
+                      type="input"
+                      name="estimatedHour"/>
+                  </label>
+                <label className='block mb-4 text-sm text-gray-700'>
+                  Project
+                  <select
+                    className='w-full p-2 border border-gray-300 rounded'
+                    id="project"
+                    value={selectedProject}
+                    onChange={(e) => setSelectedProject(e.target.value)}>
+                    <option value="" disabled>Select Project</option>
+                    <option value="HR Harmony">HR Harmony</option>
+                    <option value="Project 1">Project 1</option>
+                    <option value="Project 2">Project 2</option>
+                  </select>
+                </label>
+              </div>
               <label className="block mb-4 text-sm text-gray-700">
                 Summary
                 <input
@@ -250,7 +254,7 @@ const TasksList = () => {
                 Progress
                 <div className="relative pt-1">
                   <div>
-                    <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-teal-600 bg-teal-200">
+                    <span className="text-xs font-semibold inline-block py-1 px-2 rounded text-teal-600 bg-teal-200">
                       {progress}% Complete
                     </span>
                   </div>
@@ -267,8 +271,6 @@ const TasksList = () => {
                   </div>
                 </div>
               </label>
-
-
               <div className="flex justify-end">
                 <button
                   onClick={closeModal}
