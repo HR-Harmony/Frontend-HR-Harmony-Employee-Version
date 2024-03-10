@@ -6,6 +6,7 @@ import Employees from './Employees';
 import EmployeesExit from './EmployeesExit';
 import RolesPrivileges from './RolesPrivileges';
 import ShiftScheduling from './ShiftScheduling';
+import ExitType from './ExitType';
 import Header from '../Header/Header';
 
 const EmployeesRouter = () => {
@@ -40,6 +41,7 @@ const EmployeesRouter = () => {
               <Route path="roles-privileges" element={< RolesPrivileges />} />
               <Route path="shift-scheduling" element={< ShiftScheduling />} />
               <Route path="employees-exit" element={< EmployeesExit />} />
+              <Route path="exit-type" element={< ExitType />} />
           </Routes>
 
         </div>

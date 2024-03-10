@@ -7,6 +7,7 @@ import Designation from './Designation';
 import Policies from './Policies';
 import News from './News';
 import Chart from './Chart';
+import NewsDetails from './NewsDetails';
 import Header from '../Header/Header';
 
 const CoreHRRouter = () => {
@@ -47,6 +48,7 @@ const CoreHRRouter = () => {
               <Route path="policies-list" element={< Policies />} />
               <Route path="news-list" element={< News />} />
               <Route path="chart" element={< Chart />} />
+              <Route path="announcement-view/:identifier" element={< NewsDetails />} />
           </Routes>
 
         </div>

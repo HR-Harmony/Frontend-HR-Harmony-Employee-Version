@@ -14,9 +14,14 @@ const LoginSignup = () => {
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
+    // Fungsi untuk menyimpan token autentikasi
+    // const setAuthToken = (token) => {
+    //   localStorage.setItem('authToken', token);
+    // }
+
     const handleLogin = async () => {
         // try {
-        //     const response = await axios.post('https://hr-harmony-412823.uc.r.appspot.com/admin/signin', {
+        //     const response = await axios.post('https://hr-harmony.seculab.space/admin/signin', {
         //         username: username,
         //         password: password
         //     });
