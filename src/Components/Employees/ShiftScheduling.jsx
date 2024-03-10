@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { PencilAltIcon, TrashIcon } from '@heroicons/react/solid';
 
 const ShiftScheduling = () => {
   const [showAddForm, setShowAddForm] = useState(false);
@@ -32,13 +33,17 @@ const ShiftScheduling = () => {
     setShowEditForm(true);
   };
 
+  const handleDeleteClick = (shiftId) => {
+    // Logika untuk menghapus shift
+  };
+
   return (
     <div className="border border-gray-200 rounded overflow-hidden mx-5 my-5 max-w-5xl">
       {showAddForm && (
         <div className="bg-white shadow-md rounded-lg mb-4 w-full max-w-5xl">
-          <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-bold text-gray-700">Add New Shift</h2>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none" onClick={handleHideClick}>Hide</button>
+          <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-700">Add New Shift</h2>
+            <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none" onClick={handleHideClick}>Hide</button>
           </div>
           <form className="p-6">
             <div className="mb-4">
@@ -116,14 +121,23 @@ const ShiftScheduling = () => {
                     className="hover:bg-gray-100">
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     <div className="flex justify-between">
-                      <span style={{ paddingRight: '20px' }}>{shift.name}</span>
-                      {hoveredShiftId === shift.id && (
-                        <div className="flex-shrink-0">
-                          <button className="mr-2 text-blue-600 hover:text-blue-900 focus:outline-none mr-2"
-                                  onClick={() => handleEditClick(shift)}>Edit</button>
-                          <button className="text-red-600 hover:text-red-900 focus:outline-none">Delete</button>
-                        </div>
-                      )}
+                      <span style={{ paddingRight: '0px' }}>{shift.name}</span>
+                      <div className="flex-shrink-0 flex items-center pl-10">
+                        <button
+                          className="p-1 text-blue-600 hover:text-blue-800 focus:outline-none"
+                          style={{ visibility: hoveredShiftId === shift.id ? 'visible' : 'hidden' }}
+                          onClick={() => handleEditClick(shift)}
+                        >
+                          <PencilAltIcon className="h-5 w-5" />
+                        </button>
+                        <button
+                          className="p-1 text-red-600 hover:text-red-900 focus:outline-none"
+                          style={{ visibility: hoveredShiftId === shift.id ? 'visible' : 'hidden' }}
+                          onClick={() => handleDeleteClick(shift.id)}
+                        >
+                          <TrashIcon className="h-5 w-5" />
+                        </button>
+                      </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{shift.times.monday}</td>
@@ -152,10 +166,6 @@ const ShiftScheduling = () => {
                 </button>
               </div>
         </div>
-        {/* <div className="py-3 flex justify-end items-center">
-          <button className="mr-2 px-4 py-2 rounded text-sm font-medium border border-gray-300 hover:bg-gray-50">Previous</button>
-          <button className="px-4 py-2 rounded text-sm font-medium border border-gray-300 hover:bg-gray-50">Next</button>
-        </div> */}
       </div>
       {showEditForm && editingShift && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-start">

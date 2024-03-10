@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { PencilAltIcon, TrashIcon, ArrowCircleRightIcon } from '@heroicons/react/solid';
+import { useNavigate } from 'react-router-dom';
 
 const Employees = () => {
+  const navigate = useNavigate();
   const [showAddForm, setShowAddForm] = useState(false);
-  const [hoveredEmployeeId, setHoveredEmployeeId] = useState(null);
 
   const handleAddNewClick = () => {
     setShowAddForm(true);
@@ -14,33 +16,25 @@ const Employees = () => {
 
   const handleReset = () => {
     setShowAddForm(false);
-  }; 
-
-  const handleMouseEnter = (employeeId) => {
-    setHoveredEmployeeId(employeeId);
-  };
-
-  const handleMouseLeave = () => {
-    setHoveredEmployeeId(null);
   };
 
   const handleDelete = (employeeId) => {
 
   };
 
-  const handleEditClick = (employee) => {
-
+  const handleViewDetails = (employee) => {
+    navigate(`/employees/employee-details/${employee.identifier}`);
   };
 
   return (
     <div className="border border-gray-200 rounded overflow-hidden mx-5 my-5 max-w-5xl">
       {showAddForm && (
         <div className="bg-white shadow-md rounded-lg mb-4 w-full max-w-5xl">
-          <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-bold text-gray-700">Add New Employee</h2>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none" onClick={handleHideClick}>Hide</button>
+          <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-700">Add New Employee</h2>
+            <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none" onClick={handleHideClick}>Hide</button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4 py-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 px-4 py-2">
             {/* Form fields */}
             <div className="mb-4 md:col-span-1 lg:col-span-1"> {/* First Name */}
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="first_name">
@@ -214,21 +208,21 @@ const Employees = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {[{ id: 1, name: 'Fakhrity', designation: 'Software Engineer', contactNumber: '123-456-7890', gender: 'Female', country: 'Indonesia', role: 'Engineering', status: 'Active' },
-                { id: 2, name: 'Random Name', designation: 'Product Manager', contactNumber: '987-654-3210', gender: 'Male', country: 'Indonesia', role: 'Management', status: 'Active' }].map((employee) => (
+              {[{ id: 1, name: 'Fakhrity Hikmawan', designation: 'Software Engineer', contactNumber: '123-456-7890', gender: 'Female', country: 'Indonesia', role: 'Engineering', status: 'Active', identifier: 'emp001' },
+                { id: 2, name: 'Arfara Yema Samgusdian', designation: 'Product Manager', contactNumber: '987-654-3210', gender: 'Male', country: 'Indonesia', role: 'Management', status: 'Active', identifier: 'emp002' }].map((employee) => (
                 <tr key={employee.id}
-                    onMouseEnter={() => handleMouseEnter(employee.id)}
-                    onMouseLeave={handleMouseLeave}
-                    className="hover:bg-gray-100">
+                    className="group hover:bg-gray-100">
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     <div className="flex justify-between">
-                      <span style={{ paddingRight: '20px' }}>{employee.name}</span>
-                      {hoveredEmployeeId === employee.id && (
-                        <div className="flex-shrink-0">
-                          <button className="mr-2 text-blue-600 hover:text-blue-900 focus:outline-none" onClick={() => handleEditClick(employee)}>Edit</button>
-                          <button className="text-red-600 hover:text-red-900 focus:outline-none" onClick={() => handleDelete(employee.id)}>Delete</button>
-                        </div>
-                      )}
+                      <span>{employee.name}</span>
+                      <div className="flex-shrink-0 flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <button className="p-1 ml-10 text-blue-600 hover:text-blue-800 focus:outline-none" onClick={() => handleViewDetails(employee)}>
+                          <ArrowCircleRightIcon className="h-5 w-5" />
+                        </button>
+                        <button className="p-1 text-red-600 hover:text-red-800 focus:outline-none" onClick={() => handleDelete(employee.id)}>
+                          <TrashIcon className="h-5 w-5" />
+                        </button>
+                      </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.designation}</td>

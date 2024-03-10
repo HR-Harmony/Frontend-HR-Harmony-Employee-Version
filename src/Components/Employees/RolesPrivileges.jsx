@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { PencilAltIcon, TrashIcon } from '@heroicons/react/solid';
 
 const RolesPrivileges = () => {
   const [showAddRole, setShowAddRole] = useState(false);
@@ -48,9 +49,9 @@ const RolesPrivileges = () => {
     <div className="border border-gray-200 rounded overflow-hidden mx-5 my-5 max-w-5xl">
       {showAddRole && (
         <div className="bg-white shadow-md rounded-lg mb-4 w-full max-w-5xl">
-          <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-bold text-gray-700">Add New Role</h2>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none" onClick={handleHideNewRoleCard}>Hide</button>
+          <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-700">Add New Role</h2>
+            <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none" onClick={handleHideNewRoleCard}>Hide</button>
           </div>
           <div className="px-6 py-4">
             <form>
@@ -224,19 +225,18 @@ const RolesPrivileges = () => {
         <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700" onClick={handleAddNewRoleClick}>Add New</button>
       </div>
       <div className="px-6 py-4">
-        <div className="flex justify-between mb-4">
-          <div className="flex">
-            <label htmlFor="entries" className="mr-2 self-center">Show</label>
-            <select id="entries" className="rounded border-gray-300">
-              <option value="10">10</option>
-              <option value="20">20</option>
-            </select>
-            <span className="ml-2 self-center">entries</span>
-          </div>
-          <div>
+          <div className="flex justify-between mb-4">
+            <label className="flex items-center">
+              Show
+              <select className="mx-2 rounded border border-gray-300">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select>
+              entries
+            </label>
             <input type="search" placeholder="Search" className="rounded border border-gray-300 p-2" />
           </div>
-        </div>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -256,13 +256,15 @@ const RolesPrivileges = () => {
                     className="hover:bg-gray-100">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex justify-between">
-                      <span className="text-sm font-medium text-gray-900">{role.name}</span>
-                      {hoveredRoleId === role.id && (
-                        <div className="flex-shrink-0">
-                          <button className="text-blue-600 hover:text-blue-900 focus:outline-none mr-3" onClick={() => handleEditClick(role)}>Edit</button>
-                          <button className="text-red-600 hover:text-red-900 focus:outline-none" onClick={() => handleDelete(role.id)}>Delete</button>
-                        </div>
-                      )}
+                      <span className="text-sm text-gray-900">{role.name}</span>
+                      <div className="flex-shrink-0 flex items-center">
+                        <button className="p-1 text-blue-600 hover:text-blue-800 focus:outline-none mr-3" style={{ visibility: hoveredRoleId === role.id ? 'visible' : 'hidden' }} onClick={() => handleEditClick(role)}>
+                          <PencilAltIcon className="h-5 w-5" />
+                        </button>
+                        <button className="p-1 text-red-600 hover:text-red-800 focus:outline-none" style={{ visibility: hoveredRoleId === role.id ? 'visible' : 'hidden' }} onClick={() => handleDelete(role.id)}>
+                          <TrashIcon className="h-5 w-5" />
+                        </button>
+                      </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">{role.access}</td>
