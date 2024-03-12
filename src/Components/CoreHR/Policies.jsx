@@ -24,11 +24,13 @@ const Policies = () => {
 
   return (
     <div className="container mx-auto">
-      <div className="flex flex-wrap -mx-2">
-        <div className="w-full lg:w-1/3 px-2 mb-4 lg:mb-0">
-          <div className="bg-white shadow-md rounded-lg p-4">
-            <h5 className="text-lg font-semibold mb-4">Add New Policy</h5>
-            <form>
+      <div className="flex flex-wrap -mx-3">
+        <div className="w-full lg:w-1/4 px-3 lg:mb-0">
+          <div className="bg-white rounded-lg shadow-md">
+            <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
+              <h5 className="text-lg font-semibold text-gray-700">Add New Policy</h5>
+            </div>
+            <form className="p-4">
               <div className="mb-3">
                 <label htmlFor="designationDepartment" className="block text-sm font-medium text-gray-700">Department *</label>
                 <select id="designationDepartment" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
@@ -48,45 +50,44 @@ const Policies = () => {
                 <input type="file" id="policyAttachment" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
                 <p className="text-xs text-gray-500 mt-1">Upload files only: gif, png, jpg, jpeg</p>
               </div>
-              <button type="submit" className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Save</button>
+              <button type="submit" className="bg-indigo-600 text-white mb-4 px-4 py-2 rounded-md hover:bg-indigo-700">Save</button>
             </form>
           </div>
         </div>
 
-        <div className="w-full lg:w-2/3 px-2">
-          <div className="bg-white shadow-md rounded-lg p-4">
-            <div className="flex justify-between items-center mb-4">
-              <h5 className="text-lg font-semibold">List All Policies</h5>
-              <button className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">View Policies</button>
+        <div className="w-full lg:w-2/3 px-3 lg:mb-0">
+          <div className="bg-white rounded-lg shadow-md">
+            <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
+              <h5 className="text-lg font-semibold text-gray-700">List All Policies</h5>
             </div>
-            <div className="flex justify-between mb-2">
-              <div className="flex items-center">
-                <span>Show</span>
-                <select className="ml-1 px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                  <option>10</option>
+            <div className="flex justify-between px-3 mt-3">
+              <label className="flex items-center">
+                Show
+                <select className="mx-2 rounded border border-gray-300">
+                  <option value="10">10</option>
                 </select>
-                <span>entries</span>
-              </div>
-              <div>
+                entries
+              </label>
+              <div className="flex justify-end">
                 <input 
-                  type="text" 
-                  className="px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" 
+                  type="search" 
                   placeholder="Search" 
+                  className="rounded border border-gray-300 p-2" 
                   value={searchQuery} 
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
             </div>
-            <div className="flex flex-col">
-              <table className="table-auto w-full mb-2">
-                <thead>
+            <div className="overflow-x-auto mb-4 px-3">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-4 py-2 text-left">TITLE</th>
-                    <th className="px-4 py-2 text-left">CREATED AT</th>
-                    <th className="px-4 py-2 text-left">ADDED BY</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TITLE</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CREATED AT</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ADDED BY</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="bg-white divide-y divide-gray-200">
                   {designations.map((designation, index) => (
                     <tr 
                       key={index} 
@@ -111,12 +112,16 @@ const Policies = () => {
                   ))}
                 </tbody>
               </table>
-              <div className="flex justify-between items-center">
-                <span>Showing 1 to {designations.length} of {designations.length} records</span>
-                <div className="flex">
-                  <a className="text-indigo-600 hover:text-indigo-800 mr-2 cursor-pointer">Previous</a>
-                  <a className="text-indigo-600 hover:text-indigo-800 ml-2 cursor-pointer">Next</a>
-                </div>
+            </div>
+            <div className="text-gray-500 text-sm p-3 flex justify-between items-center">
+              Showing 1 to 2 of 2 records
+              <div>
+                <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
+                  Previous
+                </button>
+                <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
+                  Next
+                </button>
               </div>
             </div>
           </div>
