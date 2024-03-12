@@ -30,60 +30,60 @@ const Department = () => {
 
   return (
     <div className="container mx-auto">
-      <div className="flex flex-wrap -mx-2">
+      <div className="flex flex-wrap -mx-3">
         {/* Card untuk menambahkan department baru */}
-        <div className="w-full lg:w-1/3 px-2 mb-4 lg:mb-0">
-          <div className="bg-white shadow-md rounded-lg p-4">
-            <h5 className="text-lg font-semibold mb-4">Add New Department</h5>
-            <form>
-              <div className="mb-3">
+        <div className="w-full lg:w-1/3 px-3 lg:mb-0">
+          <div className="bg-white rounded-lg shadow-md">
+            <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
+              <h5 className="text-lg font-semibold text-gray-700">Add New Department</h5>
+            </div>
+            <form className="p-4">
+              <div>
                 <label htmlFor="departmentName" className="block text-sm font-medium text-gray-700">Name *</label>
                 <input type="text" id="departmentName" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Name" required />
               </div>
-              <div className="mb-3">
+              <div className="mt-3 mb-3">
                 <label htmlFor="departmentHead" className="block text-sm font-medium text-gray-700">Department Head</label>
                 <select id="departmentHead" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                   <option>Select head</option>
                   {/* Options should be populated here */}
                 </select>
               </div>
-              <button type="submit" className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Save</button>
+              <button type="submit" className="bg-indigo-600 text-white mb-4 px-4 py-2 rounded-md hover:bg-indigo-700">Save</button>
             </form>
           </div>
         </div>
 
         {/* Card untuk menampilkan semua departments */}
-        <div className="w-full lg:w-2/3 px-2">
-          <div className="bg-white shadow-md rounded-lg p-4">
-            <h5 className="text-lg font-semibold mb-4">List All Departments</h5>
-            <div className="flex justify-between mb-2">
-              <div className="flex items-center">
-                <span>Show</span>
-                <select className="ml-1 px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                  <option>10</option>
+        <div className="w-full lg:w-2/3 lg:mb-0">
+          <div className="bg-white rounded-lg shadow-md">
+            <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
+              <h5 className="text-lg font-semibold text-gray-700">List All Departments</h5>
+            </div>
+            <div className="flex justify-between px-3 mt-3">
+              <label className="flex items-center">
+                Show
+                <select className="mx-2 rounded border border-gray-300">
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="50">50</option>
                 </select>
-                <span>entries</span>
-              </div>
-              <div>
-                <input 
-                  type="text" 
-                  className="px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" 
-                  placeholder="Search" 
-                  value={searchQuery} 
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
+                entries
+              </label>
+              <div className="flex justify-end">
+               <input type="search" placeholder="Search" className="rounded border border-gray-300 p-2" />
               </div>
             </div>
-            <div className="flex flex-col">
-              <table className="table-auto w-full mb-2">
-                <thead>
+            <div className="overflow-x-auto mb-4 px-3">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-4 py-2 text-left">DEPARTMENT NAME</th>
-                    <th className="px-4 py-2 text-left">DEPARTMENT HEAD</th>
-                    <th className="px-4 py-2 text-left">CREATED AT</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DEPARTMENT NAME</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DEPARTMENT HEAD</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CREATED AT</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="bg-white divide-y divide-gray-200">
                   {departments.map((department, index) => (
                     <tr 
                       key={index} 
@@ -91,10 +91,10 @@ const Department = () => {
                       onMouseLeave={() => setHoveredRow(null)}
                       className={`relative ${hoveredRow === index ? 'bg-gray-100' : 'bg-white'}`}
                     >
-                      <td className="border px-4 py-2 flex justify-between items-center">
+                      <td className="border px-4 py-2 relative text-sm text-gray-900">
                         {department.name}
                         {hoveredRow === index && (
-                          <div className="flex items-center">
+                          <div className="absolute right-0 top-0 mr-3 mt-1 flex items-center">
                             <button className="p-1 mr-2 text-blue-600 hover:text-blue-800" onClick={() => handleEditClick(department)}>
                               <PencilAltIcon className="h-5 w-5" />
                             </button>
@@ -104,18 +104,21 @@ const Department = () => {
                           </div>
                         )}
                       </td>
-                      <td className="border px-4 py-2">{department.head}</td>
-                      <td className="border px-4 py-2">{department.createdAt}</td>
+                      <td className="border px-4 py-2 text-sm text-gray-900">{department.head}</td>
+                      <td className="border px-4 py-2 text-sm text-gray-900">{department.createdAt}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-              <div className="flex justify-between items-center">
+              <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
                 <span>Showing 1 to {departments.length} of {departments.length} records</span>
-                <div className="flex">
-                  <a className="text-indigo-600 hover:text-indigo-800 mr-2 cursor-pointer">Previous</a>
-                  {/* Pagination links should be dynamically generated based on data */}
-                  <a className="text-indigo-600 hover:text-indigo-800 ml-2 cursor-pointer">Next</a>
+                <div>
+                  <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
+                    Previous
+                  </button>
+                  <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
+                    Next
+                  </button>
                 </div>
               </div>
             </div>
