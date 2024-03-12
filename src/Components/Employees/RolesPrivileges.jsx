@@ -224,7 +224,7 @@ const RolesPrivileges = () => {
         <h2 className="text-lg font-semibold text-gray-700">List All Roles</h2>
         <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700" onClick={handleAddNewRoleClick}>Add New</button>
       </div>
-      <div className="px-6 py-4">
+      <div className="p-5">
           <div className="flex justify-between mb-4">
             <label className="flex items-center">
               Show
@@ -235,7 +235,9 @@ const RolesPrivileges = () => {
               </select>
               entries
             </label>
-            <input type="search" placeholder="Search" className="rounded border border-gray-300 p-2" />
+            <div className="flex justify-end">
+              <input type="search" placeholder="Search" className="rounded border border-gray-300 p-2" />
+            </div>
           </div>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
