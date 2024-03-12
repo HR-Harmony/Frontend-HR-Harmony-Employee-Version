@@ -92,7 +92,9 @@ const ShiftScheduling = () => {
             </select>
             entries
           </label>
-          <input type="search" placeholder="Search" className="rounded border border-gray-300 p-2" />
+          <div className="flex justify-end">
+              <input type="search" placeholder="Search" className="rounded border border-gray-300 p-2" />
+          </div>
         </div>
         <div className="overflow-x-auto mb-4">
           <table className="min-w-full divide-y divide-gray-200">
