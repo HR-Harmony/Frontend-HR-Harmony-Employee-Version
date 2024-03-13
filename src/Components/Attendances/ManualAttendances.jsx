@@ -1,270 +1,248 @@
 import React, { useState } from 'react';
+import 'tailwindcss/tailwind.css';
+import { PencilAltIcon, TrashIcon } from '@heroicons/react/solid';
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment } from 'react';
 
 const ManualAttendances = () => {
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [isModalEditOpen, setModalEditOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [hoveredEmployeeId, setHoveredEmployeeId] = useState(null);
+  const [hoveredRow, setHoveredRow] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [currentEdit, setCurrentEdit] = useState(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [visibleDelete, setVisibleDelete] = useState(null);
 
-
-  const openModal = () => {
-    setModalOpen(true);
+  const handleEditClick = (attendance) => {
+    setCurrentEdit(attendance);
+    setIsEditModalOpen(true);
   };
 
-  const closeModal = () => {
-    setModalOpen(false);
+  const handleAddNewClick = () => {
+    setIsAddModalOpen(true);
   };
 
-  const closeEditModal = () => {
-    setModalEditOpen(false);
-  }
-
-  const handleMouseEnter = (employeeId) => {
-    setHoveredEmployeeId(employeeId);
-  };
-
-  const handleMouseLeave = () => {
-    setHoveredEmployeeId(null);
-  };
-
-  const handleDelete = (employeeId) => {
-  };
-
-  const handleEditClick = (employee) => {
-    setModalEditOpen(true);
-  };
-
+  const attendances = [
+    { employee: 'Fakhrity Hikmawan', email: 'fakhrityhikmawan@gmail.com', date: '05-03-2024', inTime: '04:32 pm', outTime: '04:32 pm', duration: '0:0' },
+    { employee: 'Arfara Yema Samgusdian', email: 'arfarayemas@gmail.com', date: '06-03-2024', inTime: '09:15 am', outTime: '07:00 am', duration: '00:00' },
+  ];
 
   return (
-    <div className="flex flex-col lg:flex-row justify-between items-start m-20">
-      <div className="lg:w-30 lg:mr-5 bg-white p-4 rounded shadow-md">
-        <h2 className="text-2xl font-bold text-indigo-700 mb-4">Filter Attendance</h2>
-        <form>
-          <label className="block mb-4 text-sm text-gray-700">
-            Date
-            <input className="w-full p-2 border border-gray-300 rounded" type="date" name="date" />
-          </label>
-          <label className="block mb-4 text-sm text-gray-700">
-            Employee
-            <select className="w-full p-2 border border-gray-300 rounded" name="employee"></select>
-          </label>
-          <button
-            className="bg-indigo-700 text-white p-4 border-none rounded cursor-pointer w-full"
-            type="submit"
-          >
-            Filter
-          </button>
-        </form>
-      </div>
-      <div className="lg:w-65 relative bg-white p-4 rounded shadow-md">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold text-indigo-700 pb-2">View Attendance</h2>
-          <button className="bg-indigo-700 text-white p-2 rounded text-sm" onClick={openModal}>
-            + Add New
-          </button>
-        </div>
-        <div className="flex justify-between mb-4">
-          <div className="text-sm text-gray-700">
-            Show
-            <select className="h-8 ml-2 border border-gray-300 rounded">
-              <option value="10">10</option>
-            </select>
-            entries
-          </div>
-          <div className="search-box">
-            <input
-              className="p-2 border border-gray-300 rounded"
-              type="text"
-              placeholder="Search"
-            />
+    <div className="container mx-auto px-4">
+      <div className="flex flex-wrap -mx-3">
+        <div className="w-full lg:w-1/3 px-3 lg:mb-0">
+          <div className="bg-white rounded-lg shadow-md">
+            <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
+              <h5 className="text-lg font-semibold text-gray-700">Filter Attendance</h5>
+            </div>
+            <form className="p-4">
+              <div>
+                <label htmlFor="date" className="block text-sm font-medium text-gray-700">Date</label>
+                <input type="date" className="mt-2 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" id="date" />
+              </div>
+              <div className="mt-3">
+                <label htmlFor="employee" className="block text-sm font-medium text-gray-700">Employee</label>
+                <select id="employee" className="mt-2 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                  <option>coba saja</option>
+                  {/* Tambahkan opsi karyawan lainnya di sini */}
+                </select>
+              </div>
+              <button type="submit" className="bg-indigo-600 text-white px-4 py-2 mt-3 mb-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Filter</button>
+            </form>
           </div>
         </div>
-        <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">In Time</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Out Time</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Work</th>
-                  <th className="relative px-6 py-3">
-                    <span className="sr-only">Actions</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {[{ id: 1, name: 'Fakhrity', date: '10-02-2024', inTime: '07.30', outTime: '15.30', totalWork: '8 Hours' },
-                  { id: 1, name: 'Arfara', date: '10-02-2024', inTime: '07.30', outTime: '15.30', totalWork: '8 Hours' }].map((employee) => (
-                  <tr key={employee.id}
-                      onMouseEnter={() => handleMouseEnter(employee.id)}
-                      onMouseLeave={handleMouseLeave}
-                      className="hover:bg-gray-100">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex justify-between">
-                        <span className="text-sm font-medium text-gray-900">{employee.name}</span>
-                        {hoveredEmployeeId === employee.id && (
-                          <div className="flex-shrink-0">
-                            <button className="text-blue-600 hover:text-blue-900 focus:outline-none mr-2 ml-6" onClick={() => handleEditClick(employee)}>Edit</button>
-                            <button className="text-red-600 hover:text-red-900 focus:outline-none ml-2" onClick={() => handleDelete(employee.id)}>Delete</button>
+
+        <div className="w-full lg:w-2/3 lg:mb-0">
+          <div className="bg-white rounded-lg shadow-md">
+            <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
+              <h5 className="text-lg font-semibold text-gray-700">View Attendance</h5>
+              <button
+                onClick={handleAddNewClick}
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+              >
+                Add New
+              </button>
+            </div>
+            <div className="flex justify-between px-3 mt-3">
+              <label className="flex items-center">
+                Show
+                <select className="mx-2 rounded border border-gray-300">
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="50">50</option>
+                </select>
+                entries
+              </label>
+              <div className="flex justify-end">
+               <input type="search" placeholder="Search" className="rounded border border-gray-300 p-2" />
+              </div>
+            </div>
+            <div className="overflow-x-auto mb-4 px-3">
+              <table className="min-w-screen divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Employee</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Date</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">In Time</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Out Time</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Total Hours</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {attendances.map((attendance, index) => (
+                    <tr key={index}
+                        onMouseEnter={() => setVisibleDelete(attendance.employee)}
+                        onMouseLeave={() => setVisibleDelete(null)}
+                        className="group hover:bg-gray-100">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 relative flex justify-between">
+                        <span>{attendance.employee}</span>
+                        {visibleDelete === attendance.employee && (
+                          <div className="flex items-center">
+                            <button onClick={() => handleEditClick(attendance)} className="text-indigo-600 hover:text-indigo-900 ml-5 mr-2">
+                              <PencilAltIcon className="h-5 w-5" />
+                            </button>
+                            <button className="text-red-600 hover:text-red-800">
+                              <TrashIcon className="h-5 w-5" />
+                            </button>
                           </div>
                         )}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">{employee.date}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{employee.inTime}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{employee.outTime}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{employee.totalWork}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        <div className="flex justify-between items-center text-sm text-gray-700 mt-4">
-          <span>No records available</span>
-          <div className="flex">
-            <button className="bg-indigo-700 text-white p-2 rounded mr-2">Previous</button>
-            <button className="bg-indigo-700 text-white p-2 rounded">Next</button>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.date}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.inTime}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.outTime}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.duration}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
+                Showing 1 to 2 of 2 records
+                <div>
+                  <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 mb-4 ml-3 rounded focus:outline-none">
+                    Previous
+                  </button>
+                  <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
+                    Next
+                  </button>
+                </div>
+            </div>
           </div>
         </div>
       </div>
-
-      {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-          <div className="bg-white p-8 rounded shadow-md w-96">
-            <h2 className="text-2xl font-bold text-indigo-700 mb-4">Add New Attendance</h2>
+      {isEditModalOpen && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center" id="edit-modal">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <div className="flex justify-between items-center mb-5">
+              <h4 className="text-lg font-semibold">Edit Attendance Information</h4>
+              <button onClick={() => setIsEditModalOpen(false)} className="text-black">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
             <form>
-            <label className="block mb-4 text-sm text-gray-700">
-                Employee Name
-                <div className="relative">
-                  <input
-                    className="w-full p-2 border border-gray-300 rounded"
-                    type="text"
-                    placeholder="Search Employee"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                    <svg
-                      className="h-5 w-5 text-gray-500"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M21 21l-4.35-4.35"
-                      ></path>
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M15 11a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"
-                      ></path>
-                    </svg>
-                  </div>
+              <div className="mb-4">
+                <label htmlFor="editEmployee" className="block text-sm font-medium text-gray-700">Employee *</label>
+                <select id="editEmployee" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                  <option>{currentEdit.employee}</option>
+                  {/* Add more employee options here */}
+                </select>
+              </div>
+              <div className="mb-4">
+                <label htmlFor="editDate" className="block text-sm font-medium text-gray-700">Attendance Date *</label>
+                <input type="date" id="editDate" value={currentEdit.date} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
+              </div>
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label htmlFor="editInTime" className="block text-sm font-medium text-gray-700">In Time *</label>
+                  <input type="time" id="editInTime" value={currentEdit.inTime} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
                 </div>
-              </label>
-              <label className="block mb-4 text-sm text-gray-700">
-                Attendances Date
-                <input
-                  className="w-full p-2 border border-gray-300 rounded"
-                  type="date"
-                  name="attendancesDate"
-                />
-              </label>
-              <label className="block mb-4 text-sm text-gray-700">
-                In Time
-                <input
-                  className="w-full p-2 border border-gray-300 rounded"
-                  type="time"
-                  name="inTime"
-                />
-              </label>
-              <label className="block mb-4 text-sm text-gray-700">
-                Out Time
-                <input
-                  className="w-full p-2 border border-gray-300 rounded"
-                  type="time"
-                  name="outTime"
-                />
-              </label>
-              <div className="flex justify-end">
-                <button
-                  onClick={closeModal}
-                  className="bg-gray-300 text-gray-700 p-2 rounded mr-2"
-                >
-                  Cancel
+                <div>
+                  <label htmlFor="editOutTime" className="block text-sm font-medium text-gray-700">Out Time *</label>
+                  <input type="time" id="editOutTime" value={currentEdit.outTime} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
+                </div>
+              </div>
+              <div className="flex items-center justify-end space-x-3 mt-4">
+                <button type="button" onClick={() => setIsEditModalOpen(false)} className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                  Close
                 </button>
-                <button
-                  type="submit"
-                  className="bg-indigo-700 text-white p-2 rounded"
-                >
-                  Save
+                <button type="submit" className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  Update
                 </button>
               </div>
             </form>
           </div>
         </div>
       )}
+      <Transition appear show={isAddModalOpen} as={Fragment}>
+        <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto" onClose={() => setIsAddModalOpen(false)}>
+          <div className="min-h-screen px-4 text-center">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+            </Transition.Child>
 
-      {isModalEditOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-          <div className="bg-white p-8 rounded shadow-md w-96">
-            <h2 className="text-2xl font-bold text-indigo-700 mb-4">Edit Attendance Data</h2>
-            <form>
-              <label className="block mb-4 text-sm text-gray-700">
-                Attendances Date
-                <input
-                  className="w-full p-2 border border-gray-300 rounded"
-                  type="date"
-                  name="attendancesDate"
-                />
-              </label>
-              <label className="block mb-4 text-sm text-gray-700">
-                In Time
-                <input
-                  className="w-full p-2 border border-gray-300 rounded"
-                  type="time"
-                  name="inTime"
-                />
-              </label>
-              <label className="block mb-4 text-sm text-gray-700">
-                Out Time
-                <input
-                  className="w-full p-2 border border-gray-300 rounded"
-                  type="time"
-                  name="outTime"
-                />
-              </label>
-              <div className="flex justify-end">
-                <button
-                  onClick={closeEditModal}
-                  className="bg-gray-300 text-gray-700 p-2 rounded mr-2"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-indigo-700 text-white p-2 rounded"
-                >
-                  Save
-                </button>
+            <span className="inline-block h-screen align-middle" aria-hidden="true">&#8203;</span>
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                <div className="flex justify-between items-center mb-5">
+                  <h4 className="text-lg font-semibold">Add Attendance Information</h4>
+                  <button onClick={() => setIsAddModalOpen(false)} className="text-black">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <p className="mb-5">We need below required information to add this record.</p>
+                <form>
+                  <div className="mb-4">
+                    <label htmlFor="attendanceEmployee" className="block text-sm font-medium text-gray-700">Employee</label>
+                    <select id="attendanceEmployee" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                      <option>Select an employee</option>
+                      {/* Add employee options here */}
+                    </select>
+                  </div>
+                  <div className="mb-4">
+                    <label htmlFor="attendanceDate" className="block text-sm font-medium text-gray-700">Attendance Date</label>
+                    <input type="date" id="attendanceDate" placeholder="dd/mm/yyyy" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <label htmlFor="inTime" className="block text-sm font-medium text-gray-700">In Time *</label>
+                      <input type="time" id="inTime" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
+                    </div>
+                    <div>
+                      <label htmlFor="outTime" className="block text-sm font-medium text-gray-700">Out Time *</label>
+                      <input type="time" id="outTime" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-end space-x-3 ">
+                    <button type="button" onClick={() => setIsAddModalOpen(false)} className="bg-gray-500 text-white px-4 py-2 mt-1 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                      Close
+                    </button>
+                    <button type="submit" className="bg-indigo-600 text-white px-4 py-2 mt-1 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                      Save
+                    </button>
+                  </div>
+                </form>
               </div>
-            </form>
+            </Transition.Child>
           </div>
-        </div>
-      )}
-
+        </Dialog>
+      </Transition>
     </div>
   );
 };
 
 export default ManualAttendances;
-
-
