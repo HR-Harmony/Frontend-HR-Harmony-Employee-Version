@@ -27,11 +27,13 @@ const Designation = () => {
 
   return (
     <div className="container mx-auto">
-      <div className="flex flex-wrap -mx-2">
-        <div className="w-full lg:w-1/3 px-2 mb-4 lg:mb-0">
-          <div className="bg-white shadow-md rounded-lg p-4">
-            <h5 className="text-lg font-semibold mb-4">Add New Designation</h5>
-            <form>
+      <div className="flex flex-wrap -mx-3">
+        <div className="w-full lg:w-1/3 px-3 lg:mb-0">
+          <div className="bg-white rounded-lg shadow-md">
+            <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
+              <h5 className="text-lg font-semibold text-gray-700">Add New Designation</h5>
+            </div>            
+            <form className="p-4">
               <div className="mb-3">
                 <label htmlFor="designationDepartment" className="block text-sm font-medium text-gray-700">Department *</label>
                 <select id="designationDepartment" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
@@ -51,36 +53,34 @@ const Designation = () => {
           </div>
         </div>
 
-        <div className="w-full lg:w-2/3 px-2">
-          <div className="bg-white shadow-md rounded-lg p-4">
-            <h5 className="text-lg font-semibold mb-4">List All Designations</h5>
-            <div className="flex justify-between mb-2">
-              <div className="flex items-center">
-                <span>Show</span>
-                <select className="ml-1 px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                  <option>10</option>
-                </select>
-                <span>entries</span>
-              </div>
-              <div>
-                <input 
-                  type="text" 
-                  className="px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" 
-                  placeholder="Search" 
-                  value={searchQuery} 
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
+        <div className="w-full lg:w-2/3 lg:mb-0">
+          <div className="bg-white rounded-lg shadow-md">
+            <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
+              <h5 className="text-lg font-semibold text-gray-700">List All Departments</h5>
             </div>
-            <div className="flex flex-col">
-              <table className="table-auto w-full mb-2">
-                <thead>
+            <div className="flex justify-between px-3 mt-3">
+              <label className="flex items-center">
+                Show
+                <select className="mx-2 rounded border border-gray-300">
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="50">50</option>
+                </select>
+                entries
+              </label>
+              <div className="flex justify-end">
+               <input type="search" placeholder="Search" className="rounded border border-gray-300 p-2" />
+              </div>
+            </div>            
+            <div className="overflow-x-auto mb-4 px-3">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-4 py-2 text-left">DESIGNATION</th>
-                    <th className="px-4 py-2 text-left">DEPARTMENT</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DESIGNATION</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DEPARTMENT</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="bg-white divide-y divide-gray-200">
                   {designations.map((designation, index) => (
                     <tr 
                       key={index} 
@@ -88,28 +88,34 @@ const Designation = () => {
                       onMouseLeave={() => setHoveredRow(null)}
                       className={`relative ${hoveredRow === index ? 'bg-gray-100' : 'bg-white'}`}
                     >
-                      <td className="border px-4 py-2 flex justify-between items-center">
+                      <td className="border px-4 py-2 relative text-sm text-gray-900">
                         {designation.designation}
-                        <div className={`flex items-center transition-opacity duration-300 ${hoveredRow === index ? 'opacity-100' : 'opacity-0'}`}>
-                          <button className="p-1 mr-2 text-blue-600 hover:text-blue-800" onClick={() => handleEditClick(designation)}>
-                            <PencilAltIcon className="h-5 w-5" />
-                          </button>
-                          <button className="p-1 text-red-600 hover:text-red-800" onClick={() => handleDeleteClick(designation)}>
-                            <TrashIcon className="h-5 w-5" />
-                          </button>
-                        </div>
+                        {hoveredRow === index && (
+                          <div className="absolute right-0 top-0 mr-3 mt-1 flex items-center">
+                            <button className="p-1 mr-2 text-blue-600 hover:text-blue-800" onClick={() => handleEditClick(designation)}>
+                              <PencilAltIcon className="h-5 w-5" />
+                            </button>
+                            <button className="p-1 text-red-600 hover:text-red-800" onClick={() => handleDeleteClick(designation)}>
+                              <TrashIcon className="h-5 w-5" />
+                            </button>
+                          </div>
+                        )}
                       </td>
-                      <td className="border px-4 py-2">{designation.department}</td>
+                      <td className="border px-4 py-2 text-sm text-gray-900">{designation.department}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-              <div className="flex justify-between items-center">
-                <span>Showing 1 to {designations.length} of {designations.length} records</span>
-                <div className="flex">
-                  <a className="text-indigo-600 hover:text-indigo-800 mr-2 cursor-pointer">Previous</a>
-                  <a className="text-indigo-600 hover:text-indigo-800 ml-2 cursor-pointer">Next</a>
-                </div>
+            </div>
+            <div className="text-gray-500 text-sm p-3 flex justify-between items-center">
+              <span>Showing 1 to {designations.length} of {designations.length} records</span>
+              <div>
+                <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
+                  Previous
+                </button>
+                <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
+                  Next
+                </button>
               </div>
             </div>
           </div>
