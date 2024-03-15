@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/plugin-transform-private-methods": "^7.23.3",
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^1.0.6",
     "@testing-library/jest-dom": "^5.17.0",
