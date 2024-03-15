@@ -160,6 +160,9 @@ const RequestLoan = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{record.emi}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{record.createdAt}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{record.status}</td>
+                  <th className="relative px-6 py-3">
+                    <span className="sr-only">Delete</span>
+                  </th>
                 </tr>
               ))}
             </tbody>
