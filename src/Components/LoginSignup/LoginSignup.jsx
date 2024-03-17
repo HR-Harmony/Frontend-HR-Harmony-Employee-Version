@@ -1,104 +1,101 @@
 import React, { useState } from "react";
-import './LoginSignup.css';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useContext } from "react";
-
-import user_profile from '../Assets/user_profile.png';
-import lock_column from '../Assets/lock_column.png';
-import login_ilus from '../Assets/Computerlogin-amico.png';
+import { LockClosedIcon } from '@heroicons/react/solid';
+import loginIlus from '../Assets/comp_logo.png';
+import centerImage from '../Assets/Computerlogin-amico.png';
 
 const LoginSignup = () => {
-    const navigate = useNavigate();
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-    // Fungsi untuk menyimpan token autentikasi
-    // const setAuthToken = (token) => {
-    //   localStorage.setItem('authToken', token);
-    // }
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-    const handleLogin = async () => {
-        // try {
-        //     const response = await axios.post('https://hr-harmony.seculab.space/admin/signin', {
-        //         username: username,
-        //         password: password
-        //     });
+    navigate('/dashboard');
+  };
 
-        //     const { code, error, id, message, token } = response.data;
-        //     if (code === 200 && !error) {
-        //         setAuthToken(token);
-        //         console.log(`Admin login successful. ID: ${id}, Message: ${message}, Token: ${token}`);
-        //         navigate("/dashboard");
-        //     } else {
-        //         setErrorMessage('message');
-        //     }
-        // } catch (error) {
-        //     console.log('Error during login:', error.message);
-        //     setErrorMessage('Wrong username or password');
-        // }
-        navigate("/dashboard");
-    };
-
-    return (
-        // <div className='login-page'>
-        //     <div className='container'>
-        //         <div className="login-signup-header">
-        //             <div className="text">Sign In</div>
-        //             <div className="underline"></div>
-        //         </div>
-        //         <div className="inputs">
-        //             <div className="input">
-        //                 <img src={user_profile} alt=""/>
-        //                 <input type="text" placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
-        //             </div>
-
-        //             <div className="input">
-        //                 <img src={lock_column} alt=""/>
-        //                 <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
-        //             </div>
-        //         </div>
-        //         <div className="forgot-password">Lost Password?<span>Click Here!</span></div>
-        //         <div className="error-container">
-        //             {errorMessage && <div className="error-message">{errorMessage}</div>}
-        //         </div>
-        //         <div className="submit-container">
-        //             <button onClick={handleLogin} className="submit">Login</button>
-        //         </div>
-        //     </div>
-        //     <section className='ilustration'>
-        //     <img src={login_ilus} alt="ilustration" className='img-float-right'/>
-        //     </section>
-        // </div>
-
-        <div className='login-page'>
-            <div className='container'>
-                <div className="login-signup-header">
-                    <div className="text">Sign In</div>
-                    <div className="underline"></div>
-                </div>
-                <div className="inputs">
-                    <div className="input">
-                        <img src={user_profile} alt=""/>
-                        <input type="text" placeholder="Username" />
-                    </div>
-
-                    <div className="input">
-                        <img src={lock_column} alt=""/>
-                        <input type="password" placeholder="Password" />
-                    </div>
-                </div>
-                <div className="forgot-password">Lost Password?<span>Click Here!</span></div>
-                <div className="submit-container">
-                    <button onClick={handleLogin} className="submit">Login</button>
-                </div>
-            </div>
-            <section className='ilustration'>
-                <img src={login_ilus} alt="ilustration" className='img-float-right'/>
-            </section>
+  return (
+    <div className="min-h-screen flex flex-col sm:flex-row bg-gray-50">
+      <div 
+        className="flex-1 text-white p-10 order-last sm:order-first"
+        style={{ background: 'linear-gradient(to top, #D2E2FB 30%, #86A8DB)' }}
+      >
+        <div className="flex justify-center items-center h-full">
+          <img src={centerImage} alt="Center" className="max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto" />
         </div>
-    );
+      </div>
+      <div className="flex flex-1 items-center justify-center p-10 order-first sm:order-last">
+        <div className="max-w-md w-full">
+          <div className="text-center">
+            <img className="mx-auto h-12 w-auto" src={loginIlus} alt="Workflow" />
+            <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
+              We are The <span className="block">HR Harmony Team</span>
+            </h2>
+            <p className="mt-2 text-sm text-gray-600">Please login to your account</p>
+          </div>
+          <form className="mt-8 space-y-6" onSubmit={handleLogin}>
+            <input type="hidden" name="remember" value="true" />
+            <div className="rounded-md shadow-sm">
+              <div>
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  autoComplete="username"
+                  required
+                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </div>
+              <div className="-mt-px">
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
+                  required
+                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="text-sm">
+                <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+                  Forgot password?
+                </a>
+              </div>
+              <div className="text-sm">
+                <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+                  Create new account
+                </a>
+              </div>
+            </div>
+
+            <div>
+              <button
+                type="submit"
+                style={{ background: 'linear-gradient(to right, #60A9F6, #B3D4FC)' }}
+                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                <span className="absolute left-0 inset-y-0 flex items-center pl-3">
+                  <LockClosedIcon className="h-5 w-5 text-blue-500 group-hover:text-blue-400" aria-hidden="true" />
+                </span>
+                Sign In
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default LoginSignup;
