@@ -2,6 +2,7 @@ import React from 'react';
 import './Dashboard.css';
 import Header from '../Header/Header';
 import Chart from 'react-apexcharts';
+import { CheckCircleIcon, RefreshIcon, PlayIcon, PauseIcon } from '@heroicons/react/solid';
 
 const Dashboard = () => {
   const invoiceChartOptions = {
@@ -93,24 +94,54 @@ const Dashboard = () => {
     <div>
       <Header />
       <div className="dashboard-container">
-        <div className="overview-container">
-          <div className="overview-item" style={{ backgroundColor: '#8D8D8D', color: 'white' }}>
-            <h3>Total Employees</h3>
-            <p>15</p>
+        <div className='max-w-full mx-auto p-5 bg-white'>
+        <div className="flex flex-wrap -mx-2">
+          <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
+            <div className="bg-green-500 text-white rounded-lg shadow-lg p-4 flex items-center justify-between">
+              <div className="flex items-center">
+                <CheckCircleIcon className="h-8 w-8 text-white mr-3" />
+                <div>
+                  <p className="font-bold text-xl">2</p>
+                  <p className="text-sm">Total Completed</p>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="overview-item" style={{ backgroundColor: '#3D66F0', color: 'white' }}>
-            <h3>Total Projects</h3>
-            <p>14</p>
+          <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
+            <div className="bg-blue-500 text-white rounded-lg shadow-lg p-4 flex items-center justify-between">
+              <div className="flex items-center">
+                <RefreshIcon className="h-8 w-8 text-white mr-3" />
+                <div>
+                  <p className="font-bold text-xl">3</p>
+                  <p className="text-sm">Total In Progress</p>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="overview-item" style={{ backgroundColor: '#5FB549', color: 'white' }}>
-            <h3>Total Deposit</h3>
-            <p>IDR666,000,000</p>
+          <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
+            <div className="bg-teal-500 text-white rounded-lg shadow-lg p-4 flex items-center justify-between">
+              <div className="flex items-center">
+                <PlayIcon className="h-8 w-8 text-white mr-3" />
+                <div>
+                  <p className="font-bold text-xl">6</p>
+                  <p className="text-sm">Total Not Started</p>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="overview-item" style={{ backgroundColor: '#E9615C', color: 'white' }}>
-            <h3>Total Expenses</h3>
-            <p>IDR566,000,000</p>
+          <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
+            <div className="bg-red-500 text-white rounded-lg shadow-lg p-4 flex items-center justify-between">
+              <div className="flex items-center">
+                <PauseIcon className="h-8 w-8 text-white mr-3" />
+                <div>
+                  <p className="font-bold text-xl">1</p>
+                  <p className="text-sm">Total On Hold</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+
 
         <div className="main-content">
           <div className="charts-column">
@@ -194,7 +225,9 @@ const Dashboard = () => {
         </div>
       </div>
     </div>
+  </div>
   );
 };
 
 export default Dashboard;
+

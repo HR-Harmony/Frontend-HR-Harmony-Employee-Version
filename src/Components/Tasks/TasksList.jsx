@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import './TasksList.css';
-import { GrView } from "react-icons/gr";
-import { FaEdit } from "react-icons/fa";
-import { MdDeleteOutline } from "react-icons/md";
+import ReactQuill from 'react-quill';
+import { ArrowCircleRightIcon, CheckCircleIcon, RefreshIcon, PlayIcon, PauseIcon, PlusIcon, PencilIcon, PencilAltIcon, TrashIcon, EyeIcon } from '@heroicons/react/solid';
+import { useNavigate } from 'react-router-dom';
 
 const TasksList = () => {
+  const navigate = useNavigate();
   const [progress, setProgress] = useState(0);
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedProject, setSelectedProject] = useState('');
@@ -12,7 +12,7 @@ const TasksList = () => {
 
   const handleAddNewClick = () => {
     setShowAddForm(true);
-  };  
+  };
 
   const handleHideClick = () => {
     setShowAddForm(false);
@@ -21,12 +21,12 @@ const TasksList = () => {
   const handleReset = () => {
     setShowAddForm(false);
     setSelectedProject('');
-  }; 
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (progress < 100) {
-        setProgress(progress);
+        setProgress(progress + 10);
       } else {
         clearInterval(interval);
       }
@@ -46,252 +46,229 @@ const TasksList = () => {
   const updateProgress = (newProgress) => {
     setProgress(newProgress);
   };
+  
+  const handleViewDetailsClick = (taskId) => {
+    navigate(`/tasks/task-details/${taskId}`);
+  };
+
+  const handleEditTaskClick = (taskId) => {
+    navigate(`/tasks/task-details/${taskId}`);
+  };
+
+  const tasks = [
+    { id: '1', title: 'Slicing UI', description: 'Slicing UI Employees Feature', dueDate: '12-05-2023', status: 'Completed', progress: 100 },
+    { id: '2', title: 'API Integration', description: 'Developing API for user management', dueDate: '20-07-2023', status: 'In Progress', progress: 50 },
+    { id: '3', title: 'Fix Bug', description: 'Bug Testing and Fixing', dueDate: '13-08-2023', status: 'On Hold', progress: 25 }
+  ];
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Completed':
+        return 'text-green-500 bg-green-100';
+      case 'In Progress':
+        return 'text-blue-500 bg-blue-100';
+      case 'On Hold':
+        return 'text-red-500 bg-red-100';
+      default:
+        return 'text-gray-500 bg-gray-100';
+    }
+  };
+
+  const getProgressBarColor = (status) => {
+    switch (status) {
+      case 'Completed':
+        return 'bg-green-500';
+      case 'In Progress':
+        return 'bg-blue-500';
+      case 'On Hold':
+        return 'bg-red-500';
+      case 'Cancelled':
+        return 'bg-red-500';
+      default:
+        return 'bg-gray-300'; // Default color if status is not recognized
+    }
+  };
 
   return (
-    <div className='tasks-container'>
-      <div className='tasks-overview-container'>
-        <div className='tasks-overview-item' style={{backgroundColor:'#8763E9', color:'white'}}>
-          <h3>Projects in Progress</h3>
-          <p>4</p>
+    <div className='max-w-full mx-auto p-5 bg-white'>
+      <div className="flex flex-wrap -mx-2">
+        <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
+          <div className="bg-green-500 text-white rounded-lg shadow-lg p-4 flex items-center justify-between">
+            <div className="flex items-center">
+              <CheckCircleIcon className="h-8 w-8 text-white mr-3" />
+              <div>
+                <p className="font-bold text-xl">5</p>
+                <p className="text-sm">Total Completed</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className='tasks-overview-item' style={{backgroundColor:'#8763E9', color:'white'}}>
-          <h3>Projects Completed</h3>
-          <p>2</p>
+        <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
+          <div className="bg-blue-500 text-white rounded-lg shadow-lg p-4 flex items-center justify-between">
+            <div className="flex items-center">
+              <RefreshIcon className="h-8 w-8 text-white mr-3" />
+              <div>
+                <p className="font-bold text-xl">4</p>
+                <p className="text-sm">Total In Progress</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className='tasks-overview-item' style={{backgroundColor:'#8763E9', color:'white'}}>
-          <h3>Projects On Hold</h3>
-          <p>1</p>
+        <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
+          <div className="bg-teal-500 text-white rounded-lg shadow-lg p-4 flex items-center justify-between">
+            <div className="flex items-center">
+              <PlayIcon className="h-8 w-8 text-white mr-3" />
+              <div>
+                <p className="font-bold text-xl">8</p>
+                <p className="text-sm">Total Not Started</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className='tasks-overview-item' style={{backgroundColor:'#8763E9', color:'white'}}>
-          <h3>Projects Not Started</h3>
-          <p>3</p>
+        <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
+          <div className="bg-red-500 text-white rounded-lg shadow-lg p-4 flex items-center justify-between">
+            <div className="flex items-center">
+              <PauseIcon className="h-8 w-8 text-white mr-3" />
+              <div>
+                <p className="font-bold text-xl">2</p>
+                <p className="text-sm">Total On Hold</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className='tasks-list-header'>
-        <h2>List All Tasks</h2>
-        <button onClick={handleAddNewClick}>+ Add New Tasks</button>
+      <div className='shadow-md rounded-md p-5 flex justify-between items-center bg-white mb-7'>
+        <h2 className='text-2xl'>List All Tasks</h2>
+        <button className='text-white bg-blue-600 border-blue-600 py-2 px-4 rounded text-lg leading-6 cursor-pointer hover:bg-blue-700 hover:border-blue-700' onClick={handleAddNewClick}>+ Add Task</button>
       </div>
 
       {showAddForm && (
         <div className="bg-white shadow-md rounded-lg mb-4 w-full max-w-5xl">
           <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-bold text-gray-700">Add New Employee</h2>
+            <h2 className="text-xl font-bold text-gray-700">Add New Task</h2>
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none" onClick={handleHideClick}>Hide</button>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4 py-2">
-            <div className="mb-4 md:col-span-2 lg:col-span-3"> 
-              <div className="grid grid-cols-3 gap-4">
-                <div> {/* Title */}
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="amount">
-                    Title*
-                  </label> 
-                  <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="amount" type="text" placeholder="Title" />
-                </div>
-                <div> {/* Start Date */}
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="startDate">
+          <form className="px-4 py-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              {/* Title */}
+              <div>
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
+                  Title*
+                </label> 
+                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="title" type="text" placeholder="Title" />
+              </div>
+              {/* Start Date */}
+              <div>
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="startDate">
                   Start Date*
-                  </label>
-                  <label className="block mb-4 text-sm text-gray-700">
-                  <input className="w-full p-2 border border-gray-300 rounded" type="date" name="date" />
-                  </label>
-                </div>
-                <div> {/* End Date */}
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="startDate">
-                  End Date*
-                  </label>
-                  <label className="block mb-4 text-sm text-gray-700">
-                    <input className="w-full p-2 border border-gray-300 rounded" type="date" name="date" />
-                  </label>
-                </div>
+                </label>
+                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="startDate" type="date" />
               </div>
             </div>
 
-            <div className="mb-4 md:col-span-2 lg:col-span-3"> 
-              <div className="grid grid-cols-3 gap-4">
-                <div> {/* Estimated Hour */}
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="amount">
-                  Estimated Hour*
-                  </label> 
-                  <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="EstimatedHour" type="text" placeholder="Estimated Hour" />
-                </div>
-                <div className="mb-4 md:col-span-1 lg:col-span-1">{/* Select Project */}
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="choose_project">
-                  Choose Project *
-                  </label>
-                  <select
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="project"
-                    value={selectedProject}
-                    onChange={(e) => setSelectedProject(e.target.value)}
-                  >
-                    <option value="" disabled>Select Project</option>
-                    <option value="HR Harmony">HR Harmony</option>
-                    <option value="Project 1">Project 1</option>
-                    <option value="Project 2">Project 2</option>
-                  </select>
-                </div>
-                <div> {/* Summary */}
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="amount">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              {/* End Date */}
+              <div>
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="endDate">
+                  End Date*
+                </label>
+                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="endDate" type="date" />
+              </div>
+              {/* Estimated Hour */}
+              <div>
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="estimatedHour">
+                  Estimated Hour
+                </label> 
+                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="estimatedHour" type="number" placeholder="Estimated Hour" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              {/* Project */}
+              <div>
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="project">
+                  Project *
+                </label>
+                <select
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id="project"
+                  value={selectedProject}
+                  onChange={(e) => setSelectedProject(e.target.value)}
+                >
+                  <option value="" disabled>Select Project</option>
+                  <option value="HR Harmony">HR Harmony</option>
+                  <option value="Project 1">Project 1</option>
+                  <option value="Project 2">Project 2</option>
+                </select>
+              </div>
+              {/* Summary */}
+              <div>
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="summary">
                   Summary*
-                  </label> 
-                  <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="Summary" type="text" placeholder="Summary" />
-                </div>
+                </label> 
+                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="summary" type="text" placeholder="Summary" />
               </div>
             </div>
 
             {/* Description */}
-            <div className="mb-4 md:col-span-1 lg:col-span-1"> 
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="gender">
-              Description*
-              </label>
-              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="installment" type="text" placeholder="Description" />
-            </div>
-          </div>
-
-          {/* Reset and Save Button */}
-          <div className="flex justify-end bg-gray-200 px-4 py-3 rounded-b">
-            <button className="bg-gray-400 hover:bg-gray-500 text-black font-bold py-2 px-4 rounded mr-2 focus:outline-none" onClick={handleReset}>Reset</button>
-            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none">Save</button>
-          </div>
-        </div>
-      )}
-
-      <div className='tasks-list-container'>
-        <div className='tasks-list-card'>
-          <div className='tasks-list-card-header'>
-            <h2>1. Buat endpoint fitur absensi</h2>
-            <h2>12-05-2024</h2>
-          </div>
-          <div className='tasks-list-card-body'>
-            <p>buat dengan bahasa golang dan database postgree SQL</p>
-            <p>Due : 12-06-2024</p>
-            <div className="tasks-progress-bar-container">
-              <div className="tasks-progress-bar" style={{ width: `${progress}%` }}>
-                <div className="tasks-progress-text" style={{ left: `calc(${progress}% - 20px)` }}> {`${progress}%`}
-                </div>
-              </div>
-            </div>
-          </div>
-        <div className='tasks-list-card-footer'>
-          <button>Completed</button>
-          <GrView className='tasks-list-card-icon'/>
-          <FaEdit className='tasks-list-card-icon' onClick={setModalOpen}/>
-          <MdDeleteOutline className='tasks-list-card-icon'/>
-        </div>
-      </div>
-
-      {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-          <div className="bg-white p-8 rounded shadow-md w-96">
-            <h2 className="text-2xl font-bold text-indigo-700 mb-4">Edit Tasks Detail</h2>
-            <form>
-              <label className="block mb-4 text-sm text-gray-700">
-                Title
-                <input
-                  className="w-full p-2 border border-gray-300 rounded"
-                  type="input"
-                  name="tasksTitle"/>
-              </label>
-
-              <div className="grid grid-cols-2 gap-2">
-                <label className="block mb-4 text-sm text-gray-700">
-                  Start Date
-                  <input
-                    className="w-full p-2 border border-gray-300 rounded"
-                    type="date"
-                    name="startDate"
-                  />
-                </label>
-                <label className="block mb-4 text-sm text-gray-700">
-                  End Date
-                  <input
-                    className="w-full p-2 border border-gray-300 rounded"
-                    type="date"
-                    name="endDate"
-                  />
-                </label>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <label className="block mb-4 text-sm text-gray-700">
-                    Estimated Hours
-                    <input
-                      className="w-full p-2 border border-gray-300 rounded"
-                      type="input"
-                      name="estimatedHour"/>
-                  </label>
-                <label className='block mb-4 text-sm text-gray-700'>
-                  Project
-                  <select
-                    className='w-full p-2 border border-gray-300 rounded'
-                    id="project"
-                    value={selectedProject}
-                    onChange={(e) => setSelectedProject(e.target.value)}>
-                    <option value="" disabled>Select Project</option>
-                    <option value="HR Harmony">HR Harmony</option>
-                    <option value="Project 1">Project 1</option>
-                    <option value="Project 2">Project 2</option>
-                  </select>
-                </label>
-              </div>
-              <label className="block mb-4 text-sm text-gray-700">
-                Summary
-                <input
-                  className="w-full p-2 border border-gray-300 rounded"
-                  type="input"
-                  name="summary"/>
-              </label>
-              <label className="block mb-4 text-sm text-gray-700">
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
                 Description
-                <input
-                  className="w-full p-2 border border-gray-300 rounded"
-                  type="description"
-                  name="description"/>
               </label>
-              
-              <label className="block mb-4 text-sm text-gray-700">
-                Progress
-                <div className="relative pt-1">
-                  <div>
-                    <span className="text-xs font-semibold inline-block py-1 px-2 rounded text-teal-600 bg-teal-200">
-                      {progress}% Complete
-                    </span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <input
-                      type="range"
-                      className="w-full rounded overflow appearance-none h-2"
-                      style={{
-                        background: `linear-gradient(to right, #4299e1 ${progress}%, #cbd5e0 ${progress}%)`
-                      }}
-                      value={progress}
-                      onChange={(e) => updateProgress(parseInt(e.target.value))}
-                    />
-                  </div>
-                </div>
-              </label>
-              <div className="flex justify-end">
-                <button
-                  onClick={closeModal}
-                  className="bg-gray-300 text-gray-700 p-2 rounded mr-2"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-indigo-700 text-white p-2 rounded"
-                >
-                  Save
-                </button>
-              </div>
-            </form>
-          </div>
+              <ReactQuill theme="snow" />
+            </div>
+
+            {/* Reset and Save Button */}
+            <div className="flex justify-end bg-gray-200 px-4 py-3">
+              <button className="bg-gray-400 hover:bg-gray-500 text-black font-bold py-2 px-4 rounded mr-2 focus:outline-none" onClick={handleHideClick}>Reset</button>
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none">Save</button>
+            </div>
+          </form>
         </div>
       )}
+
+      {/* Card List All Tasks */}
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+        {tasks.map((task) => (
+          <div key={task.id} className='bg-white rounded-lg shadow-lg p-4'>
+            <div className='flex justify-between items-center mb-4'>
+              <h3 className='text-lg font-bold text-gray-700'>#{task.id}. {task.title}</h3>
+              <span className='text-sm text-gray-500'>{task.dueDate}</span>
+            </div>
+            <p className='text-gray-600 mb-2'>
+              {task.description}
+            </p>
+            <div className='mb-4'>
+              <span className='text-sm font-bold text-gray-700'>Due: </span>
+              <span className='text-sm text-gray-500'>{task.dueDate}</span>
+            </div>
+            <div className='w-full bg-gray-200 rounded-full h-2.5 mb-4'>
+              <div className={getProgressBarColor(task.status) + ' h-2.5 rounded-full'} style={{ width: `${task.progress}%` }}></div>
+            </div>
+            <div className='flex justify-between items-center'>
+              <div className='flex items-center'>
+                <span className={`inline-block w-3 h-3 rounded-full mr-2 ${getStatusColor(task.status).split(' ')[1]}`}></span>
+                <span className={`text-xs font-semibold ${getStatusColor(task.status).split(' ')[0]}`}>{task.status}</span>
+              </div>
+              <div className='flex items-center'>
+                <button className='text-blue-600 hover:text-blue-700 mr-2' onClick={() => handleViewDetailsClick(task.id)}>
+                  <ArrowCircleRightIcon className='h-5 w-5' />
+                </button>
+                <button className='text-blue-600 hover:text-blue-700 mr-2' onClick={() => handleEditTaskClick(task.id)}>
+                  <PencilAltIcon className='h-5 w-5' />
+                </button>
+                <button className='text-blue-600 hover:text-blue-700'>
+                  <TrashIcon className='h-5 w-5' />
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
-  </div>
   )
 }
 
-export default TasksList
+export default TasksList;
