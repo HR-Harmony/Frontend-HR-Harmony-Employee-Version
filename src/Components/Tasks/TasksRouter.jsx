@@ -4,6 +4,8 @@ import Header from '../Header/Header';
 import TasksList from './TasksList';
 import TasksCalendar from './TasksCalendar';
 import Projects from './Projects';
+import TaskDetails from './TaskDetails';
+import ProjectDetails from './ProjectDetails';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { GrTasks } from 'react-icons/gr';
 import { AiOutlineFundProjectionScreen } from "react-icons/ai";
@@ -35,6 +37,8 @@ const TasksRouter = () => {
                 <Route path='tasks-list' element = {<TasksList/>}/>
                 <Route path='project' element = {<Projects/>}/>
                 <Route path='calendar' element = {<TasksCalendar/>}/>
+                <Route path='task-details/:id' element = {<TaskDetails/>}/>
+                <Route path='project-details/:id' element = {<ProjectDetails/>}/>
             </Routes>
         </div>
   )
