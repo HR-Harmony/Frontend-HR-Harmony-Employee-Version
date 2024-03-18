@@ -1,10 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { PencilAltIcon, TrashIcon, ArrowCircleRightIcon } from '@heroicons/react/solid';
 import { useNavigate } from 'react-router-dom';
+import { APIEmployees } from '@/Apis/APIEmployees';
 
 const Employees = () => {
   const navigate = useNavigate();
   const [showAddForm, setShowAddForm] = useState(false);
+  const [employees, setEmployees] = useState([]);
+  const [contactNumberError, setContactNumberError] = useState('');
+  const [basicSalaryError, setBasicSalaryError] = useState('');
+  const [hourlyRateError, setHourlyRateError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [usernameError, setUsernameError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  useEffect(() => {
+    fetchEmployees();
+  }, []);
+
+  const fetchEmployees = async () => {
+    try {
+      const response = await APIEmployees.getAllEmployees();
+      setEmployees(response.employees);
+    } catch (error) {
+      console.error("Error fetching employees:", error);
+    }
+  };
 
   const handleAddNewClick = () => {
     setShowAddForm(true);
@@ -22,8 +43,66 @@ const Employees = () => {
 
   };
 
+  const handleCreateEmployee = async (employeeDetails) => {
+    try {
+      const response = await APIEmployees.createEmployee(employeeDetails);
+      // Setelah berhasil menambahkan karyawan, perbarui daftar karyawan
+      fetchEmployees(); // Memanggil fungsi fetchEmployees untuk memperbarui daftar
+    } catch (error) {
+      // Handle error
+    }
+  };
+
   const handleViewDetails = (employee) => {
     navigate(`/employees/employee-details/${employee.identifier}`);
+  };
+
+  const validateContactNumber = (value) => {
+    if (isNaN(value)) {
+      setContactNumberError('Contact Number harus berupa angka');
+    } else {
+      setContactNumberError('');
+    }
+  };
+
+  const validateBasicSalary = (value) => {
+    if (isNaN(value)) {
+      setBasicSalaryError('Basic Salary harus berupa angka');
+    } else {
+      setBasicSalaryError('');
+    }
+  };
+
+  const validateHourlyRate = (value) => {
+    if (isNaN(value)) {
+      setHourlyRateError('Hourly Rate harus berupa angka');
+    } else {
+      setHourlyRateError('');
+    }
+  };
+
+  const validateEmail = (value) => {
+    if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)) {
+      setEmailError('Format email tidak valid');
+    } else {
+      setEmailError('');
+    }
+  };
+
+  const validateUsername = (value) => {
+    if (value.length <= 5) {
+      setUsernameError('Username harus lebih dari 5 karakter');
+    } else {
+      setUsernameError('');
+    }
+  };
+
+  const validatePassword = (value) => {
+    if (value.length <= 5) {
+      setPasswordError('Password harus lebih dari 5 karakter');
+    } else {
+      setPasswordError('');
+    }
   };
 
   return (
@@ -48,31 +127,26 @@ const Employees = () => {
               </label>
               <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="last_name" type="text" placeholder="Last Name" />
             </div>
-            <div className="mb-4 md:col-span-2 lg:col-span-2"> {/* Employee ID and Contact Number */}
+            <div className="mb-4 md:col-span-2 lg:col-span-2"> {/* Contact Number and Gender */}
               <div className="grid grid-cols-2 gap-4">
-                <div> {/* Employee ID */}
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="employee_id">
-                    Employee ID *
-                  </label>
-                  <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="employee_id" type="text" placeholder="Employee ID" />
-                </div>
                 <div> {/* Contact Number */}
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="contact_number">
                     Contact Number *
                   </label>
-                  <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="contact_number" type="text" placeholder="Contact Number" />
+                  <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="contact_number" type="text" placeholder="Contact Number" onChange={(e) => validateContactNumber(e.target.value)} />
+                  {contactNumberError && <p className="text-red-500 text-xs italic">{contactNumberError}</p>}
+                </div>
+                <div> {/* Gender */}
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="gender">
+                    Gender
+                  </label>
+                  <select className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="gender">
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                  </select>                
                 </div>
               </div>
-            </div>
-            <div className="mb-4 md:col-span-1 lg:col-span-1"> {/* Gender */}
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="gender">
-                Gender
-              </label>
-              <select className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="gender">
-                <option>Male</option>
-                <option>Female</option>
-                <option>Other</option>
-              </select>
             </div>
             <div className="mb-4 md:col-span-2 lg:col-span-2"> {/* Email and Username */}
               <div className="grid grid-cols-2 gap-4">
@@ -80,13 +154,15 @@ const Employees = () => {
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                     Email *
                   </label>
-                  <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="email" placeholder="Email" />
+                  <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="email" placeholder="Email" onChange={(e) => validateEmail(e.target.value)} />
+                  {emailError && <p className="text-red-500 text-xs italic">{emailError}</p>}
                 </div>
                 <div> {/* Username */}
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
                     Username *
                   </label>
-                  <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="Username" />
+                  <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="Username" onChange={(e) => validateUsername(e.target.value)} />
+                  {usernameError && <p className="text-red-500 text-xs italic">{usernameError}</p>}
                 </div>
               </div>
             </div>
@@ -94,7 +170,8 @@ const Employees = () => {
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
                 Password *
               </label>
-              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="Password" />
+              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="Password" onChange={(e) => validatePassword(e.target.value)} />
+              {passwordError && <p className="text-red-500 text-xs italic">{passwordError}</p>}
             </div>
             <div className="mb-4 md:col-span-2 lg:col-span-2"> {/* Office Shift and Role */}
               <div className="grid grid-cols-2 gap-4">
@@ -142,13 +219,15 @@ const Employees = () => {
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="basic_salary">
                     Basic Salary *
                   </label>
-                  <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="basic_salary" type="text" placeholder="Basic Salary" />
+                  <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="basic_salary" type="text" placeholder="Basic Salary" onChange={(e) => validateBasicSalary(e.target.value)} />
+                  {basicSalaryError && <p className="text-red-500 text-xs italic">{basicSalaryError}</p>}
                 </div>
                 <div> {/* Hourly Rate */}
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="hourly_rate">
                     Hourly Rate
                   </label>
-                  <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="hourly_rate" type="text" placeholder="Hourly Rate" />
+                  <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="hourly_rate" type="text" placeholder="Hourly Rate" onChange={(e) => validateHourlyRate(e.target.value)} />
+                  {hourlyRateError && <p className="text-red-500 text-xs italic">{hourlyRateError}</p>}
                 </div>
                 <div> {/* Payslip Type */}
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="payslip_type">
@@ -170,7 +249,7 @@ const Employees = () => {
           </div>
           <div className="flex justify-end bg-gray-200 px-4 py-3">
             <button className="bg-gray-400 hover:bg-gray-500 text-black font-bold py-2 px-4 rounded mr-2 focus:outline-none" onClick={handleReset}>Reset</button>
-            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none">Save</button>
+            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none" onClick={handleCreateEmployee}>Save</button>
           </div>
         </div>
       )}
@@ -210,13 +289,12 @@ const Employees = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {[{ id: 1, name: 'Fakhrity Hikmawan', designation: 'Software Engineer', contactNumber: '123-456-7890', gender: 'Female', country: 'Indonesia', role: 'Engineering', status: 'Active', identifier: 'emp001' },
-                { id: 2, name: 'Arfara Yema Samgusdian', designation: 'Product Manager', contactNumber: '987-654-3210', gender: 'Male', country: 'Indonesia', role: 'Management', status: 'Active', identifier: 'emp002' }].map((employee) => (
+              {employees.map((employee) => (
                 <tr key={employee.id}
                     className="group hover:bg-gray-100">
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     <div className="flex justify-between">
-                      <span>{employee.name}</span>
+                      <span>{employee.first_name} {employee.last_name}</span>
                       <div className="flex-shrink-0 flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <button className="p-1 ml-10 text-blue-600 hover:text-blue-800 focus:outline-none" onClick={() => handleViewDetails(employee)}>
                           <ArrowCircleRightIcon className="h-5 w-5" />
@@ -228,7 +306,7 @@ const Employees = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.designation}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.contactNumber}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.contact_number}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.gender}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.country}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.role}</td>
