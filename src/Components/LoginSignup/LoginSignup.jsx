@@ -1,19 +1,34 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { axiosInstance } from "@/configs/axiosInstance";
 import { LockClosedIcon } from '@heroicons/react/solid';
-import loginIlus from '../Assets/comp_logo.png';
-import centerImage from '../Assets/Computerlogin-amico.png';
+import loginIlus from '@/Components/Assets/comp_logo.png';
+import centerImage from '@/Components/Assets/Computerlogin-amico.png';
 
 const LoginSignup = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setErrorMessage('');
 
-    navigate('/dashboard');
+    try {
+      const response = await axiosInstance.post('/admin/signin', {
+        username,
+        password,
+      });
+
+      navigate('/dashboard');
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        setErrorMessage('Username atau password salah.');
+      } else {
+        setErrorMessage('Terjadi kesalahan, silakan coba lagi.');
+      }
+    }
   };
 
   return (
@@ -78,6 +93,8 @@ const LoginSignup = () => {
                 </a>
               </div>
             </div>
+
+            {errorMessage && <div className="text-red-500 text-sm mb-2">{errorMessage}</div>}
 
             <div>
               <button
