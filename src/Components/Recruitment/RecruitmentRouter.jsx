@@ -5,6 +5,8 @@ import NewOpening from './NewOpening';
 import Candidates from './Candidates';
 import Interviews from './Interviews';
 import Promotions from './Promotions';
+import EditJobs from './EditJobs';
+import JobDetails from './JobDetails';
 import { FaEnvelopeOpenText } from "react-icons/fa";
 import { IoIosPeople } from "react-icons/io";
 import { BiConversation } from "react-icons/bi";
@@ -42,6 +44,8 @@ const navigate = useNavigate();
                 <Route path="candidates" element = {< Candidates />}/>
                 <Route path="interviews" element = {< Interviews />}/>
                 <Route path="promotions" element = {< Promotions />}/>
+                <Route path="edit-job/:id" element = {<EditJobs/>}/>
+                <Route path="job-details/:id" element = {<JobDetails/>}/>
             </Routes>
         </div>
         )
