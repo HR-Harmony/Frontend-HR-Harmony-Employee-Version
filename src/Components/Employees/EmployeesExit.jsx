@@ -1,13 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TrashIcon } from '@heroicons/react/solid'; // Importing the TrashIcon
+import { TrashIcon } from '@heroicons/react/solid';
+import { APIEmployees } from '@/Apis/APIEmployees';
+import { toast } from 'react-toastify';
 
 const EmployeesExit = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [hoveredExitId, setHoveredExitId] = useState(null);
+  const [employees, setEmployees] = useState([]);
+  const [exitTypes, setExitTypes] = useState([]);
+  const [exitEmployees, setExitEmployees] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [selectedExitEmployeeId, setSelectedExitEmployeeId] = useState(null);
   const navigate = useNavigate();
 
-  const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+  const maxSize = 5 * 1024 * 1024;
+
+  const fetchExitEmployees = async () => {
+    setIsLoading(true);
+    try {
+      const response = await APIEmployees.getAllEmployeeExits();
+      setExitEmployees(response.exit_employees || []);
+    } catch (error) {
+      toast.error("Gagal memuat data exit employee.");
+    }
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await APIEmployees.getAllEmployees();
+        setEmployees(response.employees || []);
+      } catch (error) {
+
+      }
+    };
+
+    const fetchExitTypes = async () => {
+      try {
+        const response = await APIEmployees.getAllExitTypes();
+        setExitTypes(response.exits || []);
+      } catch (error) {
+
+      }
+    };
+
+    fetchEmployees();
+    fetchExitTypes();
+    fetchExitEmployees();
+    setIsLoading(false);
+  }, []);
 
   const handleExitTypeClick = () => {
     navigate('/employees/exit-type');
@@ -17,25 +61,65 @@ const EmployeesExit = () => {
     setShowAddForm(true);
   };
 
-  const handleMouseEnter = (exitId) => {
-    setHoveredExitId(exitId);
+  const handleMouseEnter = (exitEmployeeId) => {
+    setHoveredExitId(exitEmployeeId);
   };
 
   const handleMouseLeave = () => {
     setHoveredExitId(null);
   };
 
-  const handleDeleteClick = (exitId) => {
+  const handleDeleteClick = (exitEmployeeId) => {
+    setSelectedExitEmployeeId(exitEmployeeId);
+    setShowDeleteConfirmation(true);
+  };
 
+  const handleHideDeleteConfirmation = () => {
+    setShowDeleteConfirmation(false);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await APIEmployees.deleteExitById(selectedExitEmployeeId);
+      setIsLoading(true);
+      fetchExitEmployees(); 
+      setShowDeleteConfirmation(false);
+    } catch (error) {
+      console.error("Error deleting exit:", error);
+    }
   };
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file && file.size > maxSize) {
       alert('File is too large. Max size is 5MB.');
-      event.target.value = ''; // Clear the file input for new selection
+      event.target.value = ''; 
     } else {
-      // Handle the file upload process
+
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const exitEmployeesId = exitEmployees.length + 1;
+    const exitData = {
+      employee_id: parseInt(document.getElementById('employee-to-exit').value),
+      exit_id: parseInt(document.getElementById('exit-type').value),
+      exit_date: document.getElementById('exit-date').value,
+      disable_account: document.getElementById('disable-account').value === 'Yes',
+      exit_interview: document.getElementById('exit-interview').value,
+      description: document.getElementById('description').value,
+    };
+
+    try {
+      await APIEmployees.createEmployeeExit(exitEmployeesId, exitData);
+      console.log("Data submitted successfully");
+      toast.success("Employee exit processed successfully");
+      setShowAddForm(false);
+      setIsLoading(true);
+      fetchExitEmployees(); 
+    } catch (error) {
+      console.error("Error submitting exit:", error);
     }
   };
 
@@ -50,14 +134,20 @@ const EmployeesExit = () => {
                   <h2 className="text-lg font-semibold text-gray-700">Add New Employee Exit</h2>
                   <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none" onClick={() => setShowAddForm(false)}>Hide</button>
                 </div>
-                {/* Form fields */}
-                <form className="w-full max-w-lg">
+                <form className="w-full max-w-lg" onSubmit={handleSubmit}>
                   <div className="flex flex-wrap -mx-3 mb-2 mt-3 ml-3">
                     <div className="w-full md:w-1/2 px-3 mb-2 md:mb-0">
                       <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="employee-to-exit">
                         Employee to Exit *
                       </label>
-                      <input className="appearance-none block w-full text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="employee-to-exit" type="text" placeholder="Employee Name" />
+                      <div className="relative">
+                        <select className="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="employee-to-exit">
+                          <option>Select Employee</option>
+                          {employees.map((employee) => (
+                            <option key={employee.id} value={employee.id}>{employee.first_name} {employee.last_name}</option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
                     <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                       <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="exit-type" onClick={handleExitTypeClick}>
@@ -65,8 +155,10 @@ const EmployeesExit = () => {
                       </label>
                       <div className="relative">
                         <select className="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="exit-type">
-                          <option>Type of Exit</option>
-                          {/* ... other options */}
+                          <option>Select Exit Type</option>
+                          {exitTypes.map((type) => (
+                            <option key={type.id} value={type.id}>{type.exit_name}</option>
+                          ))}
                         </select>
                       </div>
                     </div>
@@ -109,7 +201,7 @@ const EmployeesExit = () => {
                 <div className="border-t border-gray-300 mx-3 my-4"></div>
                 <div className="pb-5 pr-4 flex justify-end">
                     <button className="bg-gray-400 hover:bg-gray-500 text-black font-bold py-2 px-4 rounded mr-2" type="reset" onClick={() => setShowAddForm(false)}>Reset</button>
-                    <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" type="submit">Save</button>
+                    <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" type="submit" onClick={handleSubmit}>Save</button>
                 </div>
               </div>
             </div>
@@ -182,33 +274,41 @@ const EmployeesExit = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {[
-                  { id: 1, employeeName: 'Arfara Yema', exitType: 'Habis Kontrak', exitDate: '28-04-2023', exitInterview: 'Yes', disableAccount: 'Yes' },
-                  { id: 2, employeeName: 'Fakhrity Hikmawan', exitType: 'Resign', exitDate: '23-09-2023', exitInterview: 'No', disableAccount: 'Yes' }
-                ].map((exit) => (
-                  <tr key={exit.id} onMouseEnter={() => handleMouseEnter(exit.id)} onMouseLeave={handleMouseLeave} className="hover:bg-gray-100">
-                    <td className="px-6 py-4 text-sm text-gray-900 flex justify-between items-center">
-                      <span>{exit.employeeName}</span>
-                      {hoveredExitId === exit.id && (
-                        <button onClick={() => handleDeleteClick(exit.id)} className="text-red-600 hover:text-red-900 ml-4 mr-2">
-                          <TrashIcon className="h-5 w-5" />
-                        </button>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{exit.exitType}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{exit.exitDate}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{exit.exitInterview}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{exit.disableAccount}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <span className="sr-only">Actions</span>
-                    </td>
+                {isLoading ? (
+                  <tr>
+                    <td colSpan="6" className="text-center py-4 text-sm text-gray-500">Loading exits data...</td>
                   </tr>
-                ))}
+                ) : (
+                  exitEmployees.map((exitEmployee) => {
+                    const employeeName = employees.find(emp => emp.id === exitEmployee.employee_id)?.first_name + " " + employees.find(emp => emp.id === exitEmployee.employee_id)?.last_name || 'Nama tidak ditemukan';
+                    const exitTypeName = exitTypes.find(type => type.id === exitEmployee.exit_id)?.exit_name || 'Tipe tidak ditemukan';
+
+                    return (
+                      <tr key={exitEmployee.id} onMouseEnter={() => handleMouseEnter(exitEmployee.id)} onMouseLeave={handleMouseLeave} className="hover:bg-gray-100">
+                        <td className="px-6 py-4 text-sm text-gray-900 flex justify-between items-center">
+                          <span>{employeeName}</span>
+                          {hoveredExitId === exitEmployee.id && (
+                            <button onClick={() => handleDeleteClick(exitEmployee.id)} className="text-red-600 hover:text-red-900 ml-4 mr-2">
+                              <TrashIcon className="h-5 w-5" />
+                            </button>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{exitTypeName}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{exitEmployee.exit_date}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{exitEmployee.exit_interview}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{exitEmployee.disable_account ? 'Yes' : 'No'}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <span className="sr-only">Actions</span>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
               </tbody>
             </table>
           </div>
           <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
-            Showing 1 to 2 of 2 records
+            Showing 1 to {exitEmployees.length} of {exitEmployees.length} records
             <div>
               <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
                 Previous
@@ -220,6 +320,22 @@ const EmployeesExit = () => {
           </div>
         </div>
       </div>
+      {showDeleteConfirmation && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" id="my-modal">
+          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div className="mt-3 text-center">
+              <h3 className="text-lg leading-6 font-medium text-gray-900">Are you sure you want to delete this record?</h3>
+              <div className="mt-2 px-7 py-3">
+                <p className="text-sm text-gray-500">You won't be able to revert this!</p>
+              </div>
+              <div className="items-center px-4 py-3">
+                <button className="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md w-24 mr-2" onClick={handleHideDeleteConfirmation}>Close</button>
+                <button className="px-4 py-2 bg-red-600 text-white text-base font-medium rounded-md w-24" onClick={handleDelete}>Confirm</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
