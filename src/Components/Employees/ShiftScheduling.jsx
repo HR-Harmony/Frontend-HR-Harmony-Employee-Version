@@ -44,6 +44,10 @@ const ShiftScheduling = () => {
     setShowAddForm(true);
   };
 
+  const handleHideDeleteConfirmation = () => {
+    setShowDeleteConfirmation(false);
+  };
+
   const handleHideClick = () => {
     setShowAddForm(false);
     setShowEditForm(false);
@@ -204,9 +208,9 @@ const ShiftScheduling = () => {
   };
 
   return (
-    <div className="border border-gray-200 rounded overflow-hidden mx-5 my-5 max-w-5xl">
+    <div className="border border-gray-200 rounded overflow-hidden max-w-6xl ml-auto mr-auto">
       {showAddForm && (
-        <div className="bg-white shadow-md rounded-lg mb-4 w-full max-w-5xl">
+        <div className="bg-white shadow-md rounded-lg mb-2">
           <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-700">Add New Shift</h2>
             <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none" onClick={handleHideClick}>Hide</button>
@@ -304,7 +308,7 @@ const ShiftScheduling = () => {
               <input type="search" placeholder="Search" className="rounded border border-gray-300 p-2" />
           </div>
         </div>
-        <div className="overflow-x-auto mb-4">
+        <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
@@ -483,16 +487,16 @@ const ShiftScheduling = () => {
         </div>
       )}
       {showDeleteConfirmation && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" id="my-modal">
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center" id="my-modal">
+          <div className="relative mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div className="mt-3 text-center">
               <h3 className="text-lg leading-6 font-medium text-gray-900">Are you sure you want to delete this record?</h3>
               <div className="mt-2 px-7 py-3">
                 <p className="text-sm text-gray-500">You won't be able to revert this!</p>
               </div>
               <div className="items-center px-4 py-3">
-                <button className="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md w-24 mr-2" onClick={() => setShowDeleteConfirmation(false)}>Close</button>
-                <button className="px-4 py-2 bg-red-600 text-white text-base font-medium rounded-md w-24" onClick={() => handleDelete(selectedShiftId)}>Confirm</button>
+                <button id="delete-close" className="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md w-24 mr-2" onClick={handleHideDeleteConfirmation}>Close</button>
+                <button id="delete-confirm" className="px-4 py-2 bg-red-600 text-white text-base font-medium rounded-md w-24" onClick={handleDelete}>Confirm</button>
               </div>
             </div>
           </div>
