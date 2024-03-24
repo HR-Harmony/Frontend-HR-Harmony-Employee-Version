@@ -18,14 +18,12 @@ const EmployeesExit = () => {
   const maxSize = 5 * 1024 * 1024;
 
   const fetchExitEmployees = async () => {
-    setIsLoading(true);
     try {
       const response = await APIEmployees.getAllEmployeeExits();
       setExitEmployees(response.exit_employees || []);
     } catch (error) {
       toast.error("Gagal memuat data exit employee.");
     }
-    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -51,6 +49,7 @@ const EmployeesExit = () => {
       setIsLoading(true);
       await fetchEmployees();
       await fetchExitTypes();
+      await fetchExitEmployees();
       setIsLoading(false);
     };
     fetchData();
@@ -82,14 +81,15 @@ const EmployeesExit = () => {
   };
 
   const handleDelete = async () => {
+    setIsLoading(true);
     try {
       await APIEmployees.deleteExitById(selectedExitEmployeeId);
-      setIsLoading(true);
       fetchExitEmployees(); 
       setShowDeleteConfirmation(false);
     } catch (error) {
-      toast.error("Terjadi kesalahan saat menghapus exit type.");
+      toast.error("Terjadi kesalahan saat menghapus exit employee.");
     }
+    setIsLoading(false);
   };
 
   const handleFileChange = (event) => {
@@ -104,6 +104,7 @@ const EmployeesExit = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     const exitEmployeesId = exitEmployees.length + 1;
     const exitData = {
       employee_id: parseInt(document.getElementById('employee-to-exit').value),
@@ -118,11 +119,11 @@ const EmployeesExit = () => {
       await APIEmployees.createEmployeeExit(exitEmployeesId, exitData);
       toast.success("Employee exit processed successfully");
       setShowAddForm(false);
-      setIsLoading(true);
       fetchExitEmployees(); 
     } catch (error) {
       toast.error("Terjadi kesalahan saat memproses exit employee.");
     }
+    setIsLoading(false);
   };
 
   return (
@@ -343,4 +344,3 @@ const EmployeesExit = () => {
 };
 
 export default EmployeesExit;
-
