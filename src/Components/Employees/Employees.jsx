@@ -1,29 +1,87 @@
 import React, { useState, useEffect } from 'react';
-import { PencilAltIcon, TrashIcon, ArrowCircleRightIcon } from '@heroicons/react/solid';
+import { TrashIcon, ArrowCircleRightIcon } from '@heroicons/react/solid';
 import { useNavigate } from 'react-router-dom';
 import { APIEmployees } from '@/Apis/APIEmployees';
+import { APICoreHR } from '@/Apis/APICoreHR';
+import { toast } from 'react-toastify';
 
 const Employees = () => {
   const navigate = useNavigate();
   const [showAddForm, setShowAddForm] = useState(false);
   const [employees, setEmployees] = useState([]);
+  const [roles, setRoles] = useState([]);
+  const [officeShifts, setOfficeShifts] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [designations, setDesignations] = useState([]);
   const [contactNumberError, setContactNumberError] = useState('');
   const [basicSalaryError, setBasicSalaryError] = useState('');
   const [hourlyRateError, setHourlyRateError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [addError, setAddError] = useState('');
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetchEmployees();
+    fetchRoles();
+    fetchOfficeShifts();
+    fetchDepartments();
+    fetchDesignations();
   }, []);
 
   const fetchEmployees = async () => {
+    setIsLoading(true);
     try {
       const response = await APIEmployees.getAllEmployees();
-      setEmployees(response.employees);
+      setEmployees(response.employees || []);
     } catch (error) {
-      console.error("Error fetching employees:", error);
+      toast.error('Failed to fetch employees. Please try again.');
+      setEmployees([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchRoles = async () => {
+    try {
+      const response = await APIEmployees.getRoles();
+      setRoles(response.roles || []);
+    } catch (error) {
+      toast.error('Failed to fetch roles. Please try again.');
+      setRoles([]);
+    }
+  };
+
+  const fetchOfficeShifts = async () => {
+    try {
+      const response = await APIEmployees.getOfficeShifts();
+      setOfficeShifts(response.shifts || []);
+    } catch (error) {
+      toast.error('Failed to fetch office shifts. Please try again.');
+      setOfficeShifts([]);
+    }
+  };
+
+  const fetchDepartments = async () => {
+    try {
+      const response = await APICoreHR.getDepartments();
+      setDepartments(response.departments || []);
+    } catch (error) {
+      toast.error('Failed to fetch departments. Please try again.');
+      setDepartments([]);
+    }
+  };
+
+  const fetchDesignations = async () => {
+    try {
+      const response = await APICoreHR.getDesignations();
+      setDesignations(response.designations || []);
+    } catch (error) {
+      toast.error('Failed to fetch designations. Please try again.');
+      setDesignations([]);
     }
   };
 
@@ -39,17 +97,63 @@ const Employees = () => {
     setShowAddForm(false);
   };
 
-  const handleDelete = (employeeId) => {
-
+  const handleShowDeleteConfirmation = (employeeId) => {
+    setSelectedEmployeeId(employeeId);
+    setShowDeleteConfirmation(true);
   };
 
-  const handleCreateEmployee = async (employeeDetails) => {
+  const handleHideDeleteConfirmation = () => {
+    setShowDeleteConfirmation(false);
+  };
+
+  const handleDelete = async () => {
+    if (selectedEmployeeId) {
+      try {
+        await APIEmployees.deleteEmployee(selectedEmployeeId);
+        fetchEmployees();
+        handleHideDeleteConfirmation();
+      } catch (error) {
+        toast.error('Failed to delete employee. Please try again.');
+      }
+    }
+  };
+
+  const handleCreateEmployee = async () => {
+    const employeeDetails = {
+      first_name: document.getElementById('first_name').value,
+      last_name: document.getElementById('last_name').value,
+      contact_number: document.getElementById('contact_number').value,
+      gender: document.getElementById('gender').value,
+      email: document.getElementById('email').value,
+      username: document.getElementById('username').value,
+      password: document.getElementById('password').value,
+      shift_id: parseInt(document.getElementById('office_shift').value, 10),
+      role_id: parseInt(document.getElementById('role').value, 10),
+      department_id: parseInt(document.getElementById('department').value, 10),
+      designation_id: parseInt(document.getElementById('designation').value, 10),
+      basic_salary: parseInt(document.getElementById('basic_salary').value, 10),
+      hourly_rate: parseInt(document.getElementById('hourly_rate').value, 10),
+      pay_slip_type: document.getElementById('payslip_type').value,
+    };
+
+    const isDuplicate = employees.some(employee => 
+      employee.contact_number === employeeDetails.contact_number || 
+      employee.email === employeeDetails.email || 
+      employee.username === employeeDetails.username
+    );
+
+    if (isDuplicate) {
+      setAddError('Contact Number, Email, or Username already exists. Please use a different one.');
+      return;
+    }
+
     try {
       const response = await APIEmployees.createEmployee(employeeDetails);
-      // Setelah berhasil menambahkan karyawan, perbarui daftar karyawan
-      fetchEmployees(); // Memanggil fungsi fetchEmployees untuk memperbarui daftar
+      fetchEmployees();
+      setShowAddForm(false);
+      setAddError('');
     } catch (error) {
-      // Handle error
+      setAddError('Failed to add an employee. Please try again.');
     }
   };
 
@@ -59,7 +163,7 @@ const Employees = () => {
 
   const validateContactNumber = (value) => {
     if (isNaN(value)) {
-      setContactNumberError('Contact Number harus berupa angka');
+      setContactNumberError('Contact Number must be a number');
     } else {
       setContactNumberError('');
     }
@@ -67,7 +171,7 @@ const Employees = () => {
 
   const validateBasicSalary = (value) => {
     if (isNaN(value)) {
-      setBasicSalaryError('Basic Salary harus berupa angka');
+      setBasicSalaryError('Basic Salary must be a number');
     } else {
       setBasicSalaryError('');
     }
@@ -75,7 +179,7 @@ const Employees = () => {
 
   const validateHourlyRate = (value) => {
     if (isNaN(value)) {
-      setHourlyRateError('Hourly Rate harus berupa angka');
+      setHourlyRateError('Hourly Rate must be a number');
     } else {
       setHourlyRateError('');
     }
@@ -83,7 +187,7 @@ const Employees = () => {
 
   const validateEmail = (value) => {
     if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)) {
-      setEmailError('Format email tidak valid');
+      setEmailError('Invalid email format');
     } else {
       setEmailError('');
     }
@@ -91,7 +195,7 @@ const Employees = () => {
 
   const validateUsername = (value) => {
     if (value.length <= 5) {
-      setUsernameError('Username harus lebih dari 5 karakter');
+      setUsernameError('Username must be more than 5 characters');
     } else {
       setUsernameError('');
     }
@@ -99,7 +203,7 @@ const Employees = () => {
 
   const validatePassword = (value) => {
     if (value.length <= 5) {
-      setPasswordError('Password harus lebih dari 5 karakter');
+      setPasswordError('Password must be more than 5 characters');
     } else {
       setPasswordError('');
     }
@@ -180,7 +284,9 @@ const Employees = () => {
                     Office Shift *
                   </label>
                   <select className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="office_shift">
-                    {/* Opsi shift kantor */}
+                    {officeShifts && officeShifts.map((shift) => (
+                      <option key={shift.id} value={shift.id}>{shift.shift_name}</option>
+                    ))}
                   </select>
                 </div>
                 <div> {/* Role */}
@@ -188,7 +294,9 @@ const Employees = () => {
                     Role *
                   </label>
                   <select className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role">
-                    {/* Opsi role */}
+                    {roles && roles.map((role) => (
+                      <option key={role.id} value={role.id}>{role.role_name}</option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -200,7 +308,9 @@ const Employees = () => {
                     Department *
                   </label>
                   <select className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="department">
-                    {/* Opsi departemen */}
+                    {departments.map((department) => (
+                      <option key={department.id} value={department.id}>{department.department_name}</option>
+                    ))}
                   </select>
                 </div>
                 <div> {/* Designation */}
@@ -208,7 +318,9 @@ const Employees = () => {
                     Designation *
                   </label>
                   <select className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="designation">
-                    {/* Opsi jabatan */}
+                    {designations.map((designation) => (
+                      <option key={designation.id} value={designation.id}>{designation.designation_name}</option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -233,10 +345,7 @@ const Employees = () => {
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="payslip_type">
                     Payslip Type
                   </label>
-                  <select className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="payslip_type">
-                    <option>Monthly</option>
-                    <option>Hourly</option>
-                  </select>
+                  <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="payslip_type" type="text" placeholder="Payslip Type"/>
                 </div>
               </div>
             </div>
@@ -251,6 +360,7 @@ const Employees = () => {
             <button className="bg-gray-400 hover:bg-gray-500 text-black font-bold py-2 px-4 rounded mr-2 focus:outline-none" onClick={handleReset}>Reset</button>
             <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none" onClick={handleCreateEmployee}>Save</button>
           </div>
+          {addError && <div className="text-red-500 text-center p-2">{addError}</div>}
         </div>
       )}
       <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
@@ -289,38 +399,50 @@ const Employees = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {employees.map((employee) => (
-                <tr key={employee.id}
-                    className="group hover:bg-gray-100">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    <div className="flex justify-between">
-                      <span>{employee.first_name} {employee.last_name}</span>
-                      <div className="flex-shrink-0 flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <button className="p-1 ml-10 text-blue-600 hover:text-blue-800 focus:outline-none" onClick={() => handleViewDetails(employee)}>
-                          <ArrowCircleRightIcon className="h-5 w-5" />
-                        </button>
-                        <button className="p-1 text-red-600 hover:text-red-800 focus:outline-none" onClick={() => handleDelete(employee.id)}>
-                          <TrashIcon className="h-5 w-5" />
-                        </button>
+              {isLoading ? (
+                <tr>
+                  <td colSpan="8" className="text-center py-4 text-sm text-gray-500">Loading employees data...</td>
+                </tr>
+              ) : employees.length > 0 ? (
+                employees.map((employee) => (
+                  <tr key={employee.id}
+                      className="group hover:bg-gray-100">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <div className="flex justify-between">
+                        <span>{employee.first_name} {employee.last_name}</span>
+                        <div className="flex-shrink-0 flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <button className="p-1 ml-10 text-blue-600 hover:text-blue-800 focus:outline-none" onClick={() => handleViewDetails(employee)}>
+                            <ArrowCircleRightIcon className="h-5 w-5" />
+                          </button>
+                          <button className="p-1 text-red-600 hover:text-red-800 focus:outline-none" onClick={() => handleShowDeleteConfirmation(employee.id)}>
+                            <TrashIcon className="h-5 w-5" />
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.designation}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.contact_number}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.gender}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.country}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.role}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.status}</td>
-                  <td className="relative px-6 py-3">
-                    <span className="sr-only">Actions</span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.designation}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.contact_number}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.gender}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.country}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.role}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.status}</td>
+                    <td className="relative px-6 py-3">
+                      <span className="sr-only">Actions</span>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="8" className="text-center py-4 text-sm text-gray-500">
+                    No employees data available.
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
         <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
-            Showing 1 to 2 of 2 records
+            Showing 1 to {employees.length} of {employees.length} records
             <div>
               <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
                 Previous
@@ -331,6 +453,22 @@ const Employees = () => {
             </div>
           </div>
       </div>
+      {showDeleteConfirmation && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" id="my-modal">
+          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div className="mt-3 text-center">
+              <h3 className="text-lg leading-6 font-medium text-gray-900">Are you sure you want to delete this record?</h3>
+              <div className="mt-2 px-7 py-3">
+                <p className="text-sm text-gray-500">You won't be able to revert this!</p>
+              </div>
+              <div className="items-center px-4 py-3">
+                <button id="delete-close" className="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md w-24 mr-2" onClick={handleHideDeleteConfirmation}>Close</button>
+                <button id="delete-confirm" className="px-4 py-2 bg-red-600 text-white text-base font-medium rounded-md w-24" onClick={handleDelete}>Confirm</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
