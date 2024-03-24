@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-
 * {
     margin: 0;
     padding: 0;
@@ -28,10 +27,12 @@ header h1 {
     font-size: 40px;
     color: white;
 }
+
 header nav {
     display: flex;
     gap: 10px;
 }
+
 header nav a {
     text-decoration: none;
     font-size: 20px;
@@ -41,13 +42,13 @@ header nav a {
     transition: 0.3s;
     color: white;
     cursor: pointer;
-    
 }
 
 header nav a:hover {
     background: #2A2F4F;
 }
-header nav:hover > a:not(:hover) {
+
+header nav:hover>a:not(:hover) {
     background: none;
 }
 
@@ -95,29 +96,29 @@ header nav:hover > a:not(:hover) {
     scrollbar-width: thin;
     padding: 20px;
 }
-  
+
 .advantage-card {
     flex: 0 0 auto;
     background-color: #fff;
     color: black;
-    width: 300px; 
+    width: 300px;
     margin-right: 20px;
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease; 
+    transition: transform 0.3s ease;
 }
 
 .advantage-card:hover {
     transform: scale(1.03);
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .about h1 {
     font-size: 40px;
     margin-bottom: 20px;
-    font-weight:bold ;
+    font-weight: bold;
 }
 
 .about h2 {
@@ -186,7 +187,7 @@ header nav:hover > a:not(:hover) {
     justify-content: space-between;
     margin-right: auto;
     margin-left: auto;
-    width: 70%;
+    width: 80%;
 }
 
 .our-team {
@@ -218,55 +219,51 @@ header nav:hover > a:not(:hover) {
     background-color: #DBEDFF;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .form-container {
+}
+
+.form-container {
     display: grid;
     grid-template-columns: 1fr;
     gap: 15px;
-  }
-  
-  .name-group,
-  .contact-info-group {
+}
+
+.name-group,
+.contact-info-group {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 15px;
-  }
-  
-  .form-group {
+}
+
+.form-group {
     display: flex;
     flex-direction: column;
-  }
-  
-  label {
-    margin-bottom: 5px;
-  }
+}
 
-  h2 {
+label {
+    margin-bottom: 5px;
+}
+
+h2 {
     text-align: center;
     color: #333;
-  }
-  
-  textarea {
-    height: 100px;
-  }
+}
 
-  .submit-button {
-    background-color:#6D31ED;
-    color: #fff;
+textarea {
+    height: 100px;
+}
+
+.submit-button {
+    background-color: #6D31ED;
+    color: #5522e2;
     padding: 10px 15px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
-  }
-  
-  .submit-button:hover {
-    background-color:#3f467a;
-  }
-  
-  input,
-  textarea {
+}
+
+input,
+textarea {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -294,4 +291,31 @@ header nav:hover > a:not(:hover) {
     width: 180px;
     height: 100px;
     margin-right: 10px;
+}
+
+@media only screen and (max-width: 768px) {
+    /* Header */
+    header {
+        height: 80px;
+        padding: 0 2%;
+    }
+    /* Navigasi */
+    header nav {
+        flex-direction: column;
+    }
+    /* Navigasi link */
+    header nav a {
+        padding: 8px 12px;
+        font-size: 18px;
+    }
+    /* Home */
+    .home .title {
+        font-size: 30px;
+    }
+    .our-team-container {
+        flex-direction: column;
+    }
+    .product-container {
+        flex-direction: column;
+    }
 }
