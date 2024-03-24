@@ -210,9 +210,9 @@ const Employees = () => {
   };
 
   return (
-    <div className="border border-gray-200 rounded overflow-hidden mx-5 my-5 max-w-5xl">
+    <div className="border border-gray-200 rounded overflow-hidden mb-4 max-w-6xl ml-auto mr-auto">
       {showAddForm && (
-        <div className="bg-white shadow-md rounded-lg mb-4 w-full max-w-5xl">
+        <div className="bg-white shadow-md rounded-lg mb-4 w-full">
           <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-700">Add New Employee</h2>
             <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none" onClick={handleHideClick}>Hide</button>
@@ -454,8 +454,8 @@ const Employees = () => {
           </div>
       </div>
       {showDeleteConfirmation && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" id="my-modal">
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center" id="my-modal">
+          <div className="relative mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div className="mt-3 text-center">
               <h3 className="text-lg leading-6 font-medium text-gray-900">Are you sure you want to delete this record?</h3>
               <div className="mt-2 px-7 py-3">

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import 'tailwindcss/tailwind.css';
 import { PencilAltIcon, TrashIcon } from '@heroicons/react/solid';
 import { APIEmployees } from '@/Apis/APIEmployees';
+import { toast } from 'react-toastify';
 
 const ExitType = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -25,7 +26,7 @@ const ExitType = () => {
         }));
         setExitTypes(formattedData);
       } catch (error) {
-        console.error("Error fetching exit types:", error);
+        toast.error("Terjadi kesalahan saat mengambil data exit type.");
       }
       setIsLoading(false);
     };
@@ -46,7 +47,7 @@ const ExitType = () => {
         setExitTypes(updatedExitTypes);
         setIsEditModalOpen(false);
       } catch (error) {
-        console.error("Error updating exit type:", error);
+        toast.error("Terjadi kesalahan saat mengupdate exit type.");
       }
     }
   };
@@ -62,7 +63,7 @@ const ExitType = () => {
       setExitTypes(exitTypes.filter(et => et.id !== selectedExitTypeId));
       setShowDeleteConfirmation(false);
     } catch (error) {
-      console.error("Error deleting exit type:", error);
+      toast.error("Terjadi kesalahan saat menghapus exit type.");
     }
   };
 
@@ -77,12 +78,12 @@ const ExitType = () => {
       setExitTypes([...exitTypes, formattedExit]);
       document.getElementById('exitType').value = '';
     } catch (error) {
-      console.error("Error creating exit type:", error);
+      toast.error("Terjadi kesalahan saat menambahkan exit type.");
     }
   };
 
   return (
-    <div className="container mx-auto">
+    <div className="mx-5 max-w-6xl ml-auto mr-auto">
       <div className="flex flex-wrap -mx-3">
         {/* Card untuk menambahkan tipe exit baru */}
         <div className="w-full lg:w-1/3 px-3 lg:mb-0">
