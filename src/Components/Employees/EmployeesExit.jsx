@@ -18,12 +18,14 @@ const EmployeesExit = () => {
   const maxSize = 5 * 1024 * 1024;
 
   const fetchExitEmployees = async () => {
+    setIsLoading(true);
     try {
       const response = await APIEmployees.getAllEmployeeExits();
       setExitEmployees(response.exit_employees || []);
     } catch (error) {
       toast.error("Gagal memuat data exit employee.");
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -49,7 +51,6 @@ const EmployeesExit = () => {
       setIsLoading(true);
       await fetchEmployees();
       await fetchExitTypes();
-      await fetchExitEmployees();
       setIsLoading(false);
     };
     fetchData();
