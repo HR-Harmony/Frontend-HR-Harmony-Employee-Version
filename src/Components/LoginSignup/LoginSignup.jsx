@@ -4,6 +4,7 @@ import { axiosInstance } from "@/configs/axiosInstance";
 import { LockClosedIcon } from '@heroicons/react/solid';
 import loginIlus from '@/Components/Assets/comp_logo.png';
 import centerImage from '@/Components/Assets/Computerlogin-amico.png';
+import Cookies from 'js-cookie';
 
 const LoginSignup = () => {
   const [username, setUsername] = useState('');
@@ -21,6 +22,7 @@ const LoginSignup = () => {
         password,
       });
 
+      Cookies.set('token', response.data.token, { expires: 7 });
       navigate('/dashboard');
     } catch (error) {
       if (error.response && error.response.status === 401) {

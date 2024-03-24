@@ -1,40 +1,74 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PencilAltIcon, TrashIcon } from '@heroicons/react/solid';
+import { APIEmployees } from '@/Apis/APIEmployees';
+import { toast } from 'react-toastify';
 
 const RolesPrivileges = () => {
   const [showAddRole, setShowAddRole] = useState(false);
-  const [isEditPopupVisible, setIsEditPopupVisible] = useState(false);
   const [selectedRoleData, setSelectedRoleData] = useState(null);
-  const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false);
   const [hoveredRoleId, setHoveredRoleId] = useState(null);
+  const [popupMode, setPopupMode] = useState(null);
+  const [roles, setRoles] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [selectedRoleId, setSelectedRoleId] = useState(null);
 
-  const handleAddNewRoleClick = () => {
+  useEffect(() => {
+    fetchRoles();
+  }, []);
+
+  const fetchRoles = async () => {
+    setIsLoading(true);
+    try {
+      const response = await APIEmployees.getRoles();
+      setRoles(response.roles.map(role => ({
+        ...role,
+        roleName: role.role_name,
+        createdAt: role.created_at.split('T')[0],
+        updatedAt: role.UpdatedAt.split('T')[0],
+      })));
+    } catch (error) {
+      toast.error("Gagal mengambil data role.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAddNewRoleClick = async () => {
+    setPopupMode('add');
+    setShowAddRole(true);
+    setSelectedRoleData(null);
+  };
+
+  const handleEditClick = async (roleData) => {
+    setPopupMode('edit');
+    setSelectedRoleData(roleData);
     setShowAddRole(true);
   };
 
-  const handleHideNewRoleCard = () => {
-    setShowAddRole(false);
-  };
-
-  const handleReset = () => {
-    handleHideNewRoleCard();
-  };
-
-  const handleEditClick = (roleData) => {
-    setSelectedRoleData(roleData);
-    setIsEditPopupVisible(true);
-  };
-
   const handleCloseEditPopup = () => {
-    setIsEditPopupVisible(false);
+    setShowAddRole(false);
+    setSelectedRoleData(null);
   };
 
-  const handleDelete = (roleId) => {
-
+  const handleShowDeleteConfirmation = (roleId) => {
+    setSelectedRoleId(roleId);
+    setShowDeleteConfirmation(true);
   };
 
-  const toggleMoreOptions = () => {
-    setIsMoreOptionsOpen(!isMoreOptionsOpen);
+  const handleHideDeleteConfirmation = () => {
+    setShowDeleteConfirmation(false);
+  };
+
+  const handleDelete = async (roleId) => {
+    try {
+      await APIEmployees.deleteRole(roleId);
+      fetchRoles();
+      setShowDeleteConfirmation(false);
+      toast.success("Role berhasil dihapus.");
+    } catch (error) {
+      toast.error("Gagal menghapus role.");
+    }
   };
 
   const handleMouseEnter = (roleId) => {
@@ -48,125 +82,15 @@ const RolesPrivileges = () => {
   return (
     <div className="border border-gray-200 rounded overflow-hidden mx-5 my-5 max-w-5xl">
       {showAddRole && (
-        <div className="bg-white shadow-md rounded-lg mb-4 w-full max-w-5xl">
-          <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-700">Add New Role</h2>
-            <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none" onClick={handleHideNewRoleCard}>Hide</button>
-          </div>
-          <div className="px-6 py-4">
-            <form>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
-                <div className="md:col-span-1">
-                  <div className="form-row mb-4">
-                    <label htmlFor="roleName" className="block text-sm font-medium text-gray-700">Role Name *</label>
-                    <input id="roleName" type="text" placeholder="Role Name" className="mt-1 block w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
-                  </div>
-                  <div className="form-row">
-                    <label htmlFor="selectAccess" className="block text-sm font-medium text-gray-700">Select Access *</label>
-                    <select id="selectAccess" className="mt-1 block w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                      <option value="">Select Access</option>
-                      <option value="full">Full Access</option>
-                      <option value="restricted">Restricted Access</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="md:col-span-1">
-                  <div className="permissions-section pl-4">
-                    <h3 className="text-lg font-medium text-gray-700">Staff Apps</h3>
-                    <div className="grid grid-cols-1 gap-2">
-                      {/* Checkbox items for Staff Apps */}
-                      <label><input type="checkbox" /> Attendance</label>
-                      <details className="group">
-                        <summary className="cursor-pointer list-none flex items-center">
-                          <input type="checkbox" className="form-checkbox text-gray-600 mr-2" /> {/* Checkbox baru di samping kiri tulisan Projects */}
-                          <span className="mr-1 rotate-[-90deg] group-open:rotate-0 transition-transform duration-200">
-                            <svg className="fill-current h-4 w-4" viewBox="0 0 20 20"> {/* Menggunakan SVG untuk arrow yang lebih baik */}
-                              <path d="M5.5 7l4.5 4.5L14.5 7z"></path>
-                            </svg>
-                          </span> {/* Icon dropdown */}
-                          <span>Projects</span>
-                        </summary>
-                        <div className="pl-4 mt-1 flex flex-col"> {/* Menambahkan flex dan flex-col untuk layout vertikal */}
-                          {/* Sub-checkbox items for Projects */}
-                          <details className="group">
-                            <summary className="cursor-pointer list-none flex items-center" onClick={toggleMoreOptions}>
-                              <span className={`mr-1 ${isMoreOptionsOpen ? 'rotate-0' : 'rotate-[-90deg]'} transition-transform duration-200`}>
-                                <svg className="fill-current h-4 w-4" viewBox="0 0 20 20">
-                                  <path d="M5.5 7l4.5 4.5L14.5 7z"></path>
-                                </svg>
-                              </span>
-                              <span>More Options</span>
-                            </summary>
-                            <div className="pl-4 mt-1 flex flex-col">
-                              {/* Sub-sub-checkbox items */}
-                              <label className="flex items-center"><input type="checkbox" className="mr-2" /> Enable Module</label>
-                              <label className="flex items-center"><input type="checkbox" className="mr-2" /> Add</label>
-                              <label className="flex items-center"><input type="checkbox" className="mr-2" /> Edit</label>
-                              <label className="flex items-center"><input type="checkbox" className="mr-2" /> Delete</label>
-                              <label className="flex items-center"><input type="checkbox" className="mr-2" /> Update Status</label>
-                              <label className="flex items-center"><input type="checkbox" className="mr-2" /> Discussion</label>
-                              <label className="flex items-center"><input type="checkbox" className="mr-2" /> Bugs</label>
-                              <label className="flex items-center"><input type="checkbox" className="mr-2" /> Tasks</label>
-                              <label className="flex items-center"><input type="checkbox" className="mr-2" /> Attach files</label>
-                              <label className="flex items-center"><input type="checkbox" className="mr-2" /> Note</label>
-                              <label className="flex items-center"><input type="checkbox" className="mr-2" /> Time Logs</label>
-                            </div>
-                          </details>
-                          <label className="flex items-center"><input type="checkbox" className="mr-2" /> Projects Calendar</label>
-                          <label className="flex items-center"><input type="checkbox" className="mr-2" /> Projects Kanban Board</label>
-                        </div>
-                      </details>
-                      <label><input type="checkbox" /> Tasks</label>
-                      <label><input type="checkbox" /> Payroll</label>
-                      <label><input type="checkbox" /> Helpdesk</label>
-                      <label><input type="checkbox" /> Training Sessions</label>
-                      <label><input type="checkbox" /> Leave Request</label>
-                      <label><input type="checkbox" /> Overtime Request</label>
-                      <label><input type="checkbox" /> Complaints</label>
-                      <label><input type="checkbox" /> Resignations</label>
-                      <label><input type="checkbox" /> Disciplinary Cases</label>
-                      <label><input type="checkbox" /> Settings</label>
-                      {/* ... (tambahkan checkbox lainnya sesuai gambar) */}
-                    </div>
-                  </div>
-                </div>
-                <div className="md:col-span-1">
-                  <div className="permissions-section">
-                    <h3 className="text-lg font-medium text-gray-700">Company Apps</h3>
-                    <div className="grid grid-cols-1 gap-2">
-                      {/* Checkbox items for Company Apps */}
-                      <label><input type="checkbox" /> Employees</label>
-                      <label><input type="checkbox" /> Recruitment (ATS)</label>
-                      <label><input type="checkbox" /> Core HR</label>
-                      <label><input type="checkbox" /> Attendance</label>
-                      <label><input type="checkbox" /> Finance</label>
-                      <label><input type="checkbox" /> Performance (PMS)</label>
-                      <label><input type="checkbox" /> Manage Clients</label>
-                      <label><input type="checkbox" /> Events</label>
-                      <label><input type="checkbox" /> Todo List</label>
-                      <label><input type="checkbox" /> System Calendar</label>
-                      <label><input type="checkbox" /> System Reports</label>
-                      {/* ... (tambahkan checkbox lainnya sesuai gambar) */}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-          <div className="flex justify-end bg-gray-200 px-4 py-3 rounded-b">
-            <button className="bg-gray-400 hover:bg-gray-500 text-black font-bold py-2 px-4 rounded mr-2 focus:outline-none" onClick={handleReset}>Reset</button>
-            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none">Save</button>
-          </div>
-        </div>
-      )}
-      {isEditPopupVisible && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" id="my-modal">
           <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div className="mt-3 text-center">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">Edit Staff Role Information</h3>
+              <h3 className="text-lg leading-6 font-medium text-gray-900">
+                {popupMode === 'edit' ? 'Edit' : 'Add'} Staff Role Information
+              </h3>
               <div className="mt-2 px-7 py-3">
                 <p className="text-sm text-gray-500">
-                  We need below required information to update this record.
+                  We need below required information to {popupMode === 'edit' ? 'update' : 'add'} this record.
                 </p>
                 <form className="w-full max-w-xl pt-6 pb-8 mb-4">
                   <div className="mb-4">
@@ -182,38 +106,46 @@ const RolesPrivileges = () => {
                       onChange={(e) => setSelectedRoleData({ ...selectedRoleData, roleName: e.target.value })}
                     />
                   </div>
-                  <div className="mb-6">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="selectAccess">
-                      Select Access *
-                    </label>
-                    <div className="relative">
-                      <select
-                        className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-                        id="selectAccess"
-                        value={selectedRoleData?.access || ''}
-                        onChange={(e) => setSelectedRoleData({ ...selectedRoleData, access: e.target.value })}
-                      >
-                        <option value="">Select Access</option>
-                        <option value="full">Full Access</option>
-                        <option value="restricted">Restricted Access</option>
-                      </select>
-                    </div>
-                  </div>
                 </form>
               </div>
               <div className="flex items-center justify-end px-4 py-3 border-t border-gray-300">
                 <button
                   id="cancel-btn"
                   className="bg-gray-500 text-white font-bold py-2 px-4 rounded-l focus:outline-none hover:bg-gray-700 mr-2"
-                  onClick={handleCloseEditPopup}
+                  onClick={() => setShowAddRole(false)}
                 >
                   Close
                 </button>
                 <button
                   id="ok-btn"
                   className="bg-green-500 text-white font-bold py-2 px-4 rounded-r focus:outline-none hover:bg-green-700"
+                  onClick={popupMode === 'edit' ? async () => {
+                    try {
+                      const payload = {
+                        role_name: selectedRoleData.roleName
+                      };
+                      await APIEmployees.editRole(selectedRoleData.id, payload);
+                      fetchRoles();
+                      setShowAddRole(false);
+                      toast.success("Role berhasil diperbarui.");
+                    } catch (error) {
+                      toast.error("Gagal memperbarui role.");
+                    }
+                  } : async () => {
+                    try {
+                      const payload = {
+                        role_name: selectedRoleData.roleName
+                      };
+                      await APIEmployees.createRole(payload);
+                      fetchRoles(); 
+                      setShowAddRole(false); 
+                      toast.success("Role berhasil ditambahkan.");
+                    } catch (error) {
+                      toast.error("Gagal menambahkan role.");
+                    }
+                  }}
                 >
-                  Update
+                  {popupMode === 'edit' ? 'Update' : 'Add'}
                 </button>
               </div>
             </div>
@@ -244,33 +176,35 @@ const RolesPrivileges = () => {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ROLE NAME</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">MENU PERMISSION</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ADDED DATE</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CREATED DATE</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">UPDATED DATE</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {/* Dummy data for demonstration */}
-              {[{ id: 1, name: 'Admin & Log', access: 'All Menu Access', addedDate: '07-08-2023' },
-                { id: 2, name: 'Dummy Role', access: 'Custom Menu Access', addedDate: '08-08-2023' }].map((role) => (
+              {isLoading ? (
+                <tr>
+                  <td colSpan="3" className="text-center py-4 text-sm text-gray-500">Loading roles data...</td>
+                </tr>
+              ) : roles.map((role) => (
                 <tr key={role.id}
                     onMouseEnter={() => handleMouseEnter(role.id)}
                     onMouseLeave={handleMouseLeave}
                     className="hover:bg-gray-100">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex justify-between">
-                      <span className="text-sm text-gray-900">{role.name}</span>
+                      <span className="text-sm text-gray-900">{role.roleName}</span>
                       <div className="flex-shrink-0 flex items-center">
                         <button className="p-1 text-blue-600 hover:text-blue-800 focus:outline-none mr-3" style={{ visibility: hoveredRoleId === role.id ? 'visible' : 'hidden' }} onClick={() => handleEditClick(role)}>
                           <PencilAltIcon className="h-5 w-5" />
                         </button>
-                        <button className="p-1 text-red-600 hover:text-red-800 focus:outline-none" style={{ visibility: hoveredRoleId === role.id ? 'visible' : 'hidden' }} onClick={() => handleDelete(role.id)}>
+                        <button className="p-1 text-red-600 hover:text-red-800 focus:outline-none" style={{ visibility: hoveredRoleId === role.id ? 'visible' : 'hidden' }} onClick={() => handleShowDeleteConfirmation(role.id)}>
                           <TrashIcon className="h-5 w-5" />
                         </button>
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">{role.access}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{role.addedDate}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{role.createdAt}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{role.updatedAt}</td>
                 </tr>
               ))}
             </tbody>
@@ -278,7 +212,7 @@ const RolesPrivileges = () => {
         </div>
         <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
           <div>
-            Showing 1 to 2 of 2 records
+            Showing 1 to {roles.length} of {roles.length} records
           </div>
           <div>
             <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
@@ -290,7 +224,23 @@ const RolesPrivileges = () => {
           </div>
         </div>
       </div>
-  </div>
+      {showDeleteConfirmation && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" id="my-modal">
+          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div className="mt-3 text-center">
+              <h3 className="text-lg leading-6 font-medium text-gray-900">Are you sure you want to delete this record?</h3>
+              <div className="mt-2 px-7 py-3">
+                <p className="text-sm text-gray-500">You won't be able to revert this!</p>
+              </div>
+              <div className="items-center px-4 py-3">
+                <button id="delete-close" className="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md w-24 mr-2" onClick={handleHideDeleteConfirmation}>Close</button>
+                <button id="delete-confirm" className="px-4 py-2 bg-red-600 text-white text-base font-medium rounded-md w-24" onClick={() => handleDelete(selectedRoleId)}>Confirm</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
