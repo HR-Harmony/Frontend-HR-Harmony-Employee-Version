@@ -1,35 +1,110 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'tailwindcss/tailwind.css';
 import { PencilAltIcon, TrashIcon } from '@heroicons/react/solid';
+import { APICoreHR } from '@/Apis/APICoreHR';
+import { APIEmployees } from '@/Apis/APIEmployees';
+import { toast } from 'react-toastify';
 
 const Department = () => {
-  const [searchQuery, setSearchQuery] = useState('');
   const [hoveredRow, setHoveredRow] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentEdit, setCurrentEdit] = useState({});
+  const [departments, setDepartments] = useState([]);
+  const [employees, setEmployees] = useState([]);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [selectedDepartmentId, setSelectedDepartmentId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [departmentName, setDepartmentName] = useState('');
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState('');
 
-  // Dummy data untuk departments
-  const departments = [
-    { name: 'Admin', head: 'John Doe', createdAt: '09-01-2024' },
-    { name: 'Customer Service', head: 'Jane Smith', createdAt: '09-01-2024' },
-    { name: 'Engineer', head: 'Tom Brown', createdAt: '05-02-2024' },
-    { name: 'HRD', head: 'Alice Johnson', createdAt: '09-01-2024' },
-    { name: 'Produksi (Advertising)', head: 'Michael Davis', createdAt: '09-01-2024' },
-    { name: 'Produksi (Interior)', head: 'Chloe Green', createdAt: '09-01-2024' },
-  ];
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      setIsLoading(true);
+      try {
+        const data = await APICoreHR.getAllDepartments();
+        setDepartments(data.departments || []);
+      } catch (error) {
+        toast.error("Failed to fetch departments.");
+      }
+      setIsLoading(false);
+    };
+    fetchDepartments();
+  }, []);
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const employeesData = await APIEmployees.getAllEmployees();
+        setEmployees(employeesData.employees || []);
+      } catch (error) {
+        toast.error("Failed to fetch employees.");
+      }
+    };
+    fetchEmployees();
+  }, []);
+
+  const handleAddDepartment = async (event) => {
+    event.preventDefault();
+    const departmentData = { department_name: departmentName, employee_id: parseInt(selectedEmployeeId, 10) };
+    setIsLoading(true);
+    try {
+      await APICoreHR.createDepartment(departmentData);
+      const updatedDepartments = await APICoreHR.getAllDepartments();
+      setDepartments(updatedDepartments.departments || []);
+      setDepartmentName('');
+      setSelectedEmployeeId('');
+      toast.success("Department added successfully");
+    } catch (error) {
+      toast.error("Failed to add department.");
+    }
+    setIsLoading(false);
+  };
 
   const handleEditClick = (department) => {
-    setCurrentEdit(department);
+    setCurrentEdit({
+      id: department.id,
+      name: department.department_name,
+      head: department.employee_id
+    });
     setIsEditModalOpen(true);
   };
 
-  const handleDeleteClick = (department) => {
-    // Logika untuk handle delete
-    console.log('Delete:', department);
+  const handleDeleteClick = (departmentId) => {
+    setSelectedDepartmentId(departmentId);
+    setShowDeleteConfirmation(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (selectedDepartmentId) {
+      try {
+        await APICoreHR.deleteDepartment(selectedDepartmentId);
+        const updatedDepartments = await APICoreHR.getAllDepartments();
+        setDepartments(updatedDepartments.departments || []);
+        setShowDeleteConfirmation(false);
+        toast.success("Department deleted successfully");
+      } catch (error) {
+        toast.error("Failed to delete department.");
+      }
+    }
+  };
+
+  const handleUpdateDepartment = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
+    try {
+      await APICoreHR.updateDepartment(currentEdit.id, { department_name: currentEdit.name, employee_id: parseInt(currentEdit.head, 10) });
+      const updatedDepartments = await APICoreHR.getAllDepartments();
+      setDepartments(updatedDepartments.departments || []);
+      toast.success("Department updated successfully");
+      setIsEditModalOpen(false);
+    } catch (error) {
+      toast.error("Failed to update department.");
+    }
+    setIsLoading(false);
   };
 
   return (
-    <div className="container mx-auto">
+    <div className="max-w-6xl ml-auto mr-auto">
       <div className="flex flex-wrap -mx-3">
         {/* Card untuk menambahkan department baru */}
         <div className="w-full lg:w-1/3 px-3 lg:mb-0">
@@ -37,16 +112,18 @@ const Department = () => {
             <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
               <h5 className="text-lg font-semibold text-gray-700">Add New Department</h5>
             </div>
-            <form className="p-4">
+            <form className="p-4" onSubmit={handleAddDepartment}>
               <div>
                 <label htmlFor="departmentName" className="block text-sm font-medium text-gray-700">Name *</label>
-                <input type="text" id="departmentName" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Name" required />
+                <input type="text" name="departmentName" value={departmentName} onChange={(e) => setDepartmentName(e.target.value)} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Name" required />
               </div>
               <div className="mt-3 mb-3">
                 <label htmlFor="departmentHead" className="block text-sm font-medium text-gray-700">Department Head</label>
-                <select id="departmentHead" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                <select id="departmentHead" value={selectedEmployeeId} onChange={(e) => setSelectedEmployeeId(e.target.value)} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                   <option>Select head</option>
-                  {/* Options should be populated here */}
+                  {employees.map((employee) => (
+                    <option key={employee.id} value={employee.id}>{employee.first_name} {employee.last_name}</option>
+                  ))}
                 </select>
               </div>
               <button type="submit" className="bg-indigo-600 text-white mb-4 px-4 py-2 rounded-md hover:bg-indigo-700">Save</button>
@@ -84,30 +161,45 @@ const Department = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {departments.map((department, index) => (
-                    <tr 
-                      key={index} 
-                      onMouseEnter={() => setHoveredRow(index)}
-                      onMouseLeave={() => setHoveredRow(null)}
-                      className={`relative ${hoveredRow === index ? 'bg-gray-100' : 'bg-white'}`}
-                    >
-                      <td className="border px-4 py-2 relative text-sm text-gray-900">
-                        {department.name}
-                        {hoveredRow === index && (
-                          <div className="absolute right-0 top-0 mr-3 mt-1 flex items-center">
-                            <button className="p-1 mr-2 text-blue-600 hover:text-blue-800" onClick={() => handleEditClick(department)}>
-                              <PencilAltIcon className="h-5 w-5" />
-                            </button>
-                            <button className="p-1 text-red-600 hover:text-red-800" onClick={() => handleDeleteClick(department)}>
-                              <TrashIcon className="h-5 w-5" />
-                            </button>
-                          </div>
-                        )}
-                      </td>
-                      <td className="border px-4 py-2 text-sm text-gray-900">{department.head}</td>
-                      <td className="border px-4 py-2 text-sm text-gray-900">{department.createdAt}</td>
+                  {isLoading ? (
+                    <tr>
+                      <td colSpan="8" className="text-center py-4 text-sm text-gray-500">Loading departments data...</td>
                     </tr>
-                  ))}
+                  ) : departments && departments.length > 0 ? (
+                    departments.map((department, index) => {
+                      const employee = employees.find(emp => emp.id === department.employee_id);
+                      return (
+                        <tr 
+                          key={index} 
+                          onMouseEnter={() => setHoveredRow(index)}
+                          onMouseLeave={() => setHoveredRow(null)}
+                          className={`relative ${hoveredRow === index ? 'bg-gray-100' : 'bg-white'}`}
+                        >
+                          <td className="border px-4 py-2 relative text-sm text-gray-900">
+                            {department.department_name}
+                            {hoveredRow === index && (
+                              <div className="absolute right-0 top-0 mr-3 mt-1 flex items-center">
+                                <button className="p-1 mr-2 text-blue-600 hover:text-blue-800" onClick={() => handleEditClick(department)}>
+                                  <PencilAltIcon className="h-5 w-5" />
+                                </button>
+                                <button className="p-1 text-red-600 hover:text-red-800" onClick={() => handleDeleteClick(department.id)}>
+                                  <TrashIcon className="h-5 w-5" />
+                                </button>
+                              </div>
+                            )}
+                          </td>
+                          <td className="border px-4 py-2 text-sm text-gray-900">{employee ? `${employee.first_name} ${employee.last_name}` : 'N/A'}</td>
+                          <td className="border px-4 py-2 text-sm text-gray-900">{department.created_at.split('T')[0]}</td>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td colSpan="8" className="text-center py-4 text-sm text-gray-500">
+                        No departments data available.
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
               <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
@@ -135,7 +227,7 @@ const Department = () => {
               </button>
             </div>
             <p className="mb-5">We need below required information to update this record.</p>
-            <form>
+            <form onSubmit={handleUpdateDepartment}>
               <div className="mb-5">
                 <label htmlFor="editDepartmentName" className="block text-sm font-medium text-gray-700 mb-2">Name *</label>
                 <input type="text" value={currentEdit.name} onChange={(e) => setCurrentEdit({ ...currentEdit, name: e.target.value })} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" id="editDepartmentName" required />
@@ -144,7 +236,9 @@ const Department = () => {
                 <label htmlFor="editDepartmentHead" className="block text-sm font-medium text-gray-700 mb-2">Department Head</label>
                 <select value={currentEdit.head} onChange={(e) => setCurrentEdit({ ...currentEdit, head: e.target.value })} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" id="editDepartmentHead">
                   <option>Select head</option>
-                  {/* Options should be populated here */}
+                  {employees.map((employee) => (
+                    <option key={employee.id} value={employee.id}>{employee.first_name} {employee.last_name}</option>
+                  ))}
                 </select>
               </div>
               <div className="flex items-center justify-end space-x-3">
@@ -159,8 +253,30 @@ const Department = () => {
           </div>
         </div>
       )}
+      {showDeleteConfirmation && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center" id="delete-department-modal">
+          <div className="bg-white p-6 rounded-md shadow-lg w-full max-w-md">
+            <div className="flex justify-between items-center mb-5">
+              <h4 className="text-lg font-semibold">Confirm Delete</h4>
+              <button onClick={() => setShowDeleteConfirmation(false)} className="text-black">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <p className="mb-5">Are you sure you want to delete this department?</p>
+            <div className="flex items-center justify-end space-x-3">
+              <button type="button" onClick={() => setShowDeleteConfirmation(false)} className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                Cancel
+              </button>
+              <button type="button" onClick={handleConfirmDelete} className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default Department;
+

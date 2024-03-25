@@ -5,7 +5,6 @@ import { APIEmployees } from '@/Apis/APIEmployees';
 import { toast } from 'react-toastify';
 
 const ExitType = () => {
-  const [searchQuery, setSearchQuery] = useState('');
   const [hoveredRow, setHoveredRow] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentEdit, setCurrentEdit] = useState(null);
@@ -24,7 +23,7 @@ const ExitType = () => {
           created_at: exit.created_at.split('T')[0],
           UpdatedAt: exit.UpdatedAt.split('T')[0]
         }));
-        setExitTypes(formattedData);
+        setExitTypes(formattedData || []);
       } catch (error) {
         toast.error("Terjadi kesalahan saat mengambil data exit type.");
       }
@@ -44,7 +43,7 @@ const ExitType = () => {
       try {
         await APIEmployees.updateExitType(currentEdit.id, { exit_name: currentEdit.exit_name });
         const updatedExitTypes = exitTypes.map(et => et.id === currentEdit.id ? { ...et, exit_name: currentEdit.exit_name, created_at: et.created_at.split('T')[0], UpdatedAt: et.UpdatedAt.split('T')[0] } : et);
-        setExitTypes(updatedExitTypes);
+        setExitTypes(updatedExitTypes || []);
         setIsEditModalOpen(false);
       } catch (error) {
         toast.error("Terjadi kesalahan saat mengupdate exit type.");
@@ -60,7 +59,7 @@ const ExitType = () => {
   const handleConfirmDelete = async () => {
     try {
       await APIEmployees.deleteExitType(selectedExitTypeId);
-      setExitTypes(exitTypes.filter(et => et.id !== selectedExitTypeId));
+      setExitTypes(exitTypes.filter(et => et.id !== selectedExitTypeId) || []);
       setShowDeleteConfirmation(false);
     } catch (error) {
       toast.error("Terjadi kesalahan saat menghapus exit type.");
@@ -75,7 +74,7 @@ const ExitType = () => {
     try {
       const newExit = await APIEmployees.createExitType(exitData);
       const formattedExit = { ...newExit.exit, created_at: newExit.exit.created_at.split('T')[0], UpdatedAt: newExit.exit.UpdatedAt.split('T')[0] };
-      setExitTypes([...exitTypes, formattedExit]);
+      setExitTypes([...exitTypes, formattedExit] || []);
       document.getElementById('exitType').value = '';
     } catch (error) {
       toast.error("Terjadi kesalahan saat menambahkan exit type.");
@@ -134,7 +133,7 @@ const ExitType = () => {
                     <tr>
                       <td colSpan="3" className="text-center py-4 text-sm text-gray-500">Loading exit types data...</td>
                     </tr>
-                  ) : (
+                  ) : exitTypes.length > 0 ? (
                     exitTypes.map((exitType, index) => (
                       <tr 
                         key={exitType.id} 
@@ -158,6 +157,10 @@ const ExitType = () => {
                         <td className="border px-4 py-2 text-sm text-gray-900">{exitType.created_at}</td>
                       </tr>
                     ))
+                  ) : (
+                    <tr>
+                      <td colSpan="3" className="text-center py-4 text-sm text-gray-500">No exit types data available.</td>
+                    </tr>
                   )}
                 </tbody>
               </table>

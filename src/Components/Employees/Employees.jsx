@@ -67,7 +67,7 @@ const Employees = () => {
 
   const fetchDepartments = async () => {
     try {
-      const response = await APICoreHR.getDepartments();
+      const response = await APICoreHR.getAllDepartments();
       setDepartments(response.departments || []);
     } catch (error) {
       toast.error('Failed to fetch departments. Please try again.');
@@ -77,7 +77,7 @@ const Employees = () => {
 
   const fetchDesignations = async () => {
     try {
-      const response = await APICoreHR.getDesignations();
+      const response = await APICoreHR.getAllDesignations();
       setDesignations(response.designations || []);
     } catch (error) {
       toast.error('Failed to fetch designations. Please try again.');
@@ -186,7 +186,7 @@ const Employees = () => {
   };
 
   const validateEmail = (value) => {
-    if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)) {
+    if (!/^[\w-]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)) {
       setEmailError('Invalid email format');
     } else {
       setEmailError('');
