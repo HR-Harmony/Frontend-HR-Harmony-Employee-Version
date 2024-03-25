@@ -1,20 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'tailwindcss/tailwind.css';
 import { PencilAltIcon, TrashIcon } from '@heroicons/react/solid';
+import { toast } from 'react-toastify';
+import { APICoreHR } from '@/Apis/APICoreHR';
 
 const Designation = () => {
-  const [searchQuery, setSearchQuery] = useState('');
   const [hoveredRow, setHoveredRow] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentEdit, setCurrentEdit] = useState({});
+  const [designations, setDesignations] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [selectedDesignationId, setSelectedDesignationId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const designations = [
-    { designation: 'Apoteker', department: 'Admin' },
-    { designation: 'Interior', department: 'Produksi (Interior)' },
-    { designation: 'Kord engineer', department: 'Engineer' },
-    { designation: 'Pendaftaran', department: 'Customer Service' },
-    { designation: 'Recruitment', department: 'HRD' },
-  ];
+  useEffect(() => {
+    const fetchDesignations = async () => {
+      setIsLoading(true);
+      try {
+        const data = await APICoreHR.getAllDesignations();
+        setDesignations(data.designations || []);
+      } catch (error) {
+        toast.error("Failed to fetch designations.");
+      }
+      setIsLoading(false);
+    };
+    fetchDesignations();
+  }, []);
+
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      setIsLoading(true);
+      try {
+        const data = await APICoreHR.getAllDepartments();
+        setDepartments(data.departments || []);
+      } catch (error) {
+        toast.error("Failed to fetch departments.");
+      }
+      setIsLoading(false);
+    };
+    fetchDepartments();
+  }, []);
 
   const handleEditClick = (designation) => {
     setCurrentEdit(designation);
@@ -22,22 +48,80 @@ const Designation = () => {
   };
 
   const handleDeleteClick = (designation) => {
-    console.log('Delete:', designation);
+    setSelectedDesignationId(designation.id);
+    setShowDeleteConfirmation(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (selectedDesignationId) {
+      setIsLoading(true);
+      try {
+        await APICoreHR.deleteDesignation(selectedDesignationId);
+        setShowDeleteConfirmation(false);
+        const data = await APICoreHR.getAllDesignations();
+        setDesignations(data.designations || []);
+        toast.success("Designation deleted successfully");
+      } catch (error) {
+        toast.error("Failed to delete designation.");
+      }
+      setIsLoading(false);
+    }
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
+    const designationData = {
+      department_id: parseInt(event.target.designationDepartment.value),
+      designation_name: event.target.designationName.value,
+      description: event.target.designationDescription.value,
+    };
+    try {
+      await APICoreHR.createDesignation(designationData);
+      toast.success("Designation created successfully");
+      const data = await APICoreHR.getAllDesignations();
+      setDesignations(data.designations || []);
+      setIsLoading(false);
+      event.target.reset();
+      document.getElementById('designationDepartment').value = "";
+    } catch (error) {
+      toast.error("Failed to create designation.");
+      setIsLoading(false);
+    }
+  };
+
+  const handleUpdate = async () => {
+    if (currentEdit && currentEdit.id) {
+      setIsLoading(true);
+      try {
+        await APICoreHR.updateDesignation(currentEdit.id, currentEdit);
+        setIsEditModalOpen(false);
+        const data = await APICoreHR.getAllDesignations();
+        setDesignations(data.designations || []);
+        toast.success("Designation updated successfully");
+      } catch (error) {
+        toast.error("Failed to update designation.");
+      }
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="container mx-auto">
+    <div className="max-w-6xl ml-auto mr-auto">
       <div className="flex flex-wrap -mx-3">
         <div className="w-full lg:w-1/3 px-3 lg:mb-0">
           <div className="bg-white rounded-lg shadow-md">
             <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
               <h5 className="text-lg font-semibold text-gray-700">Add New Designation</h5>
             </div>            
-            <form className="p-4">
+            <form onSubmit={handleSubmit} className="p-4">
               <div className="mb-3">
                 <label htmlFor="designationDepartment" className="block text-sm font-medium text-gray-700">Department *</label>
                 <select id="designationDepartment" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                  {/* Options should be populated here */}
+                  <option value="">Select Department</option>
+                  {departments.map((department) => (
+                    <option key={department.id} value={department.id}>{department.department_name}</option>
+                  ))}
                 </select>
               </div>
               <div className="mb-3">
@@ -73,39 +157,53 @@ const Designation = () => {
               </div>
             </div>            
             <div className="overflow-x-auto mb-4 px-3">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DESIGNATION</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DEPARTMENT</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {designations.map((designation, index) => (
-                    <tr 
-                      key={index} 
-                      onMouseEnter={() => setHoveredRow(index)}
-                      onMouseLeave={() => setHoveredRow(null)}
-                      className={`relative ${hoveredRow === index ? 'bg-gray-100' : 'bg-white'}`}
-                    >
-                      <td className="border px-4 py-2 relative text-sm text-gray-900">
-                        {designation.designation}
-                        {hoveredRow === index && (
-                          <div className="absolute right-0 top-0 mr-3 mt-1 flex items-center">
-                            <button className="p-1 mr-2 text-blue-600 hover:text-blue-800" onClick={() => handleEditClick(designation)}>
-                              <PencilAltIcon className="h-5 w-5" />
-                            </button>
-                            <button className="p-1 text-red-600 hover:text-red-800" onClick={() => handleDeleteClick(designation)}>
-                              <TrashIcon className="h-5 w-5" />
-                            </button>
-                          </div>
-                        )}
-                      </td>
-                      <td className="border px-4 py-2 text-sm text-gray-900">{designation.department}</td>
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DESIGNATION</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DEPARTMENT</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                  {isLoading ? (
+                    <tr>
+                      <td colSpan="8" className="text-center py-4 text-sm text-gray-500">Loading designations data...</td>
+                    </tr>
+                  ) : designations.length > 0 ? (
+                    designations.map((designation) => (
+                      <tr 
+                        key={designation.id} 
+                        onMouseEnter={() => setHoveredRow(designation.id)}
+                        onMouseLeave={() => setHoveredRow(null)}
+                        className={`relative ${hoveredRow === designation.id ? 'bg-gray-100' : 'bg-white'}`}
+                      >
+                        <td className="border px-4 py-2 relative text-sm text-gray-900">
+                          {designation.designation_name}
+                          {hoveredRow === designation.id && (
+                            <div className="absolute right-0 top-0 mr-3 mt-1 flex items-center">
+                              <button className="p-1 mr-2 text-blue-600 hover:text-blue-800" onClick={() => handleEditClick(designation)}>
+                                <PencilAltIcon className="h-5 w-5" />
+                              </button>
+                              <button className="p-1 text-red-600 hover:text-red-800" onClick={() => handleDeleteClick(designation)}>
+                                <TrashIcon className="h-5 w-5" />
+                              </button>
+                            </div>
+                          )}
+                        </td>
+                        <td className="border px-4 py-2 text-sm text-gray-900">
+                          {departments.find(dept => dept.id === designation.department_id)?.department_name || 'Unknown Department'}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="8" className="text-center py-4 text-sm text-gray-500">
+                        No designations data available.
+                      </td>
+                    </tr>
+                  )}
+                  </tbody>
+                </table>
             </div>
             <div className="text-gray-500 text-sm p-3 flex justify-between items-center">
               <span>Showing 1 to {designations.length} of {designations.length} records</span>
@@ -130,16 +228,19 @@ const Designation = () => {
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <form>
+            <form onSubmit={handleUpdate}>
               <div className="mb-3">
                 <label htmlFor="editDesignationDepartment" className="block text-sm font-medium text-gray-700">Department *</label>
-                <select id="editDesignationDepartment" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                  {/* Options should be populated here based on existing departments */}
+                <select id="editDesignationDepartment" value={currentEdit.department_id} onChange={(e) => setCurrentEdit({ ...currentEdit, department_id: e.target.value })} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                  <option value="">Select Department</option>
+                  {departments.map((department) => (
+                    <option key={department.id} value={department.id}>{department.department_name}</option>
+                  ))}
                 </select>
               </div>
               <div className="mb-3">
                 <label htmlFor="editDesignationName" className="block text-sm font-medium text-gray-700">Designation Name *</label>
-                <input type="text" id="editDesignationName" value={currentEdit.designation} onChange={(e) => setCurrentEdit({ ...currentEdit, designation: e.target.value })} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
+                <input type="text" id="editDesignationName" value={currentEdit.designation_name} onChange={(e) => setCurrentEdit({ ...currentEdit, designation_name: e.target.value })} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
               </div>
               <div className="mb-3">
                 <label htmlFor="editDesignationDescription" className="block text-sm font-medium text-gray-700">Description</label>
@@ -147,6 +248,22 @@ const Designation = () => {
               </div>
               <button type="submit" className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Update</button>
             </form>
+          </div>
+        </div>
+      )}
+      {showDeleteConfirmation && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" id="delete-confirmation-modal">
+          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div className="mt-3 text-center">
+              <h3 className="text-lg leading-6 font-medium text-gray-900">Are you sure you want to delete this record?</h3>
+              <div className="mt-2 px-7 py-3">
+                <p className="text-sm text-gray-500">You won't be able to revert this!</p>
+              </div>
+              <div className="items-center px-4 py-3">
+                <button className="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md w-24 mr-2" onClick={() => setShowDeleteConfirmation(false)}>Close</button>
+                <button className="px-4 py-2 bg-red-600 text-white text-base font-medium rounded-md w-24" onClick={handleConfirmDelete}>Confirm</button>
+              </div>
+            </div>
           </div>
         </div>
       )}

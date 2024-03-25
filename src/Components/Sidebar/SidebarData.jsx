@@ -1,4 +1,4 @@
-import { MdDashboard, MdPayments, MdAutoGraph, MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import { MdDashboard, MdPayments, MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { FaUsers, FaUserClock } from "react-icons/fa";
 import { FaSync, FaTasks } from "react-icons/fa";
 import { MdEmojiPeople } from "react-icons/md";
@@ -58,10 +58,6 @@ const SideBarData = [
             {
                 title: "Make Announcement",
                 path: "/corehr/news-list"
-            },
-            {
-                title: "Organization Chart",
-                path: "/corehr/chart"
             },
         ]
     },

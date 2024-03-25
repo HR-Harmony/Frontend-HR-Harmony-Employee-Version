@@ -27,7 +27,7 @@ const ManualAttendances = () => {
   ];
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="max-w-6xl ml-auto mr-auto">
       <div className="flex flex-wrap -mx-3">
         <div className="w-full lg:w-1/3 px-3 lg:mb-0">
           <div className="bg-white rounded-lg shadow-md">
