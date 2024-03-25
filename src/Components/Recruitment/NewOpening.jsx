@@ -3,7 +3,7 @@ import ReactQuill from 'react-quill';
 import { ArrowCircleRightIcon, CheckCircleIcon, RefreshIcon, PlayIcon, PauseIcon, PencilAltIcon, TrashIcon} from '@heroicons/react/solid';
 import { useNavigate } from 'react-router-dom';
 
-const TasksList = () => {
+const NewOpening = () => {
   const navigate = useNavigate();
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedType, setSelectedType] = useState('');
@@ -241,4 +241,4 @@ const TasksList = () => {
   )
 }
 
-export default TasksList;
+export default NewOpening;
