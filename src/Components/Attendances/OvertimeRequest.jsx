@@ -41,7 +41,7 @@ const OvertimeRequest = () => {
   ];
 
   return (
-    <div className="border border-gray-200 rounded overflow-hidden mx-5 my-5 max-w-5xl">
+    <div className="border border-gray-200 rounded overflow-hidden max-w-6xl ml-auto mr-auto">
       <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
         <h2 className="text-lg font-semibold text-gray-700">Overtime Request</h2>
         <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700" onClick={handleAddNewClick}>Add New</button>
