@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { TrashIcon } from '@heroicons/react/solid';
+import { TrashIcon, PencilIcon } from '@heroicons/react/solid';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 
 const OvertimeRequest = () => {
   const [visibleDelete, setVisibleDelete] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState(null);
 
   const handleAddNewClick = () => {
     setShowModal(true);
@@ -13,6 +15,15 @@ const OvertimeRequest = () => {
 
   const handleCloseModal = () => {
     setShowModal(false);
+  };
+
+  const handleEditClick = (request) => {
+    setSelectedRequest(request);
+    setShowEditModal(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
   };
 
   const handleDelete = (employeeId) => {
@@ -82,9 +93,14 @@ const OvertimeRequest = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 relative">
                     <span>{request.employee}</span>
                     {visibleDelete === request.id && (
-                      <button className="absolute right-0 top-0 bottom-0 mr-4">
-                        <TrashIcon className="h-5 w-5 text-red-600 hover:text-red-800" />
-                      </button>
+                      <>
+                        <button className="absolute right-0 top-0 bottom-0 mr-10" onClick={() => handleEditClick(request)}>
+                          <PencilIcon className="h-5 w-5 text-blue-600 hover:text-blue-800" />
+                        </button>
+                        <button className="absolute right-0 top-0 bottom-0 mr-4">
+                          <TrashIcon className="h-5 w-5 text-red-600 hover:text-red-800" />
+                        </button>
+                      </>
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{request.date}</td>
@@ -208,6 +224,116 @@ const OvertimeRequest = () => {
         </div>
       </Dialog>
     </Transition>
+
+    {/* Modal untuk Edit Overtime Request */}
+    {showEditModal && (
+      <Transition appear show={showEditModal} as={Fragment}>
+        <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto" onClose={handleCloseEditModal}>
+          <div className="min-h-screen px-4 text-center">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+            </Transition.Child>
+
+            {/* This element is to trick the browser into centering the modal contents. */}
+            <span className="inline-block h-screen align-middle" aria-hidden="true">&#8203;</span>
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
+                  Edit Overtime Request Information
+                </Dialog.Title>
+                <div className="mt-2">
+                  <p className="text-sm text-gray-500">
+                    Update the required information for this record.
+                  </p>
+                  {/* Form fields */}
+                  <form className="mt-4">
+                    <div className="mb-4">
+                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="employee">
+                        Employee *
+                      </label>
+                      <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="employee" type="text" placeholder="Employee name" value={selectedRequest ? selectedRequest.employee : ''} />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="date">
+                          Date *
+                        </label>
+                        <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="date" type="date" value={selectedRequest ? selectedRequest.date : ''} />
+                      </div>
+                      <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="status">
+                          Status *
+                        </label>
+                        <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="status" value={selectedRequest ? selectedRequest.status : ''}>
+                          <option value="Pending">Pending</option>
+                          <option value="Accepted">Accepted</option>
+                          <option value="Rejected">Rejected</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="inTime">
+                          In Time *
+                        </label>
+                        <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="inTime" type="time" value={selectedRequest ? selectedRequest.inTime : ''} />
+                      </div>
+                      <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="outTime">
+                          Out Time *
+                        </label>
+                        <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="outTime" type="time" value={selectedRequest ? selectedRequest.outTime : ''} />
+                      </div>
+                    </div>
+                    <div className="mb-4">
+                      <label className="block mb-4 text-sm text-gray-700">
+                        Reason *
+                        <textarea
+                          className="w-full p-2 border border-gray-300 rounded"
+                          placeholder="Reason for overtime"
+                          rows="3"
+                          value={selectedRequest ? selectedRequest.reason : ''}
+                        />
+                      </label>
+                    </div>
+                    <div className="mt-4 flex justify-end space-x-3">
+                      <button
+                        onClick={handleCloseEditModal}
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                      >
+                        Close
+                      </button>
+                      <button
+                        type="submit"
+                        className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+                      >
+                        Update
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition>
+    )}
   </div>
   );
 };

@@ -1,19 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'tailwindcss/tailwind.css';
 import { PencilAltIcon, TrashIcon } from '@heroicons/react/solid';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
+import { APIAttendance } from '@/Apis/APIAttendance';
+import { APIEmployees } from '@/Apis/APIEmployees';
+import { toast } from 'react-toastify';
+
+const initialNewAttendanceState = {
+  employee_id: '',
+  attendance_date: '',
+  in_time: '',
+  out_time: ''
+};
 
 const ManualAttendances = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [hoveredRow, setHoveredRow] = useState(null);
+  const [hoveredId, setHoveredId] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentEdit, setCurrentEdit] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [visibleDelete, setVisibleDelete] = useState(null);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [selectedAttendanceId, setSelectedAttendanceId] = useState(null);
+  const [filterDate, setFilterDate] = useState('');
+  const [filterEmployeeId, setFilterEmployeeId] = useState('');
+  const [attendances, setAttendances] = useState([]);
+  const [employees, setEmployees] = useState([]);
+  const [filteredAttendances, setFilteredAttendances] = useState([]);
+  const [newAttendance, setNewAttendance] = useState(initialNewAttendanceState);
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const fetchAttendancesAndEmployees = async () => {
+    setIsLoading(true);
+    try {
+      const attendancesData = await APIAttendance.getAllAttendances();
+      const employeesData = await APIEmployees.getAllEmployees();
+      setAttendances(attendancesData.data || []);
+      setEmployees(employeesData.employees || []);
+      setFilteredAttendances(attendancesData.data || []);
+    } catch (error) {
+      toast.error('Failed to fetch data');
+    }
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    fetchAttendancesAndEmployees();
+  }, []);
+
+  useEffect(() => {
+    setFilteredAttendances(attendances);
+  }, [attendances]);
 
   const handleEditClick = (attendance) => {
-    setCurrentEdit(attendance);
+    setCurrentEdit({
+      ...attendance,
+      employee_id: attendance.employee_id.toString(),
+    });
     setIsEditModalOpen(true);
   };
 
@@ -21,10 +63,87 @@ const ManualAttendances = () => {
     setIsAddModalOpen(true);
   };
 
-  const attendances = [
-    { employee: 'Fakhrity Hikmawan', email: 'fakhrityhikmawan@gmail.com', date: '05-03-2024', inTime: '04:32 pm', outTime: '04:32 pm', duration: '0:0' },
-    { employee: 'Arfara Yema Samgusdian', email: 'arfarayemas@gmail.com', date: '06-03-2024', inTime: '09:15 am', outTime: '07:00 am', duration: '00:00' },
-  ];
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewAttendance({ ...newAttendance, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const dataToSend = {
+      ...newAttendance,
+      employee_id: parseInt(newAttendance.employee_id, 10)
+    };
+
+    try {
+      const response = await APIAttendance.createAttendance(dataToSend);
+      if (response.code === 201) {
+        setIsAddModalOpen(false);
+        setNewAttendance(initialNewAttendanceState);
+        fetchAttendancesAndEmployees();
+        toast.success("Attendance record added successfully");
+      }
+    } catch (error) {
+      toast.error('Failed to create attendance record');
+    }
+    setIsLoading(false);
+  };
+
+  const handleDeleteClick = (attendanceId) => {
+    setSelectedAttendanceId(attendanceId);
+    setShowDeleteConfirmation(true);
+  };
+
+  const handleUpdateSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+  
+    const dataToUpdate = {
+      ...currentEdit,
+      employee_id: parseInt(currentEdit.employee_id, 10),
+    };
+  
+    try {
+      const response = await APIAttendance.updateAttendance(dataToUpdate.id, dataToUpdate);
+      if (response.code === 200) {
+        toast.success("Attendance record updated successfully");
+        setIsEditModalOpen(false);
+        fetchAttendancesAndEmployees();
+      }
+    } catch (error) {
+      toast.error("Failed to update attendance record");
+    }
+    setIsLoading(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    setIsLoading(true);
+    try {
+      await APIAttendance.deleteAttendance(selectedAttendanceId);
+      setShowDeleteConfirmation(false);
+      fetchAttendancesAndEmployees();
+      toast.success("Attendance record deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete attendance record.");
+    }
+    setIsLoading(false);
+  };
+
+  const handleFilterSubmit = (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const filtered = attendances.filter((attendance) => {
+      const matchesDate = filterDate ? attendance.attendance_date === filterDate : true;
+      const matchesEmployee = filterEmployeeId ? attendance.employee_id.toString() === filterEmployeeId : true;
+      return matchesDate && matchesEmployee;
+    });
+  
+    setFilteredAttendances(filtered);
+    setIsLoading(false);
+  };
 
   return (
     <div className="max-w-6xl ml-auto mr-auto">
@@ -34,16 +153,20 @@ const ManualAttendances = () => {
             <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
               <h5 className="text-lg font-semibold text-gray-700">Filter Attendance</h5>
             </div>
-            <form className="p-4">
+            <form className="p-4" onSubmit={handleFilterSubmit}>
               <div>
                 <label htmlFor="date" className="block text-sm font-medium text-gray-700">Date</label>
-                <input type="date" className="mt-2 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" id="date" />
+                <input type="date" className="mt-2 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" id="date" value={filterDate} onChange={(e) => setFilterDate(e.target.value)} />
               </div>
               <div className="mt-3">
-                <label htmlFor="employee" className="block text-sm font-medium text-gray-700">Employee</label>
-                <select id="employee" className="mt-2 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                  <option>coba saja</option>
-                  {/* Tambahkan opsi karyawan lainnya di sini */}
+                <label htmlFor="employee_id" className="block text-sm font-medium text-gray-700">Employee</label>
+                <select id="employee" className="mt-2 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" value={filterEmployeeId} onChange={(e) => setFilterEmployeeId(e.target.value)}>
+                  <option value="">Select an employee</option>
+                  {employees.map((employee) => (
+                    <option key={employee.id} value={employee.id}>
+                      {employee.first_name} {employee.last_name}
+                    </option>
+                  ))}
                 </select>
               </div>
               <button type="submit" className="bg-indigo-600 text-white px-4 py-2 mt-3 mb-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Filter</button>
@@ -88,35 +211,48 @@ const ManualAttendances = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {attendances.map((attendance, index) => (
-                    <tr key={index}
-                        onMouseEnter={() => setVisibleDelete(attendance.employee)}
-                        onMouseLeave={() => setVisibleDelete(null)}
-                        className="group hover:bg-gray-100">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 relative flex justify-between">
-                        <span>{attendance.employee}</span>
-                        {visibleDelete === attendance.employee && (
-                          <div className="flex items-center">
-                            <button onClick={() => handleEditClick(attendance)} className="text-indigo-600 hover:text-indigo-900 ml-5 mr-2">
-                              <PencilAltIcon className="h-5 w-5" />
-                            </button>
-                            <button className="text-red-600 hover:text-red-800">
-                              <TrashIcon className="h-5 w-5" />
-                            </button>
-                          </div>
-                        )}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.date}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.inTime}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.outTime}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.duration}</td>
+                  {isLoading ? (
+                    <tr>
+                      <td colSpan="5" className="text-center py-4 text-sm text-gray-500">Loading attendances data...</td>
                     </tr>
-                  ))}
+                  ) : filteredAttendances.length > 0 ? (
+                    filteredAttendances.map((attendance) => {
+                      const employee = employees.find(emp => emp.id === attendance.employee_id);
+                      return (
+                        <tr key={attendance.id}
+                            onMouseEnter={() => setHoveredId(attendance.id)}
+                            onMouseLeave={() => setHoveredId(null)}
+                            className="group hover:bg-gray-100">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 relative flex justify-between">
+                            <span>{employee ? `${employee.first_name} ${employee.last_name}` : 'N/A'}</span>
+                            {hoveredId === attendance.id && (
+                              <div className="flex items-center">
+                                <button onClick={() => handleEditClick(attendance)} className="text-indigo-600 hover:text-indigo-900 ml-5 mr-2">
+                                  <PencilAltIcon className="h-5 w-5" />
+                                </button>
+                                <button onClick={() => handleDeleteClick(attendance.id)} className="text-red-600 hover:text-red-800">
+                                  <TrashIcon className="h-5 w-5" />
+                                </button>
+                              </div>
+                            )}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.attendance_date}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.in_time}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.out_time}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.total_work || 'N/A'}</td>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td colSpan="5" className="text-center py-4 text-sm text-gray-500">No attendance data available.</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
-            <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
-                Showing 1 to 2 of 2 records
+            <div className="text-gray-500 text-sm my-4 flex justify-between items-center px-3">
+                Showing 1 to {filteredAttendances.length} of {filteredAttendances.length} records
                 <div>
                   <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 mb-4 ml-3 rounded focus:outline-none">
                     Previous
@@ -138,26 +274,29 @@ const ManualAttendances = () => {
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <form>
+            <form onSubmit={handleUpdateSubmit}>
               <div className="mb-4">
                 <label htmlFor="editEmployee" className="block text-sm font-medium text-gray-700">Employee *</label>
-                <select id="editEmployee" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                  <option>{currentEdit.employee}</option>
-                  {/* Add more employee options here */}
+                <select id="editEmployee" name="employee_id" value={currentEdit.employee_id} onChange={(e) => setCurrentEdit({ ...currentEdit, employee_id: e.target.value })} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                  {employees.map((employee) => (
+                    <option key={employee.id} value={employee.id}>
+                      {employee.first_name} {employee.last_name}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="mb-4">
                 <label htmlFor="editDate" className="block text-sm font-medium text-gray-700">Attendance Date *</label>
-                <input type="date" id="editDate" value={currentEdit.date} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
+                <input type="date" id="editDate" name="attendance_date" value={currentEdit.attendance_date} onChange={(e) => setCurrentEdit({ ...currentEdit, attendance_date: e.target.value })} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
               </div>
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
                   <label htmlFor="editInTime" className="block text-sm font-medium text-gray-700">In Time *</label>
-                  <input type="time" id="editInTime" value={currentEdit.inTime} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
+                  <input type="time" id="editInTime" name="in_time" value={currentEdit.in_time} onChange={(e) => setCurrentEdit({ ...currentEdit, in_time: e.target.value })} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
                 </div>
                 <div>
                   <label htmlFor="editOutTime" className="block text-sm font-medium text-gray-700">Out Time *</label>
-                  <input type="time" id="editOutTime" value={currentEdit.outTime} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
+                  <input type="time" id="editOutTime" name="out_time" value={currentEdit.out_time} onChange={(e) => setCurrentEdit({ ...currentEdit, out_time: e.target.value })} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
                 </div>
               </div>
               <div className="flex items-center justify-end space-x-3 mt-4">
@@ -205,26 +344,30 @@ const ManualAttendances = () => {
                   </button>
                 </div>
                 <p className="mb-5">We need below required information to add this record.</p>
-                <form>
+                <form onSubmit={handleSubmit}>
                   <div className="mb-4">
                     <label htmlFor="attendanceEmployee" className="block text-sm font-medium text-gray-700">Employee</label>
-                    <select id="attendanceEmployee" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <select id="attendanceEmployee" name="employee_id" value={newAttendance.employee_id} onChange={handleInputChange} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                       <option>Select an employee</option>
-                      {/* Add employee options here */}
+                      {employees.map((employee) => (
+                        <option key={employee.id} value={employee.id}>
+                          {employee.first_name} {employee.last_name}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div className="mb-4">
                     <label htmlFor="attendanceDate" className="block text-sm font-medium text-gray-700">Attendance Date</label>
-                    <input type="date" id="attendanceDate" placeholder="dd/mm/yyyy" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
+                    <input type="date" id="attendanceDate" name="attendance_date" value={newAttendance.attendance_date} onChange={handleInputChange} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
                   </div>
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
                       <label htmlFor="inTime" className="block text-sm font-medium text-gray-700">In Time *</label>
-                      <input type="time" id="inTime" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
+                      <input type="time" id="inTime" name="in_time" value={newAttendance.in_time} onChange={handleInputChange} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
                     </div>
                     <div>
                       <label htmlFor="outTime" className="block text-sm font-medium text-gray-700">Out Time *</label>
-                      <input type="time" id="outTime" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
+                      <input type="time" id="outTime" name="out_time" value={newAttendance.out_time} onChange={handleInputChange} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
                     </div>
                   </div>
                   <div className="flex items-center justify-end space-x-3 ">
@@ -241,8 +384,29 @@ const ManualAttendances = () => {
           </div>
         </Dialog>
       </Transition>
+      {showDeleteConfirmation && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
+          <div className="bg-white p-6 rounded-md shadow-lg w-full max-w-md">
+            <div className="flex justify-between items-center mb-5">
+              <h4 className="text-lg font-semibold">Confirm Delete</h4>
+              <button onClick={() => setShowDeleteConfirmation(false)} className="text-black">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <p className="mb-5">Are you sure you want to delete this attendance record?</p>
+            <div className="flex items-center justify-end space-x-3">
+              <button type="button" onClick={() => setShowDeleteConfirmation(false)} className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
+                Cancel
+              </button>
+              <button type="button" onClick={handleConfirmDelete} className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default ManualAttendances;
+export default ManualAttendances
