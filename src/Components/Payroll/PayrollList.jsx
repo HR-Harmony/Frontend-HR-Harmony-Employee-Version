@@ -1,36 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SearchIcon, CashIcon } from '@heroicons/react/solid';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
+import { APIEmployees } from '@/Apis/APIEmployees';
+import { APIPayroll } from '@/Apis/APIPayroll';
+import { toast } from 'react-toastify';
 
 const PayrollList = () => {
   const [selectedEmployee, setSelectedEmployee] = useState('Yanti Sari');
   const [selectedMonth, setSelectedMonth] = useState('2024-03');
   const [activePaymentButton, setActivePaymentButton] = useState(null);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [employees, setEmployees] = useState([]);
+  const [payrolls, setPayrolls] = useState([]);
 
-  const payrollData = [
-    {
-      id: 1,
-      employee: 'Fakhrity Hikmawan',
-      email: 'fakhrityhikmawan@gmail.com',
-      employeeId: '011100',
-      payslipType: 'Per Month',
-      basicSalary: 'IDR10,000,000',
-      netSalary: 'IDR10,000,000',
-      status: 'Paid'
-    },
-    {
-      id: 2,
-      employee: 'Arfara Yema Samgusdian',
-      email: 'arfarayemasamgusdian@gmail.com',
-      employeeId: '011101',
-      payslipType: 'Per Month',
-      basicSalary: 'IDR10,000,000',
-      netSalary: 'IDR10,000,000',
-      status: 'Un Paid'
-    }
-  ];
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const employeesData = await APIEmployees.getAllEmployees();
+        setEmployees(employeesData.employees || []);
+      } catch (error) {
+        toast.error('Error fetching employees data');
+      }
+    };
+
+    const fetchPayrolls = async () => {
+      try {
+        const payrollsData = await APIPayroll.getAllPayrolls();
+        setPayrolls(payrollsData.payroll_info || []);
+      } catch (error) {
+        toast.error('Error fetching payrolls data');
+      }
+    };
+
+    fetchEmployees();
+    fetchPayrolls();
+  }, []);
 
   const handleEmployeeChange = (e) => {
     setSelectedEmployee(e.target.value);
@@ -49,12 +54,16 @@ const PayrollList = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="max-w-6xl mx-auto ml-auto">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-5 shadow-md rounded-md mb-5">
         <div className="flex-grow mr-5 mb-5 md:mb-0">
           <label htmlFor="employee" className="block text-sm text-gray-800 mb-1">Employee</label>
           <select id="employee" value={selectedEmployee} onChange={handleEmployeeChange} className="block w-full px-3 py-1.5 text-base leading-6 text-gray-900 bg-white bg-clip-padding border border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
-            <option value="Yanti Sari">Fakhrity Hikmawan</option>
+            {employees.map((employee) => (
+              <option key={employee.id} value={employee.username}>
+                {`${employee.first_name} ${employee.last_name}`}
+              </option>
+            ))}
           </select>
         </div>
         <div className="flex-grow mr-5 mb-5 md:mb-0">
@@ -94,39 +103,42 @@ const PayrollList = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payslip Type</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Basic Salary</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Net Salary</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hourly Rate</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {payrollData.map((data) => (
-                  <tr key={data.id}
-                      onMouseEnter={() => setActivePaymentButton(data.id)}
-                      onMouseLeave={() => setActivePaymentButton(null)}
-                      className="hover:bg-gray-100">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 flex justify-between items-center">
-                      <div>
-                        <span>{data.employee}</span>
-                        <span className="text-xs text-gray-500 block">{data.email}</span>
-                      </div>
-                      {activePaymentButton === data.id && (
-                        <CashIcon
-                          className="h-5 w-5 text-blue-500 hover:text-blue-700 cursor-pointer ml-4"
-                          onClick={openPaymentModal}
-                        />
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data.employeeId}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data.payslipType}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data.basicSalary}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data.netSalary}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${data.status === 'Paid' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                        {data.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
+                {payrolls.map((payroll) => {
+                  const employee = employees.find(e => e.id === payroll.employee_id);
+                  return (
+                    <tr key={payroll.payroll_id}
+                        onMouseEnter={() => setActivePaymentButton(payroll.payroll_id)}
+                        onMouseLeave={() => setActivePaymentButton(null)}
+                        className="hover:bg-gray-100">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 flex justify-between items-center">
+                        <div>
+                          <span>{employee ? `${employee.first_name} ${employee.last_name}` : 'Tidak Ditemukan'}</span>
+                          <span className="text-xs text-gray-500 block">{employee ? employee.email : ''}</span>
+                        </div>
+                        {activePaymentButton === payroll.payroll_id && (
+                          <CashIcon
+                            className="h-5 w-5 text-blue-500 hover:text-blue-700 cursor-pointer ml-4"
+                            onClick={openPaymentModal}
+                          />
+                        )}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payroll.employee_id}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payroll.payslip_type}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payroll.basic_salary}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payroll.hourly_rate}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${payroll.paid_status ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                          {payroll.paid_status ? 'Paid' : 'Unpaid'}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
