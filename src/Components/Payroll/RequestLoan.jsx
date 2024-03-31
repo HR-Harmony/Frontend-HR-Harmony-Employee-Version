@@ -29,7 +29,6 @@ const RequestLoan = () => {
   };
 
   const handleDeleteClick = (shiftId) => {
-    // Logika untuk menghapus shift
   };
 
   const dummyData = [
@@ -38,7 +37,7 @@ const RequestLoan = () => {
   ];
 
   return (
-    <div className="border border-gray-200 rounded overflow-hidden mx-5 my-5 max-w-5xl">
+    <div className="border border-gray-200 rounded overflow-hidden max-w-6xl ml-auto mr-auto">
       {showAddForm && (
         <div className="bg-white shadow-md rounded-lg mb-4 w-full max-w-5xl">
           <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
