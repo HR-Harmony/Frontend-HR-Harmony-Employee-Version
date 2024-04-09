@@ -1,64 +1,252 @@
-import React from 'react';
-import './PayrollList.css';
+import React, { useState, useEffect } from 'react';
+import { SearchIcon, CashIcon } from '@heroicons/react/solid';
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment } from 'react';
+import { APIEmployees } from '@/Apis/APIEmployees';
+import { APIPayroll } from '@/Apis/APIPayroll';
+import { toast } from 'react-toastify';
 
 const PayrollList = () => {
+  const [selectedEmployee, setSelectedEmployee] = useState('Yanti Sari');
+  const [selectedMonth, setSelectedMonth] = useState('2024-03');
+  const [activePaymentButton, setActivePaymentButton] = useState(null);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [employees, setEmployees] = useState([]);
+  const [payrolls, setPayrolls] = useState([]);
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const employeesData = await APIEmployees.getAllEmployees();
+        setEmployees(employeesData.employees || []);
+      } catch (error) {
+        toast.error('Error fetching employees data');
+      }
+    };
+
+    const fetchPayrolls = async () => {
+      try {
+        const payrollsData = await APIPayroll.getAllPayrolls();
+        setPayrolls(payrollsData.payroll_info || []);
+      } catch (error) {
+        toast.error('Error fetching payrolls data');
+      }
+    };
+
+    fetchEmployees();
+    fetchPayrolls();
+  }, []);
+
+  const handleEmployeeChange = (e) => {
+    setSelectedEmployee(e.target.value);
+  };
+
+  const handleMonthChange = (e) => {
+    setSelectedMonth(e.target.value);
+  };
+
+  const openPaymentModal = () => {
+    setIsPaymentModalOpen(true);
+  };
+
+  const closePaymentModal = () => {
+    setIsPaymentModalOpen(false);
+  };
+
   return (
-    <div>
-      <h2>Payroll List</h2>
-      <div className='payroll-list-card'>
-        <div className='payroll-form-group'>
-          <label htmlFor='employee'>Employee</label>
-          <select id='employee' className='form-control'>
-            <option value=''>-- Select Employee --</option>
-            {/*list of employees option*/}
+    <div className="max-w-6xl mx-auto ml-auto">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-5 shadow-md rounded-md mb-5">
+        <div className="flex-grow mr-5 mb-5 md:mb-0">
+          <label htmlFor="employee" className="block text-sm text-gray-800 mb-1">Employee</label>
+          <select id="employee" value={selectedEmployee} onChange={handleEmployeeChange} className="block w-full px-3 py-1.5 text-base leading-6 text-gray-900 bg-white bg-clip-padding border border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
+            {employees.map((employee) => (
+              <option key={employee.id} value={employee.username}>
+                {`${employee.first_name} ${employee.last_name}`}
+              </option>
+            ))}
           </select>
         </div>
-        <div className='payroll-form-group'>
-          <label htmlFor='monthSelect'>Select Month</label>
-          <input type='month' id='monthSelect' className='form-control' defaultValue={'2024-01'}/>
+        <div className="flex-grow mr-5 mb-5 md:mb-0">
+          <label htmlFor="monthSelect" className="block text-sm text-gray-800 mb-1">Select Month</label>
+          <input type="month" id="monthSelect" value={selectedMonth} onChange={handleMonthChange} className="block w-full px-3 py-1.5 text-base leading-6 text-gray-900 bg-white bg-clip-padding border border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" />
         </div>
-        <button type='submit' className='search-button'>Search</button>
+        <div>
+          <button type="submit" className="bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50 mt-5">
+            <SearchIcon className="h-5 w-5" />
+          </button>
+        </div>
       </div>
-
-      <div className='payroll-table'>
-        <div className='payroll-table-label'>
-        Show
-          <label>
-            <select>
-              <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
+      <div className="border border-gray-200 rounded overflow-hidden mx-5 my-5">
+        <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
+          <h2 className="text-lg font-semibold text-gray-700">Payment Info for {selectedMonth}</h2>
+        </div>
+        <div className="p-5">
+          <div className="flex justify-between mb-4">
+            <label className="flex items-center">
+              Show
+              <select className="mx-2 rounded border border-gray-300">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
               </select>
-          </label>
-        entries  
-        <input type="search" placeholder="Search" />
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>EMPLOYEE</th>
-              <th>EMPLOYEE ID</th>
-              <th>PAYSLIP TYPE</th>
-              <th>BASIC SALARY</th>
-              <th>NET SALARY</th>
-              <th>STATUS</th>
-            </tr>
-          </thead>
-          <tbody>
-            {/* Employee rows will go here */}
-            <tr>
-              <td colSpan="7">No records available</td>
-            </tr>
-          </tbody>
-        </table>
-        <div className="payroll-table-pagination">
-          <button>Previous</button>
-          <button>Next</button>
+              entries
+            </label>
+            <div className="flex justify-end">
+              <input type="search" placeholder="Search" className="rounded border border-gray-300 p-2" />
+            </div>
+          </div>
+          <div className="overflow-x-auto mb-4">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payslip Type</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Basic Salary</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hourly Rate</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {payrolls.map((payroll) => {
+                  const employee = employees.find(e => e.id === payroll.employee_id);
+                  return (
+                    <tr key={payroll.payroll_id}
+                        onMouseEnter={() => setActivePaymentButton(payroll.payroll_id)}
+                        onMouseLeave={() => setActivePaymentButton(null)}
+                        className="hover:bg-gray-100">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 flex justify-between items-center">
+                        <div>
+                          <span>{employee ? `${employee.first_name} ${employee.last_name}` : 'Tidak Ditemukan'}</span>
+                          <span className="text-xs text-gray-500 block">{employee ? employee.email : ''}</span>
+                        </div>
+                        {activePaymentButton === payroll.payroll_id && (
+                          <CashIcon
+                            className="h-5 w-5 text-blue-500 hover:text-blue-700 cursor-pointer ml-4"
+                            onClick={openPaymentModal}
+                          />
+                        )}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payroll.employee_id}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payroll.payslip_type}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payroll.basic_salary}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payroll.hourly_rate}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${payroll.paid_status ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                          {payroll.paid_status ? 'Paid' : 'Unpaid'}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
+            Showing 1 to 1 of 1 records
+            <div>
+              <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
+                Previous
+              </button>
+              <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
+                Next
+              </button>
+            </div>
+          </div>
         </div>
       </div>
+      <Transition appear show={isPaymentModalOpen} as={Fragment}>
+        <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto" onClose={closePaymentModal}>
+          <div className="min-h-screen px-4 text-center">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+            </Transition.Child>
+            <span className="inline-block h-screen align-middle" aria-hidden="true">&#8203;</span>
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                <div className="flex justify-between items-start">
+                  <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
+                    Make Payment
+                  </Dialog.Title>
+                  <div className="ml-auto">
+                    <button onClick={closePaymentModal} className="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                      <span className="sr-only">Close</span>
+                      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                <div className="mt-2">
+                  <div className="bg-white space-y-6">
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-sm font-medium text-gray-900">Basic Salary</h3>
+                      <p className="text-sm text-gray-900">IDR10,000,000.00</p>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-sm font-medium text-gray-900">Allowances</h3>
+                      <p className="text-sm text-gray-900">IDR0</p>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-sm font-medium text-gray-900">Commissions</h3>
+                      <p className="text-sm text-gray-900">IDR0</p>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-sm font-medium text-gray-900">Reimbursements</h3>
+                      <p className="text-sm text-gray-900">IDR0</p>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-sm font-medium text-gray-900">Statutory deductions</h3>
+                      <p className="text-sm text-gray-900">IDR0</p>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-sm font-medium text-gray-900">Advance Salary</h3>
+                      <p className="text-sm text-gray-900">IDR0</p>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-sm font-medium text-gray-900">Loan</h3>
+                      <p className="text-sm text-gray-900">IDR0</p>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-lg font-medium text-gray-900">Net Salary</h3>
+                      <p className="text-sm text-gray-900">IDR10,000,000</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-6">
+                  <label htmlFor="comments" className="block text-sm font-medium text-gray-700">
+                    Payslip Comments
+                  </label>
+                  <textarea id="comments" name="comments" rows="3" className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"></textarea>
+                </div>
+                <div className="mt-5 sm:mt-6">
+                  <button type="button" className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm">
+                    Make Payment
+                  </button>
+                </div>
+              </div>
+            </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition>
     </div>
-  )
-}
+  );
+};
 
 export default PayrollList;

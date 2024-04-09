@@ -6,7 +6,7 @@ import Department from './Department';
 import Designation from './Designation';
 import Policies from './Policies';
 import News from './News';
-import Chart from './Chart';
+import NewsDetails from './NewsDetails';
 import Header from '../Header/Header';
 
 const CoreHRRouter = () => {
@@ -34,11 +34,6 @@ const CoreHRRouter = () => {
               <FaClock className="icon" />
               <span>News & Announcement</span>
             </div>
-
-            <div className="feature" onClick={() => navigate('/corehr/chart')}>
-              <FaClock className="icon" />
-              <span>Organization Chart</span>
-            </div>
           </div>
 
           <Routes>
@@ -46,7 +41,7 @@ const CoreHRRouter = () => {
               <Route path="designation-list" element={< Designation />} />
               <Route path="policies-list" element={< Policies />} />
               <Route path="news-list" element={< News />} />
-              <Route path="chart" element={< Chart />} />
+              <Route path="announcement-view/:identifier" element={< NewsDetails />} />
           </Routes>
 
         </div>

@@ -1,6 +1,9 @@
-import { MdDashboard, MdPayments, MdAutoGraph, MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import { MdDashboard, MdPayments, MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { FaUsers, FaUserClock } from "react-icons/fa";
 import { FaSync, FaTasks } from "react-icons/fa";
+import { MdEmojiPeople } from "react-icons/md";
+import { LiaChalkboardTeacherSolid } from "react-icons/lia";
+import { FiHelpCircle } from "react-icons/fi";
 
 const SideBarData = [
     {
@@ -55,10 +58,6 @@ const SideBarData = [
             {
                 title: "Make Announcement",
                 path: "/corehr/news-list"
-            },
-            {
-                title: "Organization Chart",
-                path: "/corehr/chart"
             },
         ]
     },
@@ -166,6 +165,65 @@ const SideBarData = [
             },
         ]
     },
+
+    {
+        title: "Recruitment",
+        path: "#",
+        icon: < MdEmojiPeople />,
+        iconClosed: <MdKeyboardArrowDown />,
+        iconOpened: <MdKeyboardArrowUp />,
+        subNav: [
+            {
+                title: "New Opening",
+                path: "/recruitment/new-opening"
+            },
+            {
+                title:"Candidates",
+                path:"/recruitment/candidates"
+            },
+            {
+                title:"Interviews",
+                path:"/recruitment/interviews"
+            },
+            {
+                title:"Promotions",
+                path:"/recruitment/promotions"
+            }
+        ]   
+    },
+
+    {
+        title: "Training",
+        path: "#",
+        icon: <LiaChalkboardTeacherSolid />,
+        iconClosed: <MdKeyboardArrowDown />,
+        iconOpened: <MdKeyboardArrowUp />,
+        subNav: [
+            {
+                title: "Training Sessions",
+                path: "/training/training-sessions"
+            },
+            {
+                title: "Trainers",
+                path: "/training/trainers"
+            },
+            {
+                title: "Training Skills",
+                path: "/training/training-skills"
+            },
+            {
+                title: "Calendar",
+                path: "/training/training-calendar"
+            },
+        ]
+    },
+
+    {
+        title: "Helpdesk",
+        path: "/helpdesk",
+        icon: < FiHelpCircle />
+    },
+    
 ];
 
 export default SideBarData;

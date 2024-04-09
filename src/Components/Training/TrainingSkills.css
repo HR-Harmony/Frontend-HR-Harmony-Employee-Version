@@ -1,0 +1,120 @@
+.training-skills-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 20px;
+}
+
+.training-skills-add-new {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 20px;
+    background-color: #ffffff;
+    width: 30%;
+    margin-right: 5%;
+}
+
+.training-skills-add-new-header {
+    padding: 10px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e1e4e8;
+}
+
+.training-skills-add-new-header h2 {
+    font-weight: bold;
+}
+
+.training-skills-add-new-body {
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.training-skills-add-new-body h2 {
+    margin-bottom: 10px;
+}
+
+.training-skills-add-new-body input {
+    padding: 5px;
+    border: 1px solid #e1e4e8;
+    border-radius: 3px;
+    margin-left:auto;
+    width: 100%;
+}
+
+.training-skills-add-new-footer {
+    display: flex;
+    padding: 10px;
+    background-color: #ffffff;
+    border-top: 1px solid #e1e4e8;
+}
+
+.training-skills-add-new-footer button {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    padding: 10px 20px;
+    border-radius: 0.25rem;
+    font-size: 16px;
+    line-height: 1.5;
+    cursor: pointer;
+    margin-left: auto;
+}
+
+.training-skills-add-new-footer button:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
+
+.training-skills-list {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 20px;
+    background-color: #ffffff;
+    width: 65%;
+    position: relative;
+}
+
+.training-skills-list-header {
+    padding: 10px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e1e4e8;
+}
+
+.training-skills-list-header h2 {
+    font-weight: bold;
+}
+
+.training-skills-list-label {
+    display: flex;
+    padding: 10px;
+}
+
+.training-skills-list-label input {
+    padding: 5px;
+    border: 1px solid #e1e4e8;
+    border-radius: 3px;
+    margin-left:auto;
+}
+
+@media screen and (max-width: 992px) {
+    .training-skills-container {
+        flex-direction: column;
+    }
+
+    .training-skills-add-new,
+    .training-skills-list {
+        width: 90%;
+        margin-bottom: 20px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .training-skills-container {
+        flex-direction: column;
+    }
+
+    .training-skills-add-new,
+    .training-skills-list {
+        width: 100%;
+    }
+}
