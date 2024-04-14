@@ -152,14 +152,6 @@ const SideBarData = [
                 path: "/performance/track-goals"
             },
             {
-                title: "Calendar",
-                path: "/performance/goals-calendar"
-            },
-            {
-                title: "Competencies",
-                path: "/performance/competencies"
-            },
-            {
                 title: "Goal Type",
                 path: "/performance/goal-type"
             },
@@ -210,10 +202,6 @@ const SideBarData = [
             {
                 title: "Training Skills",
                 path: "/training/training-skills"
-            },
-            {
-                title: "Calendar",
-                path: "/training/training-calendar"
             },
         ]
     },
