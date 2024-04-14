@@ -5,7 +5,6 @@ import Header from '../Header/Header';
 import TrainingSessions from './TrainingSessions';
 import Trainers from './Trainers';
 import TrainingSkills from './TrainingSkills';
-import TrainingCalendar from './TrainingCalendar';
 import { IoBookSharp } from "react-icons/io5";
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { MdEngineering } from "react-icons/md";
@@ -32,16 +31,11 @@ const TrainingRouter = () => {
                         <span>Training Skills</span>
                     </div>
 
-                    <div className='feature' onClick={() => navigate ('/training/training-calendar')}>
-                        <FaCalendar className='icon'/>
-                        <span>Calendar</span>
-                    </div>
                 </div>
                 <Routes>
                     <Route path = 'training-sessions' element = { <TrainingSessions/> }/>
                     <Route path = 'trainers' element = { <Trainers/> }/>
                     <Route path = 'training-skills' element = { <TrainingSkills/> }/>
-                    <Route path = 'training-calendar' element = { <TrainingCalendar/> }/>
                 </Routes>
             </div>
         )

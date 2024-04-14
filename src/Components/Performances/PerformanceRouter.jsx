@@ -5,9 +5,10 @@ import './PerformanceRouter.css';
 import PerformanceIndicator from './PerformanceIndicator';
 import PerformanceAppraisal from './PerformanceAppraisal'
 import TrackGoals from './TrackGoals';
-import GoalsCalendar from './GoalsCalendar';
-import Competencies from './Competencies';
 import GoalType from './GoalType';
+import IndicatorDetails from './IndicatorDetails';
+import AppraisalDetails from './AppraisalDetails';
+import GoalsDetails from './GoalsDetails';
 import Header from '../Header/Header';
 
 const PerformanceRouter = () => {
@@ -30,16 +31,6 @@ const PerformanceRouter = () => {
               <FaClipboardList className="icon" />
               <span>Track Goals (OKRs)</span>
             </div>
-          
-            <div className="feature" onClick={() => navigate('/performance/goals-calendar')}>
-              <FaClock className="icon" />
-              <span>Calendar</span>
-            </div>
-
-            <div className="feature" onClick={() => navigate('/performance/competencies')}>
-              <FaClock className="icon" />
-              <span>Competencies</span>
-            </div>
 
             <div className="feature" onClick={() => navigate('/performance/goal-type')}>
               <FaClock className="icon" />
@@ -51,9 +42,10 @@ const PerformanceRouter = () => {
               <Route path="performance-indicator" element={< PerformanceIndicator />} />
               <Route path="performance-appraisal" element={< PerformanceAppraisal />} />
               <Route path="track-goals" element={< TrackGoals />} />
-              <Route path="goals-calendar" element={< GoalsCalendar />} />
-              <Route path="competencies" element={< Competencies />} />
               <Route path="goal-type" element={< GoalType />} />
+              <Route path='indicator-details' element = {<IndicatorDetails/>}/>
+              <Route path='appraisal-details' element = {<AppraisalDetails/>}/>
+              <Route path='goals-details' element = {<GoalsDetails/>}/>
           </Routes>
 
         </div>
