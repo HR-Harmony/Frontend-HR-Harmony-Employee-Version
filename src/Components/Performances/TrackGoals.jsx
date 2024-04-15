@@ -22,7 +22,7 @@ const TrackGoals = () => {
   return (
     <div className="border border-gray-200 rounded overflow-hidden max-w-6xl ml-auto mr-auto">
       <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-700">List All Performance Appraisal</h2>
+        <h2 className="text-lg font-semibold text-gray-700">List All Track Goals</h2>
         <div className="flex items-center">
           <button className='text-white bg-blue-500 border-blue-600 py-2 px-4 rounded text-lg leading-6 cursor-pointer hover:bg-blue-700 hover:border-blue-700' onClick={handleAddNewClick}>+ Add New</button>
         </div>
@@ -30,7 +30,7 @@ const TrackGoals = () => {
       {showAddForm && (
         <div className="bg-white shadow-md rounded-lg mb-4">
           <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-bold text-gray-700">Add New Announcement</h2>
+            <h2 className="text-xl font-bold text-gray-700">Add New Goal</h2>
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none" onClick={() => setShowAddForm(false)}>Hide</button>
           </div>
           <div className="px-4 py-2">
@@ -102,11 +102,12 @@ const TrackGoals = () => {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Designation</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Overall Rating</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Added by</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created at</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Goal Type</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Start Date</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">End Date</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Goal Rating</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Progress</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -122,11 +123,12 @@ const TrackGoals = () => {
                           </button>
                         </div>
                       </div>
-                    ---</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">---</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">---</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">---</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">---</td>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
                   </tr>
             </tbody>
           </table>
