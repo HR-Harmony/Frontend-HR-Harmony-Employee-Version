@@ -22,7 +22,7 @@ const TasksRouter = () => {
                     <span>Tasks</span>
                 </div>
 
-                <div className='feature' onClick={() => navigate('/tasks/project')}>
+                <div className='feature' onClick={() => navigate('/tasks/project-list')}>
                     <AiOutlineFundProjectionScreen className='icon'/>
                     <span>Projects</span>
                 </div>
@@ -35,10 +35,10 @@ const TasksRouter = () => {
 
             <Routes>
                 <Route path='tasks-list' element = {<TasksList/>}/>
-                <Route path='project' element = {<Projects/>}/>
+                <Route path='project-list' element = {<Projects/>}/>
                 <Route path='calendar' element = {<TasksCalendar/>}/>
-                <Route path='task-details/:id' element = {<TaskDetails/>}/>
-                <Route path='project-details/:id' element = {<ProjectDetails/>}/>
+                <Route path='/task-details/:taskId' element={<TaskDetails/>}/>
+                <Route path='/project-details/:projectId' element={<ProjectDetails/>}/>
             </Routes>
         </div>
   )

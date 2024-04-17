@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'tailwindcss/tailwind.css';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { APIProjects } from '@/Apis/APIProjects';
+import { APICoreHR } from '@/Apis/APICoreHR';
+import { APIEmployees } from '@/Apis/APIEmployees';
+import { APIClients } from '@/Apis/APIClients';
+import { toast } from 'react-toastify';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
@@ -11,141 +16,264 @@ const ProjectDetails = () => {
   const [status, setStatus] = useState('Not Started');
   const [activeTab, setActiveTab] = useState('overview');
   const [priority, setPriority] = useState('Medium');
+  const [projectDetails, setProjectDetails] = useState({});
+  const [departments, setDepartments] = useState([]);
+  const [employees, setEmployees] = useState([]);
+  const [selectedDepartment, setSelectedDepartment] = useState('');
+  const [clients, setClients] = useState([]);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState('');
 
   const navigate = useNavigate();
+  const { projectId } = useParams();
+
+
+  useEffect(() => {
+    const fetchProjectDetails = async () => {
+      try {
+        const response = await APIProjects.getProjectById(projectId);
+        if (response) {
+          setProjectDetails(response);
+          setProgress(response.project_bar);
+          setStatus(response.status);
+          setPriority(response.priority);
+          console.log("Project details:", response);
+        }
+      } catch (error) {
+        toast.error("Failed to fetch project details.");
+      }
+    };
+
+    if (projectId) {
+      fetchProjectDetails();
+    }
+  }, [projectId]);
+
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const response = await APICoreHR.getAllDepartments();
+        setDepartments(response.departments);
+      } catch (error) {
+        toast.error("Failed to fetch departments.");
+      }
+    };
+
+    const fetchEmployees = async () => {
+      try {
+        const response = await APIEmployees.getAllEmployees();
+        setEmployees(response.data);
+      } catch (error) {
+        toast.error("Failed to fetch employees.");
+      }
+    };
+
+    fetchDepartments();
+    fetchEmployees();
+  }, []);
+
+  useEffect(() => {
+    const fetchClients = async () => {
+      try {
+        const response = await APIClients.getAllClients();
+        setClients(response.data);
+      } catch (error) {
+        toast.error("Failed to fetch clients.");
+      }
+    };
+
+    fetchClients();
+  }, []);
 
   const updateStatus = (newStatus) => {
     setStatus(newStatus);
   };
 
   const handleAddProjectClick = () => {
-    navigate('/projects/project');
+    navigate('/tasks/project-list');
   };
 
   const handlePriorityChange = (event) => {
     setPriority(event.target.value);
   };
 
-  const OverviewTab = () => (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <div className="mb-4">
-        <h3 className="text-lg font-semibold text-gray-700">Project : Rangka</h3>
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Title</label>
-          <div className="mt-1 px-3 py-2 bg-gray-100 rounded-md text-gray-700">Rangka</div>
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Start Date</label>
-          <div className="mt-1 px-3 py-2 bg-gray-100 rounded-md text-gray-700">11-05-2023</div>
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">End Date</label>
-          <div className="mt-1 px-3 py-2 bg-gray-100 rounded-md text-gray-700">12-05-2023</div>
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Estimated Hour</label>
-          <div className="mt-1 px-3 py-2 bg-gray-100 rounded-md text-gray-700">24</div>
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Project</label>
-          <div className="mt-1 px-3 py-2 bg-gray-100 rounded-md text-gray-700">BBC</div>
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Team</label>
-          <div className="mt-1 px-3 py-2 bg-gray-100 rounded-md text-gray-700"></div>
-        </div>
-      </div>
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Associated Goals</label>
-        <div className="mt-1 px-3 py-2 bg-gray-100 rounded-md text-gray-700"></div>
-      </div>
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Summary</label>
-        <div className="mt-1 px-3 py-2 bg-gray-100 rounded-md text-gray-700">asdasdasd...</div>
-      </div>
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Description</label>
-        <div className="mt-1 px-3 py-2 bg-gray-100 rounded-md text-gray-700"></div>
-      </div>
-    </div>
-  );
+  const handleUpdateProject = async () => {
+    try {
+      const projectData = {
+        project_bar: progress,
+        status: status,
+        priority: priority,
+      };
+      await APIProjects.editProjectById(projectId, projectData);
+      console.log("Data sent to backend:", projectData);
+      toast.success("Project updated successfully.");
+    } catch (error) {
+      toast.error("Failed to update project.");
+    }
+  };
 
-  const EditTab = () => (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="mb-4 md:mb-0">
-          <label className="block text-sm font-medium text-gray-700">Title *</label>
-          <input type="text" value="Rangka" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" />
-        </div>
-        <div className="mb-4 md:mb-0">
-          <label className="block text-sm font-medium text-gray-700">Start Date *</label>
-          <input type="date" value="2023-05-11" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" />
-        </div>
-        <div className="mb-4 md:mb-0">
-          <label className="block text-sm font-medium text-gray-700">End Date *</label>
-          <input type="date" value="2023-05-12" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" />
-        </div>
-        <div className="mb-4 md:mb-0">
-          <label className="block text-sm font-medium text-gray-700">Estimated Hour</label>
-          <input type="number" value="24" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" />
-        </div>
-        <div className="mb-4 md:mb-0">
-          <label className="block text-sm font-medium text-gray-700">Project *</label>
-          <input type="text" value="BBC" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" />
-        </div>
-        <div className="mb-4 md:mb-0">
-          <label className="block text-sm font-medium text-gray-700">Team</label>
-          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" />
-        </div>
-      </div>
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Associated Goals</label>
-        <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" />
-      </div>
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Summary *</label>
-        <textarea className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" />
-      </div>
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Description</label>
-        <textarea className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" />
-      </div>
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        Update Project
-      </button>
-    </div>
-  );
+  const handleClientChange = (event) => {
+    setSelectedEmployeeId(parseInt(event.target.value, 10));
+  };
 
-  const ProjectDiscussionTab = () => {
-    const [discussionText, setDiscussionText] = useState('');
-
-    const handleDiscussionChange = (value) => {
-      setDiscussionText(value);
-    };
-
-    const handleAddDiscussion = () => {
-      console.log(discussionText);
-    };
-
+  const OverviewTab = ({ project }) => {
     return (
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold text-gray-700">Project Discussion</h3>
-        </div>
-        <div className="mb-4">
-          <ReactQuill theme="snow" value={discussionText} onChange={handleDiscussionChange} />
-        </div>
-        <button
-          onClick={handleAddDiscussion}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Add
-        </button>
+      <div className="bg-white p-8 rounded-lg shadow-md">
+        {project && (
+          <div>
+            <div className="mb-6">
+              <h3 className="text-2xl font-semibold text-gray-800">Project : {project?.title}</h3>
+            </div>
+            <div className="divide-y divide-gray-200">
+              <div className="py-4 grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Title</label>
+                  <p className="mt-1 text-sm text-gray-600">{project?.title}</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Start Date</label>
+                  <p className="mt-1 text-sm text-gray-600">{project?.start_date}</p>
+                </div>
+              </div>
+              <div className="py-4 grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">End Date</label>
+                  <p className="mt-1 text-sm text-gray-600">{project?.end_date}</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Estimated Hour</label>
+                  <p className="mt-1 text-sm text-gray-600">{project?.estimated_hour}</p>
+                </div>
+              </div>
+              <div className="py-4 grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Client</label>
+                  <p className="mt-1 text-sm text-gray-600">{project?.client_name}</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Team</label>
+                  <p className="mt-1 text-sm text-gray-600">{project?.department_name}</p>
+                </div>
+              </div>
+              <div className="py-4">
+                <label className="block text-sm font-medium text-gray-700">Summary</label>
+                <p className="mt-1 text-sm text-gray-600 whitespace-pre-line">{project?.summary}</p>
+              </div>
+              <div className="py-4">
+                <label className="block text-sm font-medium text-gray-700">Description</label>
+                <p className="mt-1 text-sm text-gray-600 whitespace-pre-line">{project?.description}</p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   };
+
+  const EditTab = React.memo(({ project }) => {
+    const [localProject, setLocalProject] = useState(project);
+
+    useEffect(() => {
+      setLocalProject(project);
+    }, [project]);
+
+    useEffect(() => {
+      setLocalProject(prevProject => ({ ...prevProject, employee_id: selectedEmployeeId }));
+    }, [selectedEmployeeId]);
+
+    const handleInputChange = (e) => {
+      const { name, value } = e.target;
+      setLocalProject(prevProject => ({ ...prevProject, [name]: value }));
+    };
+
+    const handleDepartmentChange = (event) => {
+      setLocalProject(prevProject => ({ ...prevProject, department_id: parseInt(event.target.value, 10) }));
+    };
+
+    const handleSubmitEditTab = async (e) => {
+      e.preventDefault();
+      const updatedProject = {
+        ...localProject,
+        title: localProject.title,
+        estimated_hour: parseInt(localProject.estimated_hour, 10),
+        priority: localProject.priority,
+        start_date: localProject.start_date,
+        end_date: localProject.end_date,
+        summary: localProject.summary,
+        department_id: parseInt(localProject.department_id, 10),
+        description: localProject.description,
+        employee_id: selectedEmployeeId,
+      };
+      console.log("Sending update for project:", updatedProject);
+      try {
+        const response = await APIProjects.editProjectById(projectId, updatedProject);
+        console.log("Update response:", response);
+        toast.success("Project updated successfully.");
+      } catch (error) {
+        console.error("Failed to update project:", error);
+        toast.error("Failed to update project.");
+      }
+    };
+
+    return (
+      <div className="bg-white p-8 rounded-lg shadow-md">
+        {project && (
+          <form onSubmit={handleSubmitEditTab} className="divide-y divide-gray-200">
+            <div className="py-4 grid grid-cols-3 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Title</label>
+                <input name="title" type="text" value={localProject?.title} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Start Date</label>
+                <input name="start_date" type="date" value={localProject?.start_date} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">End Date</label>
+                <input name="end_date" type="date" value={localProject?.end_date} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3" />
+              </div>
+            </div>
+            <div className="py-4 grid grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Estimated Hour</label>
+                <input name="estimated_hour" type="number" value={localProject?.estimated_hour} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Client</label>
+                <select name="client" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3" onChange={handleClientChange}>
+                  {clients.map(client => (
+                    <option key={client.id} value={client.id}>{client.first_name} {client.last_name}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="py-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700">Department</label>
+                <select name="team" value={localProject?.department_id} onChange={handleDepartmentChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3">
+                  {departments && departments.map(department => (
+                    <option key={department.id} value={department.id}>{department.department_name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700">Summary</label>
+                <textarea name="summary" onChange={handleInputChange} value={localProject?.summary} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3" />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700">Description</label>
+                <ReactQuill theme="snow" value={localProject?.description || ''} onChange={(content) => setLocalProject({...localProject, description: content})} className="mt-1 block w-full" />
+              </div>
+            </div>
+            <div className="flex justify-end py-4">
+              <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Update Project
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
+    );
+  });
 
   const PostANoteTab = () => {
     const [notes, setNotes] = useState([
@@ -202,57 +330,6 @@ const ProjectDetails = () => {
             +
           </button>
         </div>
-      </div>
-    );
-  };
-
-  const ProjectFilesTab = () => {
-    const [files, setFiles] = useState([
-      { id: 1, title: 'File 1', author: 'Super Admin', timestamp: '6 months ago' }
-    ]);
-
-    const handleFileChange = (event) => {
-      // Handle file selection
-    };
-
-    const handleAddFile = () => {
-      // Handle adding file
-    };
-
-    const handleDeleteFile = (fileId) => {
-      setFiles(files.filter(file => file.id !== fileId));
-    };
-
-    return (
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h3 className="text-lg font-semibold text-gray-700 mb-4">Project Files</h3>
-        {files.map(file => (
-          <div key={file.id} className="flex items-center justify-between mb-4 bg-gray-50 p-4 rounded-lg">
-            <div className="flex items-center">
-              <img src="/path-to-avatar-image.jpg" alt="Avatar" className="rounded-full w-8 h-8 mr-3" />
-              <div>
-                <div className="text-sm text-gray-500">{file.timestamp}</div>
-                <div className="font-semibold">{file.author}</div>
-              </div>
-            </div>
-            <div>
-              <button className="text-blue-500 hover:text-blue-700 mr-2">Download</button>
-              <button onClick={() => handleDeleteFile(file.id)} className="text-red-500 hover:text-red-700">Delete</button>
-            </div>
-          </div>
-        ))}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Title *</label>
-          <input type="text" placeholder="Title" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" />
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Attachment *</label>
-          <input type="file" onChange={handleFileChange} className="mt-1 block w-full" accept=".gif,.png,.jpg,.jpeg" />
-          <p className="text-xs text-gray-500 mt-1">Upload files only: gif, png, jpg, jpeg</p>
-        </div>
-        <button onClick={handleAddFile} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Add File
-        </button>
       </div>
     );
   };
@@ -331,7 +408,7 @@ const ProjectDetails = () => {
                   <option value="Low">Low</option>
                 </select>
               </div>
-              <button type="button" className="bg-indigo-600 text-white mb-4 px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full">
+              <button type="button" onClick={handleUpdateProject} className="bg-indigo-600 text-white mb-4 px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full">
                 Update Status
               </button>
             </div>
@@ -344,17 +421,13 @@ const ProjectDetails = () => {
               <div className="flex space-x-2 mb-4">
                 <button onClick={() => setActiveTab('overview')} className={`px-4 py-2 ${activeTab === 'overview' ? 'bg-gray-200' : ''}`}>OVERVIEW</button>
                 <button onClick={() => setActiveTab('edit')} className={`px-4 py-2 ${activeTab === 'edit' ? 'bg-gray-200' : ''}`}>EDIT</button>
-                <button onClick={() => setActiveTab('projectDiscussion')} className={`px-4 py-2 ${activeTab === 'projectDiscussion' ? 'bg-gray-200' : ''}`}>PROJECT DISCUSSION</button>
                 <button onClick={() => setActiveTab('postANote')} className={`px-4 py-2 ${activeTab === 'postANote' ? 'bg-gray-200' : ''}`}>POST A NOTE</button>
-                <button onClick={() => setActiveTab('projectFiles')} className={`px-4 py-2 ${activeTab === 'projectFiles' ? 'bg-gray-200' : ''}`}>PROJECT FILES</button>
               </div>
             </div>
             <div className="p-4">
-              {activeTab === 'overview' && <OverviewTab />}
-              {activeTab === 'edit' && <EditTab />}
-              {activeTab === 'projectDiscussion' && <ProjectDiscussionTab />}
+              {activeTab === 'overview' && <OverviewTab project={projectDetails}/>}
+              {activeTab === 'edit' && <EditTab project={projectDetails} />}
               {activeTab === 'postANote' && <PostANoteTab />}
-              {activeTab === 'projectFiles' && <ProjectFilesTab />}
             </div>
           </div>
         </div>
@@ -363,4 +436,4 @@ const ProjectDetails = () => {
   );
 };
 
-export default ProjectDetails;
+export default ProjectDetails

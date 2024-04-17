@@ -1,17 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'tailwindcss/tailwind.css';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment } from 'react';
+import { APITasks } from '@/Apis/APITasks';
+import { APIProjects } from '@/Apis/APIProjects';
+import { APIEmployees } from '@/Apis/APIEmployees';
+import { toast } from 'react-toastify';
 
 const TaskDetails = () => {
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState('Not Started');
   const [activeTab, setActiveTab] = useState('overview');
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [deleteTaskId, setDeleteTaskId] = useState(null);
+  const [task, setTask] = useState(null);
+  const [projects, setProjects] = useState([]);
+  const [employees, setEmployees] = useState([]);
 
   const navigate = useNavigate();
+  const { taskId } = useParams();
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await APIProjects.getAllProjects();
+        setProjects(response.projects || []);
+      } catch (error) {
+        toast.error("Failed to fetch projects.");
+      }
+    };
+
+    const fetchEmployees = async () => {
+      try {
+        const response = await APIEmployees.getAllEmployees();
+        setEmployees(response.employees || []);
+      } catch (error) {
+        toast.error("Failed to fetch employees.");
+      }
+    };
+
+    fetchProjects();
+    fetchEmployees();
+  }, []);
+
+  useEffect(() => {
+  }, [projects, employees]);
 
   const updateStatus = (newStatus) => {
     setStatus(newStatus);
@@ -21,132 +59,200 @@ const TaskDetails = () => {
     navigate('/tasks/tasks-list');
   };
 
-  const OverviewTab = () => (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <div className="mb-4">
-        <h3 className="text-lg font-semibold text-gray-700">Task : Rangka</h3>
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Title</label>
-          <div className="mt-1 px-3 py-2 bg-gray-100 rounded-md text-gray-700">Rangka</div>
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Start Date</label>
-          <div className="mt-1 px-3 py-2 bg-gray-100 rounded-md text-gray-700">11-05-2023</div>
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">End Date</label>
-          <div className="mt-1 px-3 py-2 bg-gray-100 rounded-md text-gray-700">12-05-2023</div>
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Estimated Hour</label>
-          <div className="mt-1 px-3 py-2 bg-gray-100 rounded-md text-gray-700">24</div>
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Project</label>
-          <div className="mt-1 px-3 py-2 bg-gray-100 rounded-md text-gray-700">BBC</div>
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Team</label>
-          <div className="mt-1 px-3 py-2 bg-gray-100 rounded-md text-gray-700"></div>
-        </div>
-      </div>
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Associated Goals</label>
-        <div className="mt-1 px-3 py-2 bg-gray-100 rounded-md text-gray-700"></div>
-      </div>
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Summary</label>
-        <div className="mt-1 px-3 py-2 bg-gray-100 rounded-md text-gray-700">asdasdasd...</div>
-      </div>
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Description</label>
-        <div className="mt-1 px-3 py-2 bg-gray-100 rounded-md text-gray-700"></div>
-      </div>
-    </div>
-  );
+  const handleConfirmDelete = async () => {
+    if (deleteTaskId) {
+      try {
+        await APITasks.deleteTaskById(deleteTaskId);
+        setShowDeleteConfirmation(false);
+        navigate('/tasks/tasks-list');
+      } catch (error) {
+        toast.error("Failed to delete task.");
+      }
+    }
+  };
 
-  const EditTab = () => (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="mb-4 md:mb-0">
-          <label className="block text-sm font-medium text-gray-700">Title *</label>
-          <input type="text" value="Rangka" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" />
-        </div>
-        <div className="mb-4 md:mb-0">
-          <label className="block text-sm font-medium text-gray-700">Start Date *</label>
-          <input type="date" value="2023-05-11" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" />
-        </div>
-        <div className="mb-4 md:mb-0">
-          <label className="block text-sm font-medium text-gray-700">End Date *</label>
-          <input type="date" value="2023-05-12" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" />
-        </div>
-        <div className="mb-4 md:mb-0">
-          <label className="block text-sm font-medium text-gray-700">Estimated Hour</label>
-          <input type="number" value="24" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" />
-        </div>
-        <div className="mb-4 md:mb-0">
-          <label className="block text-sm font-medium text-gray-700">Project *</label>
-          <input type="text" value="BBC" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" />
-        </div>
-        <div className="mb-4 md:mb-0">
-          <label className="block text-sm font-medium text-gray-700">Team</label>
-          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" />
-        </div>
-      </div>
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Associated Goals</label>
-        <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" />
-      </div>
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Summary *</label>
-        <textarea className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" />
-      </div>
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Description</label>
-        <textarea className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" />
-      </div>
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        Update Task
-      </button>
-    </div>
-  );
-
-  const TaskDiscussionTab = () => {
-    const [discussionText, setDiscussionText] = useState('');
-
-    const handleDiscussionChange = (value) => {
-      setDiscussionText(value);
+  useEffect(() => {
+    const fetchTaskDetails = async () => {
+      try {
+        const response = await APITasks.getTaskById(taskId);
+        if (response) {
+          setTask(response);
+        }
+      } catch (error) {
+        toast.error("Failed to retrieve task.");
+      }
     };
+  
+    if (taskId && (activeTab === 'overview' || activeTab === 'edit')) {
+      fetchTaskDetails();
+    }
+  }, [taskId, activeTab]);
 
-    const handleAddDiscussion = () => {
-      console.log(discussionText);
-    };
+  const handleUpdateStatusAndProgress = async () => {
+    try {
+      const updateData = {
+        status: status,
+        progress_bar: progress
+      };
+      console.log("Sending update for status and progress:", updateData);
+      await APITasks.updateTaskById(taskId, updateData);
+      toast.success("Task updated successfully.");
+    } catch (error) {
+      console.error("Failed to update task status and progress:", error);
+      toast.error("Failed to update task.");
+    }
+  };
 
+  const OverviewTab = ({ task }) => {
     return (
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold text-gray-700">Task Discussion</h3>
-        </div>
-        <div className="mb-4">
-          <ReactQuill theme="snow" value={discussionText} onChange={handleDiscussionChange} />
-        </div>
-        <button
-          onClick={handleAddDiscussion}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Add
-        </button>
+      <div className="bg-white p-8 rounded-lg shadow-md">
+        {task && (
+          <div>
+            <div className="mb-6">
+              <h3 className="text-2xl font-semibold text-gray-800">Task : {task?.title}</h3>
+            </div>
+            <div className="divide-y divide-gray-200">
+              <div className="py-4 grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Title</label>
+                  <p className="mt-1 text-sm text-gray-600">{task?.title}</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Start Date</label>
+                  <p className="mt-1 text-sm text-gray-600">{task?.start_date}</p>
+                </div>
+              </div>
+              <div className="py-4 grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">End Date</label>
+                  <p className="mt-1 text-sm text-gray-600">{task?.end_date}</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Estimated Hour</label>
+                  <p className="mt-1 text-sm text-gray-600">{task?.estimated_hour}</p>
+                </div>
+              </div>
+              <div className="py-4 grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Project</label>
+                  <p className="mt-1 text-sm text-gray-600">{task?.project_name}</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Team</label>
+                  <p className="mt-1 text-sm text-gray-600">{task?.team}</p>
+                </div>
+              </div>
+              <div className="py-4">
+                <label className="block text-sm font-medium text-gray-700">Summary</label>
+                <p className="mt-1 text-sm text-gray-600 whitespace-pre-line">{task?.summary}</p>
+              </div>
+              <div className="py-4">
+                <label className="block text-sm font-medium text-gray-700">Description</label>
+                <p className="mt-1 text-sm text-gray-600 whitespace-pre-line">{task?.description}</p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   };
 
-  const PostANoteTab = () => {
-    const [notes, setNotes] = useState([
-      { id: 1, author: 'Super Admin', content: 'Bismillah', timestamp: '4 months ago' },
-      { id: 2, author: 'Super Admin', content: 'GO GO GO', timestamp: 'a month ago' }
-    ]);
+  const EditTab = React.memo(({ task, setTask }) => {
+    const [localTask, setLocalTask] = useState(task);
+
+    useEffect(() => {
+      setLocalTask(task);
+    }, [task]);
+
+    const handleInputChange = (e) => {
+      const { name, value } = e.target;
+      setLocalTask(prevTask => ({ ...prevTask, [name]: value }));
+    };
+
+    const handleSubmitEditTab = async (e) => {
+      e.preventDefault();
+      const updatedTask = {
+        ...localTask,
+        estimated_hour: parseInt(localTask.estimated_hour, 10)
+      };
+      console.log("Sending update for task:", updatedTask);
+      try {
+        await APITasks.updateTaskById(taskId, updatedTask);
+        toast.success("Task updated successfully.");
+      } catch (error) {
+        console.error("Failed to update task:", error);
+        toast.error("Failed to update task.");
+      }
+    };
+
+    return (
+      <div className="bg-white p-8 rounded-lg shadow-md">
+        {task && (
+          <form onSubmit={handleSubmitEditTab} className="divide-y divide-gray-200">
+            <div className="py-4 grid grid-cols-3 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Title *</label>
+                <input name="title" type="text" value={localTask?.title} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Start Date *</label>
+                <input name="start_date" type="date" value={localTask?.start_date} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">End Date *</label>
+                <input name="end_date" type="date" value={localTask?.end_date} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3" />
+              </div>
+            </div>
+            <div className="py-4 grid grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Estimated Hour</label>
+                <input name="estimated_hour" type="number" value={localTask?.estimated_hour} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Project *</label>
+                <select name="project_name" value={localTask?.project_name} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3">
+                  {projects.map(project => (
+                    <option key={project.id} value={project.id}>{project.title}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="py-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700">Team</label>
+                <select name="team" value={localTask?.team} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3">
+                  {employees.map(employee => (
+                    <option key={employee.id} value={employee.id}>{employee.first_name} {employee.last_name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700">Summary *</label>
+                <textarea name="summary" onChange={handleInputChange} value={localTask?.summary} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3" />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700">Description</label>
+                <textarea name="description" onChange={handleInputChange} value={localTask?.description} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3" />
+              </div>
+            </div>
+            <div className="flex justify-end py-4">
+              <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Update Task
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
+    );
+  });
+
+  const handleDeleteNote = (noteId) => {
+    const updatedNotes = task.notes.filter(note => note.id !== noteId);
+    setTask({ ...task, notes: updatedNotes });
+    toast.success("Note deleted successfully.");
+  };
+
+  const PostANoteTab = ({ notes }) => {
     const [newNote, setNewNote] = useState('');
 
     const handlePostNote = () => {
@@ -156,12 +262,8 @@ const TaskDetails = () => {
         content: newNote,
         timestamp: 'Just now'
       };
-      setNotes([...notes, newNoteToAdd]);
+      setTask({ ...task, notes: [...notes, newNoteToAdd] });
       setNewNote('');
-    };
-
-    const handleDeleteNote = (noteId) => {
-      setNotes(notes.filter(note => note.id !== noteId));
     };
 
     return (
@@ -169,19 +271,15 @@ const TaskDetails = () => {
         <div className="mb-4">
           <h3 className="text-lg font-semibold text-gray-700">Post A Note</h3>
         </div>
-        {notes.map(note => (
-          <div key={note.id} className="flex items-center mb-4">
-            <img src="/path-to-avatar-image.jpg" alt="Avatar" className="rounded-full w-8 h-8 mr-3" />
-            <div className="flex-1">
-              <div className="font-semibold">{note.author}</div>
-              <div className="text-sm text-gray-500">{note.timestamp}</div>
-              <div>{note.content}</div>
-            </div>
-            <button onClick={() => handleDeleteNote(note.id)} className="text-red-500 hover:text-red-700">
-              Delete
-            </button>
-          </div>
-        ))}
+        {notes && notes.length > 0 ? (
+          <ul>
+            {notes.map(note => (
+              <li key={note.id}>{note.note_text}</li>
+            ))}
+          </ul>
+        ) : (
+          <p>No notes available.</p>
+        )}
         <div className="flex items-center">
           <input
             type="text"
@@ -197,57 +295,6 @@ const TaskDetails = () => {
             +
           </button>
         </div>
-      </div>
-    );
-  };
-
-  const TaskFilesTab = () => {
-    const [files, setFiles] = useState([
-      { id: 1, title: 'File 1', author: 'Super Admin', timestamp: '6 months ago' }
-    ]);
-
-    const handleFileChange = (event) => {
-      // Handle file selection
-    };
-
-    const handleAddFile = () => {
-      // Handle adding file
-    };
-
-    const handleDeleteFile = (fileId) => {
-      setFiles(files.filter(file => file.id !== fileId));
-    };
-
-    return (
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h3 className="text-lg font-semibold text-gray-700 mb-4">Task Files</h3>
-        {files.map(file => (
-          <div key={file.id} className="flex items-center justify-between mb-4 bg-gray-50 p-4 rounded-lg">
-            <div className="flex items-center">
-              <img src="/path-to-avatar-image.jpg" alt="Avatar" className="rounded-full w-8 h-8 mr-3" />
-              <div>
-                <div className="text-sm text-gray-500">{file.timestamp}</div>
-                <div className="font-semibold">{file.author}</div>
-              </div>
-            </div>
-            <div>
-              <button className="text-blue-500 hover:text-blue-700 mr-2">Download</button>
-              <button onClick={() => handleDeleteFile(file.id)} className="text-red-500 hover:text-red-700">Delete</button>
-            </div>
-          </div>
-        ))}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Title *</label>
-          <input type="text" placeholder="Title" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" />
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Attachment *</label>
-          <input type="file" onChange={handleFileChange} className="mt-1 block w-full" accept=".gif,.png,.jpg,.jpeg" />
-          <p className="text-xs text-gray-500 mt-1">Upload files only: gif, png, jpg, jpeg</p>
-        </div>
-        <button onClick={handleAddFile} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Add File
-        </button>
       </div>
     );
   };
@@ -312,7 +359,7 @@ const TaskDetails = () => {
                 </div>
                 <div className="text-center mt-2">{status}</div>
               </div>
-              <button type="button" className="bg-indigo-600 text-white mb-4 px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full">
+              <button type="button" onClick={handleUpdateStatusAndProgress} className="bg-indigo-600 text-white mb-4 px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full">
                 Update Status
               </button>
             </div>
@@ -325,23 +372,73 @@ const TaskDetails = () => {
               <div className="flex space-x-2 mb-4">
                 <button onClick={() => setActiveTab('overview')} className={`px-4 py-2 ${activeTab === 'overview' ? 'bg-gray-200' : ''}`}>OVERVIEW</button>
                 <button onClick={() => setActiveTab('edit')} className={`px-4 py-2 ${activeTab === 'edit' ? 'bg-gray-200' : ''}`}>EDIT</button>
-                <button onClick={() => setActiveTab('taskDiscussion')} className={`px-4 py-2 ${activeTab === 'taskDiscussion' ? 'bg-gray-200' : ''}`}>TASK DISCUSSION</button>
                 <button onClick={() => setActiveTab('postANote')} className={`px-4 py-2 ${activeTab === 'postANote' ? 'bg-gray-200' : ''}`}>POST A NOTE</button>
-                <button onClick={() => setActiveTab('taskFiles')} className={`px-4 py-2 ${activeTab === 'taskFiles' ? 'bg-gray-200' : ''}`}>TASK FILES</button>
               </div>
             </div>
             <div className="p-4">
-              {activeTab === 'overview' && <OverviewTab />}
-              {activeTab === 'edit' && <EditTab />}
-              {activeTab === 'taskDiscussion' && <TaskDiscussionTab />}
-              {activeTab === 'postANote' && <PostANoteTab />}
-              {activeTab === 'taskFiles' && <TaskFilesTab />}
+              {activeTab === 'overview' && task && <OverviewTab task={task} />}
+              {activeTab === 'edit' && task && <EditTab task={task} setTask={setTask} />}
+              {activeTab === 'postANote' && <PostANoteTab notes={task?.notes} />}
             </div>
           </div>
         </div>
       </div>
+      <Transition appear show={showDeleteConfirmation} as={Fragment}>
+        <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto" onClose={() => setShowDeleteConfirmation(false)}>
+          <div className="min-h-screen px-4 text-center">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+            </Transition.Child>
+            <span className="inline-block h-screen align-middle" aria-hidden="true">&#8203;</span>
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
+                  Confirm Delete
+                </Dialog.Title>
+                <div className="mt-2">
+                  <p className="text-sm text-gray-500">
+                    Are you sure you want to delete this item? This action cannot be undone.
+                  </p>
+                </div>
+                <div className="mt-4 flex justify-end space-x-3">
+                  <button
+                    onClick={() => setShowDeleteConfirmation(false)}
+                    type="button"
+                    className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleConfirmDelete}
+                    type="button"
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Confirm
+                  </button>
+                </div>
+              </div>
+            </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition>
     </div>
   );
 };
 
-export default TaskDetails;
+export default TaskDetails
