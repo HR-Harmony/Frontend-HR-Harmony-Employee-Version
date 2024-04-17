@@ -1,14 +1,116 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import ReactQuill from 'react-quill';
 import { ArrowCircleRightIcon, CheckCircleIcon, RefreshIcon, PlayIcon, PauseIcon, PlusIcon, PencilIcon, PencilAltIcon, TrashIcon, EyeIcon } from '@heroicons/react/solid';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Dialog, Transition } from '@headlessui/react';
+import { APIProjects } from '@/Apis/APIProjects';
+import { APICoreHR } from '@/Apis/APICoreHR';
+import { APIClients } from '@/Apis/APIClients';
+import { toast } from 'react-toastify';
 
 const Projects = () => {
   const navigate = useNavigate();
-  const [progress, setProgress] = useState(0);
+  const [projects, setProjects] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [clients, setClients] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedProject, setSelectedProject] = useState('');
   const [isModalOpen, setModalOpen] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [deleteProjectId, setDeleteProjectId] = useState(null);
+  const [formData, setFormData] = useState({
+    title: '',
+    department_id: '',
+    estimated_hour: '',
+    priority: '',
+    start_date: '',
+    end_date: '',
+    summary: '',
+    description: '',
+    client_id: '',
+  });
+
+  const fetchProjects = async () => {
+    try {
+      const response = await APIProjects.getAllProjects();
+      setProjects(response.projects || []);
+    } catch (error) {
+      toast.error("Failed to retrieve projects");
+    }
+  };
+
+  const fetchDepartments = async () => {
+    try {
+      const response = await APICoreHR.getAllDepartments();
+      setDepartments(response.departments || []);
+    } catch (error) {
+      toast.error("Failed to retrieve departments");
+    }
+  };
+
+  const fetchClient = async () => {
+    try {
+      const response = await APIClients.getAllClients();
+      setClients(response.data || []);
+    } catch (error) {
+      toast.error("Failed to retrieve clients");
+    }
+  };
+
+  useEffect(() => {
+    fetchProjects();
+    fetchDepartments();
+    fetchClient();
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const descriptionValue = formData.description.replace(/<\/?p>/g, ''); 
+
+    const dataToSend = {
+      title: formData.title,
+      department_id: formData.department_id ? parseInt(formData.department_id, 10) : null,
+      estimated_hour: formData.estimated_hour ? parseInt(formData.estimated_hour, 10) : null,
+      priority: formData.priority || null,
+      start_date: formData.start_date || null,
+      end_date: formData.end_date || null,
+      summary: formData.summary || null,
+      description: descriptionValue || null,
+      employee_id: parseInt(formData.client_id, 10),
+    };
+
+    console.log('Sending form data:', dataToSend);
+
+    try {
+      const response = await APIProjects.createProject(dataToSend);
+      console.log('Response received:', response);
+      toast.success("Project added successfully");
+      fetchProjects();
+      setShowAddForm(false);
+      setFormData({
+        title: '',
+        department_id: '',
+        estimated_hour: '',
+        priority: '',
+        start_date: '',
+        end_date: '',
+        summary: '',
+        description: '',
+        client_id: '',
+      });
+    } catch (error) {
+      toast.error("Failed to add project");
+    }
+  };
 
   const handleAddNewClick = () => {
     setShowAddForm(true);
@@ -16,24 +118,23 @@ const Projects = () => {
 
   const handleHideClick = () => {
     setShowAddForm(false);
+    setFormData({
+      title: '',
+      department_id: '',
+      estimated_hour: '',
+      priority: '',
+      start_date: '',
+      end_date: '',
+      summary: '',
+      description: '',
+      client_id: '',
+    });
   };
 
   const handleReset = () => {
     setShowAddForm(false);
     setSelectedProject('');
   };
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (progress < 100) {
-        setProgress(progress + 10);
-      } else {
-        clearInterval(interval);
-      }
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [progress]);
 
   const openModal = () => {
     setModalOpen(true);
@@ -43,10 +144,6 @@ const Projects = () => {
     setModalOpen(false);
   };
 
-  const updateProgress = (newProgress) => {
-    setProgress(newProgress);
-  };
-  
   const handleViewDetailsClick = (projectId) => {
     navigate(`/tasks/project-details/${projectId}`);
   };
@@ -55,11 +152,25 @@ const Projects = () => {
     navigate(`/tasks/project-details/${projectId}`);
   };
 
-  const projects = [
-    { id: '1', title: 'Website Redesign', description: 'Redesigning the corporate website', dueDate: '12-05-2023', status: 'Cancelled', progress: 30 },
-    { id: '2', title: 'Mobile App Dev', description: 'Developing a cross-platform mobile', dueDate: '20-07-2023', status: 'Completed', progress: 100 },
-    { id: '3', title: 'Cloud Migration', description: 'Migrating infrastructure to the cloud', dueDate: '13-08-2023', status: 'In Progress', progress: 60 }
-  ];
+  const handleShowDeleteConfirmation = (projectId) => {
+    setDeleteProjectId(projectId);
+    setShowDeleteConfirmation(true);
+  };
+
+  const handleHideDeleteConfirmation = () => {
+    setShowDeleteConfirmation(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      await APIProjects.deleteProjectById(deleteProjectId);
+      toast.success("Project successfully deleted");
+      setShowDeleteConfirmation(false);
+      fetchProjects();
+    } catch (error) {
+      toast.error("Failed to delete project");
+    }
+  };
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -68,7 +179,7 @@ const Projects = () => {
       case 'In Progress':
         return 'text-blue-500 bg-blue-100';
       case 'On Hold':
-        return 'text-red-500 bg-red-100';
+        return 'text-yellow-500 bg-yellow-100';
       case 'Cancelled':
         return 'text-red-500 bg-red-100';
       default:
@@ -79,15 +190,17 @@ const Projects = () => {
   const getProgressBarColor = (status) => {
     switch (status) {
       case 'Completed':
-        return 'bg-green-500';
+        return '#10B981';
       case 'In Progress':
-        return 'bg-blue-500';
+        return '#818CF8';
       case 'On Hold':
-        return 'bg-red-500';
+        return '#E5E7EB';
+      case 'Not Started':
+        return '#FBBF24';
       case 'Cancelled':
-        return 'bg-red-500';
+        return '#F87171';
       default:
-        return 'bg-gray-300'; // Default color if status is not recognized
+        return '#E5E7EB';
     }
   };
 
@@ -152,79 +265,82 @@ const Projects = () => {
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none" onClick={handleHideClick}>Hide</button>
           </div>
           
-          <form className="px-6 py-4">
+          <form className="px-6 py-4" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-              {/* Title */}
               <div>
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
                   Title*
                 </label> 
-                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="title" type="text" placeholder="Title" />
+                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="title" name="title" type="text" placeholder="Title" onChange={handleChange} value={formData.title} />
               </div>
-              {/* Start Date */}
               <div>
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="startDate">
                   Start Date*
                 </label>
-                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="startDate" type="date" />
+                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="startDate" name="start_date" type="date" onChange={handleChange} value={formData.start_date} />
               </div>
-              {/* Client */}
-              <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="client">
-                  Client*
-                </label> 
-                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="client" type="text" placeholder="Client" />
-              </div>
-              {/* End Date */}
               <div>
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="endDate">
                   End Date*
                 </label>
-                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="endDate" type="date" />
+                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="endDate" name="end_date" type="date" onChange={handleChange} value={formData.end_date} />
               </div>
-              {/* Summary */}
               <div>
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="summary">
                   Summary*
                 </label> 
-                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="summary" type="text" placeholder="Summary" />
+                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="summary" name="summary" type="text" placeholder="Summary" onChange={handleChange} value={formData.summary} />
               </div>
-              {/* Estimated Hour */}
               <div>
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="estimatedHour">
                   Estimated Hour
                 </label> 
-                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="estimatedHour" type="number" placeholder="Estimated Hour" />
+                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="estimatedHour" name="estimated_hour" type="number" placeholder="Estimated Hour" onChange={handleChange} value={formData.estimated_hour} />
               </div>
-              {/* Priority */}
               <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="priority">
-                  Priority
-                </label>
-                <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="priority">
-                  <option>Highest</option>
-                  {/* Add other priority options here */}
-                </select>
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="summary">
+                  Department*
+                </label> 
+                <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="department_id" name="department_id" onChange={handleChange} value={formData.department_id}>
+                      <option value="">Select Department</option>
+                      {departments.map(department => (
+                        <option key={department.id} value={department.id}>{department.department_name}</option>
+                      ))}
+                    </select>              
               </div>
+                <div className="flex justify-between items-center col-span-full">
+                  <div className="w-1/2 pr-2">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="priority">
+                      Priority
+                    </label>
+                    <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="priority" name="priority" onChange={handleChange} value={formData.priority}>
+                      <option value="">Select Priority</option>
+                      <option value="High">High</option>
+                      <option value="Medium">Medium</option>
+                      <option value="Low">Low</option>
+                    </select>
+                  </div>
+                  <div className="w-1/2 pl-2">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="client_id">
+                      Client*
+                    </label>
+                    <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="client_id" name="client_id" onChange={handleChange} value={formData.client_id}>
+                      <option value="">Select Client</option>
+                      {clients.map(client => (
+                        <option key={client.id} value={client.id}>{client.first_name} {client.last_name}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
             </div>
 
-            {/* Team */}
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="team">
-                Team
-              </label> 
-              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="team" type="text" placeholder="Team" />
-            </div>
-
-            {/* Description */}
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
                 Description
               </label>
-              <ReactQuill theme="snow" />
+              <ReactQuill theme="snow" value={formData.description} onChange={(content, delta, source, editor) => setFormData({...formData, description: editor.getHTML()})} />
             </div>
 
-            {/* Reset and Save Button */}
             <div className="flex justify-end bg-gray-200 px-4 py-3">
               <button className="bg-gray-400 hover:bg-gray-500 text-black font-bold py-2 px-4 rounded mr-2 focus:outline-none" onClick={handleHideClick}>Reset</button>
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none">Save</button>
@@ -233,46 +349,97 @@ const Projects = () => {
         </div>
       )}
 
-      {/* Card List All Projects */}
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
         {projects.map((project) => (
-          <div key={project.id} className='bg-white rounded-lg shadow-lg p-4'>
-            <div className='flex justify-between items-center mb-4'>
-              <h3 className='text-lg font-bold text-gray-700'>#{project.id}. {project.title}</h3>
-              <span className='text-sm text-gray-500'>{project.dueDate}</span>
-            </div>
-            <p className='text-gray-600 mb-2'>
-              {project.description}
-            </p>
-            <div className='mb-4'>
-              <span className='text-sm font-bold text-gray-700'>Due: </span>
-              <span className='text-sm text-gray-500'>{project.dueDate}</span>
-            </div>
-            <div className='w-full bg-gray-200 rounded-full h-2.5 mb-4'>
-              <div className={getProgressBarColor(project.status) + ' h-2.5 rounded-full'} style={{ width: `${project.progress}%` }}></div>
-            </div>
-            <div className='flex justify-between items-center'>
-              <div className='flex items-center'>
-                <span className={`inline-block w-3 h-3 rounded-full mr-2 ${getStatusColor(project.status).split(' ')[1]}`}></span>
-                <span className={`text-xs font-semibold ${getStatusColor(project.status).split(' ')[0]}`}>{project.status}</span>
+          <div key={project.id} className='bg-white rounded-lg shadow-lg p-4 flex flex-col justify-between'>
+            <div>
+              <div className='flex justify-between items-center mb-4'>
+                <h3 className='text-lg font-bold text-gray-700'>{project.title}</h3>
+                <span className='text-sm text-gray-500'>{project.start_date}</span>
               </div>
-              <div className='flex items-center'>
-                <button className='text-blue-600 hover:text-blue-700 mr-2' onClick={() => handleViewDetailsClick(project.id)}>
-                  <ArrowCircleRightIcon className='h-5 w-5' />
-                </button>
-                <button className='text-blue-600 hover:text-blue-700 mr-2' onClick={() => handleEditProjectClick(project.id)}>
-                  <PencilAltIcon className='h-5 w-5' />
-                </button>
-                <button className='text-blue-600 hover:text-blue-700'>
-                  <TrashIcon className='h-5 w-5' />
-                </button>
+              <p className='text-gray-600 mb-2'>
+                {project.summary}
+              </p>
+            </div>
+            <div>
+              <div className='w-full bg-gray-200 rounded-full h-2.5 mb-4'>
+                <div className='h-2.5 rounded-full' style={{ width: `${project.project_bar}%`, backgroundColor: getProgressBarColor(project.status) }}></div>
+              </div>
+              <div className='flex justify-between items-center'>
+                <span className={`text-xs font-semibold ${getStatusColor(project.status).split(' ')[0]}`}>{project.status}</span>
+                <div className='flex items-center'>
+                  <button className='text-blue-600 hover:text-blue-700 mr-2' onClick={() => handleViewDetailsClick(project.id)}>
+                    <ArrowCircleRightIcon className='h-5 w-5' />
+                  </button>
+                  <button className='text-blue-600 hover:text-blue-700 mr-2' onClick={() => handleEditProjectClick(project.id)}>
+                    <PencilAltIcon className='h-5 w-5' />
+                  </button>
+                  <button className='text-red-600 hover:text-red-800' onClick={() => handleShowDeleteConfirmation(project.id)}>
+                    <TrashIcon className='h-5 w-5' />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         ))}
       </div>
+
+      <Transition appear show={showDeleteConfirmation} as={Fragment}>
+        <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto" onClose={handleHideDeleteConfirmation}>
+          <div className="min-h-screen px-4 text-center">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+            </Transition.Child>
+            <span className="inline-block h-screen align-middle" aria-hidden="true">&#8203;</span>
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
+                  Delete Project
+                </Dialog.Title>
+                <div className="mt-2">
+                  <p className="text-sm text-gray-500">
+                    Are you sure you want to delete this project? This action cannot be undone.
+                  </p>
+                </div>
+                <div className="mt-4 flex justify-end space-x-3">
+                  <button
+                    onClick={handleHideDeleteConfirmation}
+                    type="button"
+                    className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleConfirmDelete}
+                    type="button"
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Confirm
+                  </button>
+                </div>
+              </div>
+            </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition>
     </div>
   )
 }
 
-export default Projects;
+export default Projects
