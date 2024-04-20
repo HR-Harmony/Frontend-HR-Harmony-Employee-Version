@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SearchIcon, CashIcon } from '@heroicons/react/solid';
+import { SearchIcon } from '@heroicons/react/solid';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { APIEmployees } from '@/Apis/APIEmployees';
@@ -9,10 +9,21 @@ import { toast } from 'react-toastify';
 const PayrollList = () => {
   const [selectedEmployee, setSelectedEmployee] = useState('Yanti Sari');
   const [selectedMonth, setSelectedMonth] = useState('2024-03');
-  const [activePaymentButton, setActivePaymentButton] = useState(null);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [selectedPayrollId, setSelectedPayrollId] = useState(null);
   const [employees, setEmployees] = useState([]);
   const [payrolls, setPayrolls] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchPayrolls = async () => {
+    try {
+      const payrollsData = await APIPayroll.getAllPayrolls();
+      setPayrolls(payrollsData.payroll_info || []);
+    } catch (error) {
+      toast.error('Error fetching payrolls data');
+    }
+    setIsLoading(false);
+  };
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -21,15 +32,6 @@ const PayrollList = () => {
         setEmployees(employeesData.employees || []);
       } catch (error) {
         toast.error('Error fetching employees data');
-      }
-    };
-
-    const fetchPayrolls = async () => {
-      try {
-        const payrollsData = await APIPayroll.getAllPayrolls();
-        setPayrolls(payrollsData.payroll_info || []);
-      } catch (error) {
-        toast.error('Error fetching payrolls data');
       }
     };
 
@@ -45,12 +47,24 @@ const PayrollList = () => {
     setSelectedMonth(e.target.value);
   };
 
-  const openPaymentModal = () => {
+  const openPaymentModal = (payrollId) => {
+    setSelectedPayrollId(payrollId);
     setIsPaymentModalOpen(true);
   };
 
   const closePaymentModal = () => {
     setIsPaymentModalOpen(false);
+  };
+
+  const handleConfirmPayment = async () => {
+    try {
+      await APIPayroll.updatePayrollStatus(selectedPayrollId, { paid_status: true });
+      toast.success("Payment successful");
+      closePaymentModal();
+      fetchPayrolls();
+    } catch (error) {
+      toast.error("Failed to make payment");
+    }
   };
 
   return (
@@ -100,50 +114,61 @@ const PayrollList = () => {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payslip Type</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Basic Salary</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hourly Rate</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {payrolls.map((payroll) => {
-                  const employee = employees.find(e => e.id === payroll.employee_id);
-                  return (
-                    <tr key={payroll.payroll_id}
-                        onMouseEnter={() => setActivePaymentButton(payroll.payroll_id)}
-                        onMouseLeave={() => setActivePaymentButton(null)}
-                        className="hover:bg-gray-100">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 flex justify-between items-center">
-                        <div>
-                          <span>{employee ? `${employee.first_name} ${employee.last_name}` : 'Tidak Ditemukan'}</span>
-                          <span className="text-xs text-gray-500 block">{employee ? employee.email : ''}</span>
-                        </div>
-                        {activePaymentButton === payroll.payroll_id && (
-                          <CashIcon
-                            className="h-5 w-5 text-blue-500 hover:text-blue-700 cursor-pointer ml-4"
-                            onClick={openPaymentModal}
-                          />
-                        )}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payroll.employee_id}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payroll.payslip_type}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payroll.basic_salary}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payroll.hourly_rate}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${payroll.paid_status ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                          {payroll.paid_status ? 'Paid' : 'Unpaid'}
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
+                {isLoading ? (
+                  <tr>
+                    <td colSpan="6" className="text-center py-4 text-sm text-gray-500">Loading payroll data...</td>
+                  </tr>
+                ) : payrolls.length === 0 ? (
+                  <tr>
+                    <td colSpan="6" className="text-center py-4 text-sm text-gray-500">No payroll data available.</td>
+                  </tr>
+                ) : (
+                  payrolls.map((payroll) => {
+                    const employee = employees.find(e => e.id === payroll.employee_id);
+                    return (
+                      <tr key={payroll.payroll_id}
+                          className="hover:bg-gray-100">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 flex justify-between items-center">
+                          <div>
+                            <span>{employee ? `${employee.first_name} ${employee.last_name}` : 'Not Found'}</span>
+                            <span className="text-xs text-gray-500 block">{employee ? employee.email : ''}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payroll.payslip_type}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payroll.basic_salary}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payroll.hourly_rate}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                          {payroll.paid_status ? (
+                            <span className="bg-green-200 text-green-700 py-1 px-3 rounded-full text-xs">Paid</span>
+                          ) : (
+                            <span className="bg-red-200 text-red-700 py-1 px-3 rounded-full text-xs">Unpaid</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                          <button
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            onClick={() => openPaymentModal(payroll.payroll_id)}
+                          >
+                            Make Payment
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
               </tbody>
             </table>
           </div>
           <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
-            Showing 1 to 1 of 1 records
+            Showing 1 to {payrolls.length} of {payrolls.length} records
             <div>
               <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
                 Previous
@@ -182,7 +207,7 @@ const PayrollList = () => {
               <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
                 <div className="flex justify-between items-start">
                   <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
-                    Make Payment
+                    Confirm Payment
                   </Dialog.Title>
                   <div className="ml-auto">
                     <button onClick={closePaymentModal} className="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -194,50 +219,17 @@ const PayrollList = () => {
                   </div>
                 </div>
                 <div className="mt-2">
-                  <div className="bg-white space-y-6">
-                    <div className="flex justify-between items-center">
-                      <h3 className="text-sm font-medium text-gray-900">Basic Salary</h3>
-                      <p className="text-sm text-gray-900">IDR10,000,000.00</p>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <h3 className="text-sm font-medium text-gray-900">Allowances</h3>
-                      <p className="text-sm text-gray-900">IDR0</p>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <h3 className="text-sm font-medium text-gray-900">Commissions</h3>
-                      <p className="text-sm text-gray-900">IDR0</p>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <h3 className="text-sm font-medium text-gray-900">Reimbursements</h3>
-                      <p className="text-sm text-gray-900">IDR0</p>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <h3 className="text-sm font-medium text-gray-900">Statutory deductions</h3>
-                      <p className="text-sm text-gray-900">IDR0</p>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <h3 className="text-sm font-medium text-gray-900">Advance Salary</h3>
-                      <p className="text-sm text-gray-900">IDR0</p>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <h3 className="text-sm font-medium text-gray-900">Loan</h3>
-                      <p className="text-sm text-gray-900">IDR0</p>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <h3 className="text-lg font-medium text-gray-900">Net Salary</h3>
-                      <p className="text-sm text-gray-900">IDR10,000,000</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-6">
-                  <label htmlFor="comments" className="block text-sm font-medium text-gray-700">
-                    Payslip Comments
-                  </label>
-                  <textarea id="comments" name="comments" rows="3" className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"></textarea>
+                  <p className="text-sm text-gray-500">
+                    Are you sure you want to make this payment?
+                  </p>
                 </div>
                 <div className="mt-5 sm:mt-6">
-                  <button type="button" className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm">
-                    Make Payment
+                  <button
+                    type="button"
+                    className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm"
+                    onClick={handleConfirmPayment}
+                  >
+                    Confirm
                   </button>
                 </div>
               </div>
@@ -250,3 +242,6 @@ const PayrollList = () => {
 };
 
 export default PayrollList;
+
+
+

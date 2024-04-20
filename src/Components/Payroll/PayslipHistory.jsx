@@ -1,32 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { EyeIcon } from '@heroicons/react/solid';
 import { useNavigate } from 'react-router-dom';
 import { Fragment } from 'react';
+import { APIPayroll } from '@/Apis/APIPayroll';
+import { APIEmployees } from '@/Apis/APIEmployees';
+import { toast } from 'react-toastify';
 
 const PayslipHistory = () => {
   const navigate = useNavigate();
   const [visibleDelete, setVisibleDelete] = useState(null);
+  const [payrollHistory, setPayrollHistory] = useState([]);
+  const [employees, setEmployees] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPayrollHistory = async () => {
+      try {
+        const payrollData = await APIPayroll.getPayrollHistory();
+        setPayrollHistory(payrollData.payroll_info_list);
+      } catch (error) {
+        toast.error('Failed to fetch payroll history data.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    const fetchEmployees = async () => {
+      try {
+        const employeesData = await APIEmployees.getAllEmployees();
+        setEmployees(employeesData.employees);
+      } catch (error) {
+        toast.error('Failed to fetch employees data.');
+      }
+    };
+
+    fetchPayrollHistory();
+    fetchEmployees();
+  }, []);
 
   const handleViewDetails = (employeeId) => {
     navigate(`/payroll/payroll-view/${employeeId}`);
   };
-
-  const payrollRecords = [
-    {
-      id: 1,
-      employee: 'Fakhrity Hikmawan',
-      netPayable: 'IDR5,000,000',
-      salaryMonth: 'December, 2024',
-      payDate: '2023-01-05'
-    },
-    {
-      id: 2,
-      employee: 'Arfara Yema Samgusdian',
-      netPayable: 'IDR5,000,000',
-      salaryMonth: 'December, 2024',
-      payDate: '2023-01-05'
-    }
-  ];
 
   return (
     <div className="border border-gray-200 rounded overflow-hidden max-w-6xl ml-auto mr-auto">
@@ -56,32 +70,52 @@ const PayslipHistory = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Net Payable</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Salary Month</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pay Date</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {payrollRecords.map((record) => (
-                <tr key={record.id}
-                    onMouseEnter={() => setVisibleDelete(record.id)}
-                    onMouseLeave={() => setVisibleDelete(null)}
-                    className="hover:bg-gray-100">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 relative">
-                    {record.employee}
-                    {visibleDelete === record.id && (
-                      <button className="absolute right-0 top-0 bottom-0 mr-4" onClick={() => handleViewDetails(record.id)}>
-                        <EyeIcon className="h-5 w-5 text-blue-600 hover:text-blue-800" />
-                      </button>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{record.netPayable}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{record.salaryMonth}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{record.payDate}</td>
-                </tr>
-              ))}
+              {isLoading ? (
+                <tr><td colSpan="4" className="text-center py-4 text-sm text-gray-500">Loading payslip history data...</td></tr>
+              ) : payrollHistory.length > 0 ? (
+                payrollHistory.map((record) => {
+                  const employee = employees.find(e => e.id === record.employee_id);
+                  const salaryMonth = new Date(record.created_at).toLocaleString('default', { month: 'long', year: 'numeric' });
+                  const payDate = new Date(record.updated_at).toISOString().split('T')[0];
+
+                  return (
+                    <tr key={record.id}
+                        onMouseEnter={() => setVisibleDelete(record.id)}
+                        onMouseLeave={() => setVisibleDelete(null)}
+                        className="hover:bg-gray-100">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 relative">
+                        {employee ? `${employee.first_name} ${employee.last_name}` : 'Tidak Ditemukan'}
+                        {visibleDelete === record.id && (
+                          <button className="absolute right-0 top-0 bottom-0 mr-4" onClick={() => handleViewDetails(record.id)}>
+                            <EyeIcon className="h-5 w-5 text-blue-600 hover:text-blue-800" />
+                          </button>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{record.basic_salary}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{salaryMonth}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{payDate}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                          {record.paid_status ? (
+                            <span className="bg-green-200 text-green-700 py-1 px-3 rounded-full text-xs">Paid</span>
+                          ) : (
+                            <span className="bg-red-200 text-red-700 py-1 px-3 rounded-full text-xs">Unpaid</span>
+                          )}
+                        </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr><td colSpan="4" className="text-center py-4 text-sm text-gray-500">No payslip history data available.</td></tr>
+              )}
             </tbody>
           </table>
         </div>
         <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
-            Showing 1 to 2 of 2 records
+            Showing 1 to {payrollHistory.length} of {payrollHistory.length} records
             <div>
               <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
                 Previous

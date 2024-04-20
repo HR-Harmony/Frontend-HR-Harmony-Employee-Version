@@ -124,7 +124,7 @@ const SideBarData = [
             },
             {
                 title:"Projects",
-                path:"/tasks/project"
+                path:"/tasks/project-list"
             },
             {
                 title:"Calendar",
