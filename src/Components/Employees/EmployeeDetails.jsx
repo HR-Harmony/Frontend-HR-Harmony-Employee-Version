@@ -1,343 +1,584 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 
-const EmployeeDetails = () => {
-  const [activeTab, setActiveTab] = useState('Contract');
+const ClientDetails = () => {
+    const navigate = useNavigate();
+    const [selectedMenu, setSelectedMenu] = useState("");
+    const [activeTab, setActiveTab] = useState('Bio');
 
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
-  };
+    const handleMenuClick = (menu) => {
+        setSelectedMenu(menu);
+    };
 
-  return (
-    <div className="container mx-auto p-4 bg-gray-50">
-      <div className="flex flex-col lg:flex-row gap-4">
-        <div className="w-full lg:w-1/4">
-          {/* Sidebar with menu */}
-          <div className="bg-white p-4 rounded shadow">
-            <div className="flex items-center mb-6">
-              <img
-                className="h-16 w-16 rounded-full mr-4"
-                src="/path-to-profile-image.jpg"
-                alt="Profile"
-              />
-              <div>
-                <p className="text-gray-900 font-semibold">coba saja</p>
-                <p className="text-gray-600 text-sm">interior</p>
+    const handleTabClick = (tab) => {
+      setActiveTab(tab);
+    };
+
+    const renderContent = () => {
+        switch (selectedMenu) {
+            default:
+                return <div>
+                    <div className="bg-white shadow-md rounded-lg mb-4">
+                    <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
+                        <h2 className="text-xl font-bold text-gray-700">Basic Information</h2>
+                    </div>
+                    <div className="px-4 py-2">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="mb-4 md:col-span-1">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="firstName">
+                                First Name
+                                </label>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="firstName" name="firstName" type="text" placeholder="First Name"/>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lastName">
+                                Last Name
+                                </label>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="lastName" name="lastName" type="text" placeholder="Last Name"/>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="employeeID">
+                                Employee ID
+                                </label>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="employeeID" name="employeeID" type="employeeID" placeholder="Employee ID"/>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="dateofBirth">
+                                Date of Birth
+                                </label>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="dateofBirth" name="dateofBirth" type="date"/>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="status">
+                                Status
+                                </label>
+                                <div className="relative">
+                                <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="status">
+                                    <option>Active</option>
+                                    <option>Banned</option>
+                                </select>
+                                </div>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="contactNumber">
+                                Contact Number
+                                </label>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="contactNumber" name="contactNumber" type="number" placeholder="Contact Number"/>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="gender">
+                                Gender
+                                </label>
+                                <div className="relative">
+                                <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="gender">
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                </select>
+                                </div>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="maritalStatus">
+                                    Marital Status
+                                </label>
+                                <div className="relative">
+                                    <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="maritalStatus">
+                                        <option value="">Married</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="role">
+                                Role
+                                </label>
+                                <div className="relative">
+                                <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role">
+                                    <option>Employee</option>
+                                    <option>Manager</option>
+                                </select>
+                                </div>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="religion">
+                                Religion
+                                </label>
+                                <div className="relative">
+                                <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="religion">
+                                    <option>Islam</option>
+                                    <option>Katholik</option>
+                                    <option>Protestan</option>
+                                    <option>Konghucu</option>
+                                    <option>Buddha</option>
+                                </select>
+                                </div>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="bloodGroup">
+                                Blood Group
+                                </label>
+                                <div className="relative">
+                                <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="bloodGroup">
+                                    <option>A</option>
+                                    <option>B</option>
+                                    <option>AB</option>
+                                    <option>O</option>
+                                </select>
+                                </div>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nationality">
+                                Nationality
+                                </label>
+                                <div className="relative">
+                                <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="nationality">
+                                    <option>Warga Negara Indonesia</option>
+                                    <option>Warga Negara Asing</option>
+                                    <option>Ini harusnya isinya nama negara2 tapi gua gatau cara buat yang bisa langsung list semua negara ri</option>
+                                </select>
+                                </div>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="citizenship">
+                                Citizenship
+                                </label>
+                                <div className="relative">
+                                <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="nationality">
+                                    <option>Indonesia</option>
+                                    <option>Malaysia</option>
+                                    <option>Ini harusnya isinya nama negara2 tapi gua gatau cara buat yang bisa langsung list semua negara ri</option>
+                                </select>
+                                </div>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="bpjs">
+                                BPJS Kesehatan
+                                </label>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="bpjs" name="bpjs" type="text" placeholder="BPJS"/>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="basicSalary">
+                                Basic Salary
+                                </label>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="basicSalary" name="basicSalary" type="text" placeholder="Basic Salary"/>
+                            </div>
+                            <div className="mb-4 md:col-span-2 lg:col-span-2">
+                              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="profile_picture">
+                                  Profile Picture
+                              </label>
+                              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="profile_picture" type="file" />
+                            </div>
+                            <div className="mb-4 md:col-span-1"> 
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="address1">
+                                Address 1
+                                </label>
+                                <textarea name="address1" id="address1" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder=" Address 1"></textarea>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="address2">
+                                Address 2
+                                </label>
+                                <textarea name="address2" id="address2" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder=" Address 2"></textarea>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="city">
+                                City
+                                </label>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="city" name="city" type="city" placeholder="City"/>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="state">
+                                State/Province
+                                </label>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="state" name="state" type="state" placeholder="State/Province"/>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="postalCode">
+                                Zip Code / Postal Code
+                                </label>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="postalCode" name="postalCode" type="postalCode" placeholder="ZIP/Postal Code"/>
+                            </div>
+                        </div>
+                        <div className="flex justify-end bg-gray-200 px-4 py-3">
+                        <button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none mr-2">Reset</button>
+                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none">Save</button>
+                        </div>
+                    </div>
+                </div>
+                </div>;
+            case "personalInformation":
+                return <div className="w-full lg:w-3/4">
+                    <div className="bg-white p-6 rounded shadow">
+                      <div className="mb-6">
+                        {/* Contract option header */}
+                        <h2 className="text-xl font-semibold text-gray-800 mb-2">Personal Information</h2>
+                        {/* Tabs */}
+                        <ul className="flex border-b">
+                          <li className="-mb-px mr-1">
+                            <a
+                              className={`inline-block py-2 px-4 font-semibold ${activeTab === 'Bio' ? 'text-blue-500 border-b-2 border-blue-500 cursor-pointer' : 'text-gray-500 hover:text-gray-800 cursor-pointer'}`}
+                              onClick={() => handleTabClick('Bio')}
+                            >
+                              Bio
+                            </a>
+                          </li>
+                          <li className="mr-1">
+                            <a
+                              className={`inline-block py-2 px-4 font-semibold ${activeTab === 'SocialProfile' ? 'text-blue-500 border-b-2 border-blue-500 cursor-pointer' : 'text-gray-500 hover:text-gray-800 cursor-pointer'}`}
+                              onClick={() => handleTabClick('SocialProfile')}
+                            >
+                              Social Profile
+                            </a>
+                          </li>
+                          <li className="mr-1">
+                            <a
+                              className={`inline-block py-2 px-4 font-semibold ${activeTab === 'BankAccount' ? 'text-blue-500 border-b-2 border-blue-500 cursor-pointer' : 'text-gray-500 hover:text-gray-800 cursor-pointer'}`}
+                              onClick={() => handleTabClick('BankAccount')}
+                            >
+                              Bank Account
+                            </a>
+                          </li>
+                          <li className="mr-1">
+                            <a
+                              className={`inline-block py-2 px-4 font-semibold ${activeTab === 'EmergencyContact' ? 'text-blue-500 border-b-2 border-blue-500 cursor-pointer' : 'text-gray-500 hover:text-gray-800 cursor-pointer'}`}
+                              onClick={() => handleTabClick('EmergencyContact')}
+                            >
+                              Emergency Contact
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                      {activeTab === 'Bio' && (
+                        <div>
+                          <div className="mb-4 md:col-span-1">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="bio">
+                            Bio
+                            </label>
+                            <textarea name="address1" id="address1" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter Staff Bio Here"></textarea>
+                          </div>
+                          <div className="flex justify-end bg-white-200 px-4 py-3">
+                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none">Update Bio</button>
+                          </div>
+                        </div>
+                      )}
+                      {activeTab === 'SocialProfile' && (
+                      <div>  
+                        <div>
+                          <div className="mb-4 md:col-span-1">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="facebook">
+                            Facebook
+                            </label>
+                            <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="facebook" name="facebook" type="link" placeholder="Profile Url"/>
+                          </div>
+                        </div>
+                        <div>
+                          <div className="mb-4 md:col-span-1">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="instagram">
+                            Instagram
+                            </label>
+                            <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="instagram" name="instagram" type="link" placeholder="Profile Url"/>
+                          </div>
+                        </div>
+                        <div>
+                          <div className="mb-4 md:col-span-1">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="twitter">
+                            Twitter
+                            </label>
+                            <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="twitter" name="twitter" type="link" placeholder="Profile Url"/>
+                          </div>
+                        </div>
+                        <div>
+                          <div className="mb-4 md:col-span-1">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="linkedin">
+                            LinkedIn
+                            </label>
+                            <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="linkedin" name="linkedin" type="link" placeholder="Profile Url"/>
+                          </div>
+                        </div>
+                        <div className="flex justify-end bg-white-200 px-4 py-3">
+                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none">Update Social</button>
+                        </div>
+                      </div>
+                      )}
+                      {activeTab === 'BankAccount' && (
+                      <div>
+                        <div className="px-4 py-2">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="mb-4 md:col-span-1">
+                              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="accountTitle">
+                              Account Title
+                              </label>
+                              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="accountTitle" name="accountTitle" type="text" placeholder="Account Title"/>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="accountNumber">
+                              Account Number
+                              </label>
+                              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="accountNumber" name="accountNumber" type="number" placeholder="Account Number"/>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="bankName">
+                              Bank Name
+                              </label>
+                              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="bankName" name="bankName" type="text" placeholder="Bank Name"/>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="iban">
+                              IBAN
+                              </label>
+                              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="iban" name="iban" type="number" placeholder="International Bank Account Number"/>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="swiftCode">
+                              Swift Code
+                              </label>
+                              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="swiftCode" name="swiftCode" type="text" placeholder="Swift Code"/>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="bankBranch">
+                              Bank Branch
+                              </label>
+                              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="bankBranch" name="bankBranch" type="text" placeholder="Bank Branch"/>
+                            </div>
+                          </div>
+                          <div className="flex justify-end bg-white-200 px-4 py-3">
+                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none">Update Bank Info</button>
+                          </div>
+                        </div>
+                      </div>
+                      )}
+                      {activeTab === 'EmergencyContact' && (
+                        <div>
+                          <div className="px-4 py-2">
+                            <div className="mb-4 md:col-span-1">
+                              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fullName">
+                              Full Name
+                              </label>
+                              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="fullName" name="fullName" type="name" placeholder="Full Name"/>
+                            </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="mb-4 md:col-span-1">
+                              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="contactNumber">
+                              Contact Number
+                              </label>
+                              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="contactNumber" name="contactNumbere" type="number" placeholder="Contact Number"/>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                              Email
+                              </label>
+                              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" name="email" type="email" placeholder="Email"/>
+                            </div>
+                          </div>
+                          <div className="mb-4 md:col-span-1">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="address">
+                            Address
+                            </label>
+                            <textarea name="address" id="address" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Address"></textarea>
+                          </div>
+                          <div className="flex justify-end bg-white-200 px-4 py-3">
+                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none">Update Con</button>
+                          </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+            case "accountInformation":
+                return <div>
+                  <div className="bg-white shadow-md rounded-lg mb-4">
+                    <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
+                        <h2 className="text-xl font-bold text-gray-700">Account Information</h2>
+                    </div>
+                    <div className="px-4 py-2">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="mb-4 md:col-span-1">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+                                Username
+                                </label>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" name="username" type="username" placeholder="Username"/>
+                            </div>
+                            <div className="mb-4 md:col-span-1">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                                Account Email
+                                </label>
+                                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" name="email" type="email" placeholder="Email"/>
+                            </div>
+                          </div>
+                          <div className="flex justify-end bg-white-200 px-4 py-3">
+                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none">Save</button>
+                          </div>
+                        </div>  
+                  </div> 
+                </div>;
+            case "document":
+                return <div>
+                  <div className="bg-white shadow-md rounded-lg mb-4">
+                  <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
+                    <h2 className="text-xl font-bold text-gray-700">Documents</h2>
+                  </div>
+                  <div className="overflow-x-auto mb-4">
+                  <div className='p-5'>
+                      <div className="flex justify-between mb-4">
+                          <label className="flex items-center">
+                              Show
+                              <select className="mx-2 rounded border border-gray-300">
+                              <option value="10">10</option>
+                              <option value="20">20</option>
+                              <option value="50">50</option>
+                              </select>
+                              entries
+                          </label>
+                          <div className="flex justify-end">
+                              <input type="search" placeholder="Search" className="rounded border border-gray-300 p-2" />
+                          </div>
+                          </div>
+                          <table className="min-w-full divide-y divide-gray-200">
+                              <thead className="bg-gray-50">
+                              <tr>
+                                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Document Name</th>
+                                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Document Type</th>
+                                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Document File</th>
+                                  <th className="relative px-6 py-3">
+                                  <span className="sr-only">Actions</span>
+                                  </th>
+                              </tr>
+                              </thead>
+                              <tbody className="bg-white divide-y divide-gray-200">
+                                  <tr className="group hover:bg-gray-100">
+                                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                      <div className="flex justify-between">
+                                          <div className="flex-shrink-0 flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                          </div>
+                                      </div>
+                                      </td>
+                                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
+                                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
+                                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"></td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                          <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
+                              Showing 1 to of 3 records
+                              <div>
+                              <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
+                                  Previous
+                              </button>
+                              <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
+                                  Next
+                              </button>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                  <div className="px-4 py-2 border-t">
+                    <div className="flex justify-between items-center mb-5 mt-5">
+                      <h2 className="text-xl font-bold text-gray-700">Add New Document</h2>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="mb-4 md:col-span-1">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="documentName">
+                            Document Name
+                            </label>
+                            <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="documentName" name="documentName" type="documentName" placeholder="Document Name"/>
+                        </div>
+                        <div className="mb-4 md:col-span-1">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="documentType">
+                            Document Type
+                            </label>
+                            <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="documentType" name="documentTypel" type="documentType" placeholder="Document Type"/>
+                        </div>
+                        <div className="mb-4 md:col-span-2 lg:col-span-2">
+                              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="document_file">
+                              Document File
+                              </label>
+                              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="document_file" type="file" />
+                        </div>
+                      </div>
+                      <div className="flex justify-end bg-white-200 px-4 py-3">
+                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none">Add Document</button>
+                      </div>
+                    </div> 
               </div>
+            </div>;
+            case "changePassword":
+                return <div>
+                    <div className="bg-white shadow-md rounded-lg mb-4">
+                        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
+                            <h2 className="text-xl font-bold text-gray-700">Change Password</h2>
+                        </div>
+                        <div className="px-4 py-2">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="mb-4 md:col-span-1">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+                                    Current Password
+                                    </label>
+                                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" name="password" type="password" placeholder="Password"/>
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="mb-4 md:col-span-1">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+                                    New Password
+                                    </label>
+                                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" name="password" type="password" placeholder="Password"/>
+                                </div>
+                                <div className="mb-4 md:col-span-1">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+                                    Confirm New Password
+                                    </label>
+                                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" name="password" type="password" placeholder="Password"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex justify-end bg-white-200 px-4 py-3">
+                            <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none">Change Password</button>
+                        </div>
+                    </div>
+                </div>;
+        }
+    };
+
+    return(
+        <div>
+            <div className="w-full mx-auto p-10 bg-white-50">
+                <div className="flex flex-col lg:flex-row gap-4">
+                    <div className="w-full lg:w-1/4">
+                        <div className="bg-white p-4 rounded shadow">
+                            <div className="flex items-center mb-6">
+                                <img
+                                    className="h-16 w-16 rounded-full mr-4"
+                                    src=".jpg"
+                                    alt="Profile"
+                                />
+                                <div>
+                                    <p className="text-gray-900 font-semibold">coba saja</p>
+                                    <p className="text-gray-600 text-sm">interior</p>
+                                </div>
+                            </div>
+                            <nav className="flex flex-col text-gray-800">
+                                <a href="#" className="py-2 px-2 hover:bg-gray-100 rounded">Manager</a>
+                                <a href="#" className="py-2 px-2 hover:bg-gray-100 rounded">Email</a>
+                                <a href="#" className="py-2 px-2 hover:bg-gray-100 rounded" onClick={() => handleMenuClick("default")}>Basic Information</a>
+                                <a href="#" className="py-2 px-2 hover:bg-gray-100 rounded" onClick={() => handleMenuClick("personalInformation")}>Personal Information</a>
+                                <a href="#" className="py-2 px-2 hover:bg-gray-100 rounded" onClick={() => handleMenuClick("accountInformation")}>Account Information</a>
+                                <a href="#" className="py-2 px-2 hover:bg-gray-100 rounded" onClick={() => handleMenuClick("document")}>Documents</a>
+                                <a href="#" className="py-2 px-2 hover:bg-gray-100 rounded" onClick={() => handleMenuClick("changePassword")}>Change Password</a>
+                            </nav>
+                        </div>
+                    </div>
+                    <div className="w-full lg:w-3/4">
+                        <div className="bg-white p-6 rounded shadow">
+                            {renderContent()}
+                        </div>
+                    </div>
+                </div>
             </div>
-            {/* Navigation */}
-            <nav className="flex flex-col text-gray-800">
-              <a href="#" className="py-2 hover:bg-gray-100 rounded">Email</a>
-              <a href="#" className="py-2 hover:bg-gray-100 rounded">Contract</a>
-              <a href="#" className="py-2 hover:bg-gray-100 rounded">Basic Information</a>
-              <a href="#" className="py-2 hover:bg-gray-100 rounded">Personal Information</a>
-              <a href="#" className="py-2 hover:bg-gray-100 rounded">Profile Picture</a>
-              <a href="#" className="py-2 hover:bg-gray-100 rounded">Account Information</a>
-              <a href="#" className="py-2 hover:bg-gray-100 rounded">Documents</a>
-              <a href="#" className="py-2 hover:bg-gray-100 rounded">Timesheet Agenda</a>
-              <a href="#" className="py-2 hover:bg-gray-100 rounded">Change Password</a>
-            </nav>
-          </div>
         </div>
-        <div className="w-full lg:w-3/4">
-          <div className="bg-white p-6 rounded shadow">
-            <div className="mb-6">
-              {/* Contract option header */}
-              <h2 className="text-xl font-semibold text-gray-800 mb-2">Set Contract</h2>
-              <p className="text-gray-600 text-sm mb-4">Define salary options with contract start and end date.</p>
-              {/* Tabs */}
-              <ul className="flex border-b">
-                <li className="-mb-px mr-1">
-                  <a
-                    className={`inline-block py-2 px-4 font-semibold ${activeTab === 'Contract' ? 'text-blue-500 border-b-2 border-blue-500' : 'text-gray-500 hover:text-gray-800'}`}
-                    onClick={() => handleTabClick('Contract')}
-                  >
-                    Contract
-                  </a>
-                </li>
-                <li className="mr-1">
-                  <a
-                    className={`inline-block py-2 px-4 font-semibold ${activeTab === 'Allowances' ? 'text-blue-500 border-b-2 border-blue-500' : 'text-gray-500 hover:text-gray-800'}`}
-                    onClick={() => handleTabClick('Allowances')}
-                  >
-                    Allowances
-                  </a>
-                </li>
-                <li className="mr-1">
-                  <a className="inline-block py-2 px-4 text-gray-500 hover:text-gray-800 font-semibold" href="#">Commissions</a>
-                </li>
-                <li className="mr-1">
-                  <a className="inline-block py-2 px-4 text-gray-500 hover:text-gray-800 font-semibold" href="#">Statutory deductions</a>
-                </li>
-                <li className="mr-1">
-                  <a className="inline-block py-2 px-4 text-gray-500 hover:text-gray-800 font-semibold" href="#">Reimbursements</a>
-                </li>
-              </ul>
-            </div>
-            {activeTab === 'Contract' && (
-              <div>
-                {/* Contract form fields */}
-                <form>
-                  {/* Form fields */}
-                  <div className="flex flex-wrap -mx-3 mb-6">
-                    {/* Contract Date */}
-                    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                      <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="contract-date">
-                        Contract Date *
-                      </label>
-                      <input className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" id="contract-date" type="date" />
-                    </div>
-                    {/* Department */}
-                    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                      <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="department">
-                        Department *
-                      </label>
-                      <div className="relative">
-                        <select className="block appearance-none w-full bg-gray-100 border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500" id="department">
-                          <option>Produksi (interior)</option>
-                          {/* Add other options here */}
-                        </select>
-                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                          <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                            <path d="M5.5 7l4.5 4.5L14.5 7H5.5z"/>
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                    {/* Basic Salary */}
-                    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                      <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="basic-salary">
-                        Basic Salary *
-                      </label>
-                      <input className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" id="basic-salary" type="text" placeholder="IDR 2500000.00" />
-                    </div>
-                    {/* Office Shift */}
-                    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                      <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="office-shift">
-                        Office Shift *
-                      </label>
-                      <div className="relative">
-                        <select className="block appearance-none w-full bg-gray-100 border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500" id="office-shift">
-                          <option>SHIFT 1</option>
-                          {/* Add other options here */}
-                        </select>
-                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                          <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                            <path d="M5.5 7l4.5 4.5L14.5 7H5.5z"/>
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                    {/* Designation */}
-                    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                      <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="designation">
-                        Designation *
-                      </label>
-                      <div className="relative">
-                        <select className="block appearance-none w-full bg-gray-100 border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500" id="designation">
-                          <option>interior</option>
-                          {/* Add other options here */}
-                        </select>
-                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                          <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                            <path d="M5.5 7l4.5 4.5L14.5 7H5.5z"/>
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                    {/* Hourly Rate */}
-                    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                      <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="hourly-rate">
-                        Hourly Rate
-                      </label>
-                      <input className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" id="hourly-rate" type="text" placeholder="IDR 25000.00" />
-                    </div>
-                    {/* Contract End */}
-                    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                      <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="contract-end">
-                        Contract End Date *
-                      </label>
-                      <input className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" id="contract-end" type="date" placeholder="05-03-2025" />
-                    </div>
-                    {/* Payslip Type */}
-                    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                      <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="payslip-type">
-                        Payslip Type *
-                      </label>
-                      <div className="relative">
-                        <select className="block appearance-none w-full bg-gray-100 border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500" id="payslip-type">
-                          <option>Per Month</option>
-                          {/* Add other options here */}
-                        </select>
-                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                          <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                            <path d="M5.5 7l4.5 4.5L14.5 7H5.5z"/>
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                    {/* Leave Categories */}
-                    <div className="w-full px-3 mb-6">
-                      <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="leave-categories">
-                        Leave Categories
-                      </label>
-                      <input className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" id="leave-categories" type="text" placeholder="Enter leave categories here." />
-                    </div>
-                    {/* Role Description */}
-                    <div className="w-full px-3 mb-6">
-                      <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="role-description">
-                        Role Description *
-                      </label>
-                      <textarea className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" id="role-description" placeholder="Enter role description here."></textarea>
-                    </div>
-                    {/* Submit Button */}
-                    <div className="flex justify-end mt-6">
-                      <button
-                        type="submit"
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                      >
-                        Update Contract
-                      </button>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            )}
-            {activeTab === 'Allowances' && (
-              <div>
-                {/* Allowances content */}
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">List All Allowances</h3>
-                <div className="mb-4">
-                  <div className="flex justify-between items-center">
-                    <div className="w-1/4 pr-4">
-                      <label htmlFor="entries" className="block text-gray-700 text-sm font-bold mb-2">Show</label>
-                      <div className="relative">
-                        <select id="entries" className="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
-                          <option>10</option>
-                          <option>20</option>
-                          <option>50</option>
-                          <option>100</option>
-                        </select>
-                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                          <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                            <path d="M5.5 7l4.5 4.5L14.5 7H5.5z"/>
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="w-1/4">
-                      <label htmlFor="search" className="block text-gray-700 text-sm font-bold mb-2">Search</label>
-                      <input id="search" type="text" placeholder="Search" className="block w-full bg-white text-gray-700 border border-gray-300 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" />
-                    </div>
-                  </div>
-                </div>
-                <div className="overflow-x-auto">
-                  <table className="min-w-full bg-white">
-                    <thead>
-                      <tr>
-                        <th className="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                          TITLE
-                        </th>
-                        <th className="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                          AMOUNT
-                        </th>
-                        <th className="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                          ALLOWANCE OPTION
-                        </th>
-                        <th className="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                          AMOUNT OPTION
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td colSpan="4" className="py-2 px-4 border-b border-gray-200 text-sm text-center">
-                          No records available
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <div className="py-3 flex items-center justify-between">
-                  <div className="flex-1 flex justify-between sm:hidden">
-                    <a href="#" className="text-gray-500 hover:text-gray-900">Previous</a>
-                    <a href="#" className="ml-3 text-gray-500 hover:text-gray-900">Next</a>
-                  </div>
-                  <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                    <div>
-                      <p className="text-sm text-gray-700">
-                        Showing <span className="font-medium">1</span> to <span className="font-medium">10</span> of <span className="font-medium">20</span> results
-                      </p>
-                    </div>
-                    <div>
-                      <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                        <a href="#" className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                          Previous
-                        </a>
-                        {/* Pagination goes here */}
-                        <a href="#" className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                          Next
-                        </a>
-                      </nav>
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-6">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Allowance Option *</h3>
-                  <div className="flex flex-wrap -mx-3 mb-2">
-                    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                      <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="allowance-option">
-                        Non Taxable
-                      </label>
-                      <select className="block appearance-none w-full bg-gray-100 border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500" id="allowance-option">
-                        <option>Fixed</option>
-                        {/* Add other options here */}
-                      </select>
-                    </div>
-                    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                      <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="title">
-                        Title *
-                      </label>
-                      <input className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" id="title" type="text" placeholder="Title" />
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap -mx-3 mb-2">
-                    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                      <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="amount-option">
-                        Amount Option *
-                      </label>
-                      <select className="block appearance-none w-full bg-gray-100 border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500" id="amount-option">
-                        <option>Fixed</option>
-                        {/* Add other options here */}
-                      </select>
-                    </div>
-                    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                      <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="amount">
-                        Amount *
-                      </label>
-                      <div className="flex items-center">
-                        <input className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-300 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" id="amount" type="text" placeholder="Amount" />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex justify-end mt-6">
-                    <button
-                      type="submit"
-                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    >
-                      Save
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-            {/* ... other tab contents */}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+    )
+}
 
-export default EmployeeDetails
-
+export default ClientDetails;
