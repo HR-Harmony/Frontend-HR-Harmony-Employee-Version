@@ -1,7 +1,6 @@
-import { MdDashboard, MdPayments, MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
-import { FaUsers, FaUserClock } from "react-icons/fa";
-import { FaSync, FaTasks } from "react-icons/fa";
-import { MdEmojiPeople } from "react-icons/md";
+import { MdDashboard, MdPayments, MdKeyboardArrowDown, MdKeyboardArrowUp, MdEmojiPeople } from "react-icons/md";
+import { FaUsers, FaUserClock, FaSync, FaTasks } from "react-icons/fa";
+import { FaBuildingUser } from "react-icons/fa6";
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { FiHelpCircle } from "react-icons/fi";
 
@@ -124,7 +123,7 @@ const SideBarData = [
             },
             {
                 title:"Projects",
-                path:"/tasks/project-list"
+                path:"/tasks/project"
             },
             {
                 title:"Calendar",
@@ -204,6 +203,12 @@ const SideBarData = [
                 path: "/training/training-skills"
             },
         ]
+    },
+
+    {
+        title: "Manage Client",
+        path: "/client-list",
+        icon: < FaBuildingUser />
     },
 
     {
