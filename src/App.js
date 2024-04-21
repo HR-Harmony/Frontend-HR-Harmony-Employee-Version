@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginSignup from './Components/LoginSignup/LoginSignup'
 import LandingPage from './Components/LandingPage/LandingPage';
 import SideBar from "./Components/Sidebar/Sidebar";
-import Header from './Components/Header/Header';
 import Dashboard from "./Components/Dashboard/Dashboard";
 import PayrollRouter from './Components/Payroll/PayrollRouter';
 import TasksRouter from './Components/Tasks/TasksRouter';
@@ -15,6 +14,8 @@ import RecruitmentRouter from './Components/Recruitment/RecruitmentRouter';
 import TrainingRouter from './Components/Training/TrainingRouter';
 import Helpdesk from './Components/Helpdesk/Helpdesk';
 import TicketDetails from './Components/Helpdesk/TicketDetails';
+import ClientList from './Components/ManageClient/ClientList';
+import ClientDetails from './Components/ManageClient/ClientDetails';
 
 // eslint-disable-next-line
 function App() {
@@ -45,6 +46,8 @@ function DashboardLayout() {
             <Route path = "/training/*" element = { < TrainingRouter /> } />
             <Route path = "/helpdesk" element = { < Helpdesk/> } />
             <Route path="/helpdesk/ticket-details/:ticketId" element={<TicketDetails />} />
+            <Route path = "/client-list" element = { < ClientList/> } />
+            <Route path = "/client-list/client-details" element = { < ClientDetails/> } />
             </Routes > 
         </div>
     );
