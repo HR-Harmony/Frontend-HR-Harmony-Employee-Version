@@ -10,56 +10,7 @@ const SideBarData = [
         path: "/dashboard",
         icon: <MdDashboard />
     },
-    {
-        title: "Employees",
-        path: "#",
-        icon: <FaUsers />,
-        iconClosed: <MdKeyboardArrowDown />,
-        iconOpened: <MdKeyboardArrowUp />,
-        subNav: [
-            {
-                title: "Employees",
-                path: "/employees/staff-list"
-            },
-            {
-                title: "Roles & Privileges",
-                path: "/employees/roles-privileges"
-            },
-            {
-                title: "Shift Scheduling",
-                path: "/employees/shift-scheduling"
-            },
-            {
-                title: "Employees Exit",
-                path: "/employees/employees-exit"
-            },
-        ]
-    },
-    {
-        title: "Core HR",
-        path: "#",
-        icon: <FaSync />,
-        iconClosed: <MdKeyboardArrowDown />,
-        iconOpened: <MdKeyboardArrowUp />,
-        subNav: [
-            {
-                title: "Department",
-                path: "/corehr/departments-list"
-            },
-            {
-                title: "Designation",
-                path: "/corehr/designation-list"
-            },
-            {
-                title: "Policies",
-                path: "/corehr/policies-list"
-            },
-            {
-                title: "Make Announcement",
-                path: "/corehr/news-list"
-            },
-        ]
-    },
+    
     {
         title: "Attendance",
         path: "#",
@@ -131,86 +82,7 @@ const SideBarData = [
             }
         ]
     },
-    {
-        title: "Performance",
-        path: "#",
-        icon: < MdPayments />,
-        iconClosed: <MdKeyboardArrowDown />,
-        iconOpened: <MdKeyboardArrowUp />,
-        subNav: [
-            {
-                title: "KPI (Indicator)",
-                path: "/performance/performance-indicator"
-            },
-            {
-                title: "KPA (Appraisal)",
-                path: "/performance/performance-appraisal"
-            },
-            {
-                title: "Track Goals (OKRs)",
-                path: "/performance/track-goals"
-            },
-            {
-                title: "Goal Type",
-                path: "/performance/goal-type"
-            },
-        ]
-    },
-
-    {
-        title: "Recruitment",
-        path: "#",
-        icon: < MdEmojiPeople />,
-        iconClosed: <MdKeyboardArrowDown />,
-        iconOpened: <MdKeyboardArrowUp />,
-        subNav: [
-            {
-                title: "New Opening",
-                path: "/recruitment/new-opening"
-            },
-            {
-                title:"Candidates",
-                path:"/recruitment/candidates"
-            },
-            {
-                title:"Interviews",
-                path:"/recruitment/interviews"
-            },
-            {
-                title:"Promotions",
-                path:"/recruitment/promotions"
-            }
-        ]   
-    },
-
-    {
-        title: "Training",
-        path: "#",
-        icon: <LiaChalkboardTeacherSolid />,
-        iconClosed: <MdKeyboardArrowDown />,
-        iconOpened: <MdKeyboardArrowUp />,
-        subNav: [
-            {
-                title: "Training Sessions",
-                path: "/training/training-sessions"
-            },
-            {
-                title: "Trainers",
-                path: "/training/trainers"
-            },
-            {
-                title: "Training Skills",
-                path: "/training/training-skills"
-            },
-        ]
-    },
-
-    {
-        title: "Manage Client",
-        path: "/client-list",
-        icon: < FaBuildingUser />
-    },
-
+    
     {
         title: "Helpdesk",
         path: "/helpdesk",
