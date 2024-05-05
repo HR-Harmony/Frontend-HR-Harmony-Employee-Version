@@ -145,16 +145,6 @@ const RequestLoan = () => {
           </div>
           <form className="p-6" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="md:col-span-2">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="employeeName">
-                  Employee *
-                </label>
-                <select className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="employeeName" name="employeeName">
-                  {employees.map((employee) => (
-                    <option key={employee.id} value={employee.id}>{employee.first_name} {employee.last_name}</option>
-                  ))}
-                </select>
-              </div>
               <div>
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="monthYear">
                   Month & Year *
@@ -204,7 +194,7 @@ const RequestLoan = () => {
         </div>
       )}
       <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-700">List All Request Loan</h2>
+        <h2 className="text-lg font-semibold text-gray-700">My Loan Request</h2>
         <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700" onClick={handleAddNewClick}>Add New</button>
       </div>
       <div className="p-5">
@@ -394,16 +384,6 @@ const RequestLoan = () => {
                 <form onSubmit={handleEditSubmit}>
                   <div className="mt-2">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="md:col-span-2">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="employeeNameEdit">
-                          Employee *
-                        </label>
-                        <select className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="employeeNameEdit" name="employeeNameEdit" defaultValue={editData?.employee_id}>
-                          {employees.map((employee) => (
-                            <option key={employee.id} value={employee.id}>{employee.first_name} {employee.last_name}</option>
-                          ))}
-                        </select>
-                      </div>
                       <div>
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="monthYearEdit">
                           Month & Year *
@@ -442,16 +422,6 @@ const RequestLoan = () => {
                           Reason *
                         </label>
                         <textarea className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="reasonEdit" name="reasonEdit" defaultValue={editData?.reason}></textarea>
-                      </div>
-                      <div className="md:col-span-2">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="statusEdit">
-                          Status *
-                        </label>
-                        <select className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="statusEdit" name="statusEdit" defaultValue={editData?.status}>
-                          <option>Pending</option>
-                          <option>Approved</option>
-                          <option>Rejected</option>
-                        </select>
                       </div>
                     </div>
                   </div>

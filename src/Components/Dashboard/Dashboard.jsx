@@ -1,233 +1,160 @@
-import React from 'react';
-import './Dashboard.css';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../Header/Header';
-import Chart from 'react-apexcharts';
-import { CheckCircleIcon, RefreshIcon, PlayIcon, PauseIcon } from '@heroicons/react/solid';
+import { FaClock } from 'react-icons/fa';
+import ReactApexChart from 'react-apexcharts';
+import { Doughnut } from 'react-chartjs-2';
+import { Chart, ArcElement } from 'chart.js';
 
 const Dashboard = () => {
-  const invoiceChartOptions = {
-    chart: {
-      id: 'invoice-chart',
-      toolbar: {
-        show: false
-      }
-    },
-    xaxis: {
-      categories: ['2024-01', '2023-12', '2023-11', '2023-10', '2023-09', '2023-08']
-    },
-    plotOptions: {
-      bar: {
-        horizontal: false,
-      }
-    },
-    stroke: {
-      show: true,
-      width: 2,
-      colors: ['transparent']
-    },
-    colors: ['#34eb9b', '#eb4034'],
+  Chart.register(ArcElement);
+
+  const user = {
+    name: "John Doe",
+    position: "Software Developer"
   };
 
-  const invoiceChartSeries = [
-    {
-      name: 'Paid Invoices',
-      data: [1, 1, 1, 1, 1, 1]
-    },
-    {
-      name: 'Unpaid Invoices',
-      data: [5, 4, 4, 3, 2, 1]
-    }
-  ];
-
-  const payrollChartOptions = {
-    chart: {
-      id: 'payroll-chart',
-      toolbar: {
-        show: false
+  const monthlyPayrollData = {
+    series: [
+      {
+        name: 'Payroll',
+        data: [4000, 6000, 3500, 5000, 7000, 4500, 8000, 6500, 7500, 9000, 5500, 8500]
       }
-    },
-    xaxis: {
-      categories: ['Jan 2024', 'Dec 2023', 'Nov 2023', 'Oct 2023', 'Sep 2023', 'Aug 2023', 'Jul 2023', 'Jun 2023', 'May 2023', 'Apr 2023', 'Mar 2023', 'Feb 2023']
-    },
-    colors: ['#3056d3'],
+    ],
+    options: {
+      xaxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      }
+    }
   };
 
-  const payrollChartSeries = [
-    {
-      name: 'Payroll',
-      data: [69200960, 62280864, 55360768, 48440672, 41520576, 34600480, 27680384, 20760288, 13840192, 6920096, 3460048, 1730024] // Adjust the data to match your real data
-    }
-  ];
+  const [tasksStatus, setTasksStatus] = useState({
+    completed: 20,
+    pending: 30,
+    onProgress: 40,
+    notStarted: 10
+  });
 
-    const radialBarChartOptions = {
-      chart: {
-        type: 'radialBar',
-      },
-      plotOptions: {
-        radialBar: {
-          dataLabels: {
-            name: {
-              fontSize: '22px',
-            },
-            value: {
-              fontSize: '16px',
-            },
-            total: {
-              show: true,
-              label: 'Total',
-              formatter: function (w) {
-                return w.globals.seriesTotals.reduce((a, b) => {
-                  return a + b
-                }, 0)
-              }
-            }
-          }
-        }
-      },
-      labels: ['Project A', 'Project B', 'Project C', 'Project D'],
-    };
-  
-    const projectsStatusSeries = [44, 55, 67, 83];
-    const tasksStatusSeries = [76, 85, 101, 98];
-  
+  const TasksdoughnutData = {
+    labels: ['Completed', 'Pending', 'On Progress', 'Not Started'],
+    datasets: [{
+      data: [tasksStatus.completed, tasksStatus.pending, tasksStatus.onProgress, tasksStatus.notStarted],
+      backgroundColor: ['#68D391', '#F6E05E', '#63B3ED', '#FC8181']
+    }]
+  };
+
+  const [projectStatus, setProjectStatus] = useState({
+    completed: 50,
+    pending: 10,
+    onProgress: 30,
+    notStarted: 10
+  });
+
+  const ProjectsdoughnutData = {
+    labels: ['Completed', 'Pending', 'On Progress', 'Not Started'],
+    datasets: [{
+      data: [projectStatus.completed, projectStatus.pending, projectStatus.onProgress, projectStatus.notStarted],
+      backgroundColor: ['#68D391', '#F6E05E', '#63B3ED', '#FC8181']
+    }]
+  };
+
+  const [trainingData, setTrainingData] = useState({
+    monthly: [5, 8, 3, 6, 7, 9, 4, 5, 6, 8, 7, 10], // contoh data bulanan
+    yearly: 80 // contoh data tahunan
+  });
+
+  const monthlyTrainingOptions = {
+    chart: {
+      type: 'bar',
+      height: 350
+    },
+    xaxis: {
+      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      title: {
+        text: 'Month'
+      }
+    },
+    yaxis: {
+      title: {
+        text: 'Number of Trainings'
+      }
+    }
+  };
+
+
   return (
     <div>
       <Header />
-      <div className="dashboard-container">
-        <div className='max-w-full mx-auto p-5 bg-white'>
-        <div className="flex flex-wrap -mx-2">
-          <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
-            <div className="bg-green-500 text-white rounded-lg shadow-lg p-4 flex items-center justify-between">
-              <div className="flex items-center">
-                <CheckCircleIcon className="h-8 w-8 text-white mr-3" />
-                <div>
-                  <p className="font-bold text-xl">2</p>
-                  <p className="text-sm">Total Completed</p>
+      <div className='px-10 py-5 flex flex-col lg:flex-row gap-4'>
+        <div className="lg:w-1/2 px-4 mt-8">
+          {/* Kontainer kiri */}
+          <div className="w-full border border-white-400 shadow-md rounded-lg p-6 mb-4">
+            <div className="flex items-center mb-4">
+                <div className="rounded-full overflow-hidden mr-4">
+                    <img src={user.profilePicture} alt={user.name} className="w-12 h-12" />
                 </div>
-              </div>
+                <div>
+                    <h2 className="text-xl font-semibold mb-2">Hello {user.name}</h2>
+                    <p className="text-sm text-gray-600">{user.position}</p>
+                </div>
+            </div>
+            <div className="border-t border-b border-gray-400 py-6 mb-4">
+                <h3 className="text-lg font-semibold mb-4">Record Your Attendances</h3>
+                <div className="mb-4 flex gap-4">
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center">
+                        <FaClock className="mr-2" /> Clock In
+                    </button>
+                    <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded flex items-center">
+                        <FaClock className="mr-2" /> Clock Out
+                    </button>
+                </div>
+            </div>
+            <div>
+                <Link to="/attendances/attendance-list">
+                    <button className="bg-purple-500 hover:bg-purple-800 text-white font-bold py-2 px-4 rounded w-full">
+                        View My Attendances
+                    </button>
+                </Link>
+            </div>
+        </div>
+
+          {/* Overtime Request & My leave */}
+          <div className='flex flex-col lg:flex-row gap-4'>
+            <div className='lg:w-1/2 border border-white-400 shadow-md rounded-lg p-6 mb-4'>
+              <h1>Overtime Request</h1>
+              <h1>2</h1>
+            </div>
+            <div className='lg:w-1/2 border border-white-400 shadow-md rounded-lg p-6 mb-4'>
+              <h1>My leave</h1>
+              <h1>1</h1>
             </div>
           </div>
-          <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
-            <div className="bg-blue-500 text-white rounded-lg shadow-lg p-4 flex items-center justify-between">
-              <div className="flex items-center">
-                <RefreshIcon className="h-8 w-8 text-white mr-3" />
-                <div>
-                  <p className="font-bold text-xl">3</p>
-                  <p className="text-sm">Total In Progress</p>
-                </div>
-              </div>
+          {/* Tasks Status & Project Status */}
+          <div className='flex flex-col lg:flex-row gap-4'>
+            <div className='lg:w-1/2 border border-white-400 shadow-md rounded-lg p-6 mb-4'>
+              <h2 className="text-xl font-semibold mb-4">Tasks Status</h2>
+              <Doughnut data={TasksdoughnutData}/>
             </div>
-          </div>
-          <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
-            <div className="bg-teal-500 text-white rounded-lg shadow-lg p-4 flex items-center justify-between">
-              <div className="flex items-center">
-                <PlayIcon className="h-8 w-8 text-white mr-3" />
-                <div>
-                  <p className="font-bold text-xl">6</p>
-                  <p className="text-sm">Total Not Started</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="w-full sm:w-1/2 md:w-1/4 px-2 mb-4">
-            <div className="bg-red-500 text-white rounded-lg shadow-lg p-4 flex items-center justify-between">
-              <div className="flex items-center">
-                <PauseIcon className="h-8 w-8 text-white mr-3" />
-                <div>
-                  <p className="font-bold text-xl">1</p>
-                  <p className="text-sm">Total On Hold</p>
-                </div>
-              </div>
+            <div className='lg:w-1/2 border border-white-400 shadow-md rounded-lg p-6 mb-4'>
+              <h2 className="text-xl font-semibold mb-4">Project Status</h2>
+              <Doughnut data={ProjectsdoughnutData}/>
             </div>
           </div>
         </div>
-
-
-        <div className="main-content">
-          <div className="charts-column">
-            {/* Invoice Payments Chart */}
-            <div className="chart-container">
-              <div className="chart-title">Invoice Payments</div>
-              <Chart
-                options={invoiceChartOptions}
-                series={invoiceChartSeries}
-                type="bar"
-                height="350"
-              />
-            </div>
-
-            {/* Payroll Monthly Report Chart */}
-            <div className="chart-container">
-              <div className="chart-title">Payroll Monthly Report</div>
-              <Chart
-                options={payrollChartOptions}
-                series={payrollChartSeries}
-                type="bar"
-                height="350"
-              />
-            </div>
+        <div className='lg:w-1/2'>
+          {/* Kontainer kanan */}
+          <div className="border border-white-400 shadow-md rounded-lg p-6 mt-8 h-200">
+            <h2 className="text-xl font-semibold mb-4">My Monthly Payroll Report</h2>
+            <ReactApexChart options={monthlyPayrollData.options} series={monthlyPayrollData.series} type="line" />
           </div>
-
-          <div className="widgets-column">
-            {/* Department wise staff */}
-            <div className="widget-container">
-              <div className="widget-title">Department Wise Staff</div>
-              <ul className="widget-list">
-                <li>Engineering: 10</li>
-                <li>Marketing: 8</li>
-                <li>Sales: 15</li>
-              </ul>
-            </div>
-
-            {/* Designation wise staff */}
-            <div className="widget-container">
-              <div className="widget-title">Designation Wise Staff</div>
-              <ul className="widget-list">
-                <li>Manager: 4</li>
-                <li>Developer: 7</li>
-                <li>Designer: 3</li>
-              </ul>
-            </div>
-
-            {/* Staff attendance */}
-            <div className="widget-container">
-              <div className="widget-title">Staff Attendance</div>
-              <div className="widget-content">
-                <p>Total Staff: 30</p>
-                <p>Present: 28</p>
-                <p>Absent: 2</p>
-                {/* ... additional widget content ... */}
-              </div>
-            </div>
-
-            {/* Projects Status */}
-            <div className="widget-container">
-              <div className="widget-title">Projects Status</div>
-              <Chart
-                options={radialBarChartOptions}
-                series={projectsStatusSeries}
-                type="radialBar"
-                height="350"
-              />
-            </div>
-
-            {/* Tasks Status */}
-            <div className="widget-container">
-              <div className="widget-title">Tasks Status</div>
-              <Chart
-                options={radialBarChartOptions}
-                series={tasksStatusSeries}
-                type="radialBar"
-                height="350"
-              />
-            </div>
+          <div className="border border-white-400 shadow-md rounded-lg p-6 mt-8 h-200">
+            <h2 className="text-xl font-semibold mb-4">My Training Report</h2>
+            <ReactApexChart options={monthlyTrainingOptions} series={[{ data: trainingData.monthly }]} type="bar" />
           </div>
         </div>
       </div>
     </div>
-  </div>
   );
 };
 
 export default Dashboard;
-

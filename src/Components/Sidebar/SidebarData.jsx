@@ -23,14 +23,6 @@ const SideBarData = [
                 path: "/attendances/attendance-list"
             },
             {
-                title: "Manual Attendance",
-                path: "/attendances/manual-attendance"
-            },
-            {
-                title: "Monthly Report",
-                path: "/attendances/monthly-report"
-            },
-            {
                 title: "Overtime Request",
                 path: "/attendances/overtime-request"
             },
@@ -43,10 +35,6 @@ const SideBarData = [
         iconClosed: <MdKeyboardArrowDown />,
         iconOpened: <MdKeyboardArrowUp />,
         subNav: [
-            {
-                title: "Payroll",
-                path: "/payroll/payroll-list"
-            },
             {
                 title: "Pasyslip History",
                 path: "/payroll/payslip-history"

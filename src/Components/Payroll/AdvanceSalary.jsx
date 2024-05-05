@@ -145,16 +145,6 @@ const AdvanceSalary = () => {
           </div>
           <form className="p-6" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <div className="mb-2 md:col-span-2">
-                <label className="block text-gray-700 text-sm font-bold" htmlFor="employeeName">
-                  Employee *
-                </label>
-                <select className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="employeeName" name="employeeName">
-                  {employees.map((employee) => (
-                    <option key={employee.id} value={employee.id}>{employee.first_name} {employee.last_name}</option>
-                  ))}
-                </select>
-              </div>
               <div>
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="monthYear">
                   Month & Year *
@@ -204,7 +194,7 @@ const AdvanceSalary = () => {
         </div>
       )}
       <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-700">List All Advance Salary</h2>
+        <h2 className="text-lg font-semibold text-gray-700">My Advance Salary Request</h2>
         <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700" onClick={handleAddNewClick}>Add New</button>
       </div>
       <div className="p-5">

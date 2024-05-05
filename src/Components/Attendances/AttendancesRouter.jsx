@@ -5,8 +5,6 @@ import { FaCalendar, FaUserClock, FaClipboardList, FaClock } from 'react-icons/f
 import './AttendanceList';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import AttendanceList from './AttendanceList';
-import ManualAttendances from './ManualAttendances';
-import MonthlyReport from './MonthlyReport';
 import OvertimeRequest from './OvertimeRequest';
 import Header from '../Header/Header';
 
@@ -21,16 +19,6 @@ const AttendancesRouter = () => {
               <span>Attendances</span>
             </div>
           
-            <div className="feature" onClick={() => navigate('/attendances/manual-attendance')}>
-              <FaUserClock className="icon" />
-              <span>Manual Attendances</span>
-            </div>
-            
-            <div className="feature" onClick={() => navigate('/attendances/monthly-report')}>
-              <FaClipboardList className="icon" />
-              <span>Monthly Report</span>
-            </div>
-          
             <div className="feature" onClick={() => navigate('/attendances/overtime-request')}>
               <FaClock className="icon" />
               <span>Overtime Request</span>
@@ -39,8 +27,6 @@ const AttendancesRouter = () => {
 
           <Routes>
               <Route path="attendance-list" element={< AttendanceList />} />
-              <Route path="manual-attendance" element={< ManualAttendances />} />
-              <Route path="monthly-report" element={< MonthlyReport />} />
               <Route path="overtime-request" element={< OvertimeRequest />} />
           </Routes>
 

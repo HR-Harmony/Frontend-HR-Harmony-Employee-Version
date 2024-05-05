@@ -4,18 +4,6 @@ const AttendanceList = () => {
   const attendanceData = [
     {
       id: 1,
-      employee: 'Fakhrity Hikmawan',
-      email: 'fakhrityhikmawan@gmail.com',
-      date: '2024-03-14',
-      status: 'Absent',
-      clockIn: '00:00',
-      clockOut: '00:00',
-      late: '00:00',
-      earlyLeaving: '00:00',
-      totalWork: '00:00'
-    },
-    {
-      id: 2,
       employee: 'Arfara Yema Samgusdian',
       email: 'arfarayemasamgsudian@gmail.com',
       date: '2024-03-14',
@@ -25,13 +13,37 @@ const AttendanceList = () => {
       late: '00:00',
       earlyLeaving: '00:00',
       totalWork: '00:00'
-    }
+    },
+    {
+      id: 2,
+      employee: 'Arfara Yema Samgusdian',
+      email: 'arfarayemasamgsudian@gmail.com',
+      date: '2024-03-15',
+      status: 'Present',
+      clockIn: '03:15 AM',
+      clockOut: '00:00',
+      late: '00:00',
+      earlyLeaving: '00:00',
+      totalWork: '00:00'
+    },
+    {
+      id: 3,
+      employee: 'Arfara Yema Samgusdian',
+      email: 'arfarayemasamgsudian@gmail.com',
+      date: '2024-03-16',
+      status: 'Present',
+      clockIn: '03:15 AM',
+      clockOut: '00:00',
+      late: '00:00',
+      earlyLeaving: '00:00',
+      totalWork: '00:00'
+    },
   ];
 
   return (
     <div className="border border-gray-200 rounded overflow-hidden max-w-6xl ml-auto mr-auto">
       <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-700">Daily Attendance Report</h2>
+        <h2 className="text-lg font-semibold text-gray-700">My Daily Attendance Report</h2>
       </div>
       <div className="p-5">
         <div className="flex justify-between mb-4">

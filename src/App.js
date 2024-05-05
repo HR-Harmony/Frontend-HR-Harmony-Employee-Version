@@ -4,6 +4,7 @@ import LoginSignup from './Components/LoginSignup/LoginSignup'
 import LandingPage from './Components/LandingPage/LandingPage';
 import SideBar from "./Components/Sidebar/Sidebar";
 import Dashboard from "./Components/Dashboard/Dashboard";
+import PayrollRouter from './Components/Payroll/PayrollRouter';
 import TasksRouter from './Components/Tasks/TasksRouter';
 import AttendancesRouter from './Components/Attendances/AttendancesRouter';
 import Helpdesk from './Components/Helpdesk/Helpdesk';
@@ -28,7 +29,8 @@ function DashboardLayout() {
         <SideBar / >
             <Routes >
             <Route path = "/dashboard" element = { < Dashboard / > }/>   
-            <Route path = "/attendances/*" element = { < AttendancesRouter / > }/>  
+            <Route path = "/attendances/*" element = { < AttendancesRouter / > }/> 
+            <Route path = "/payroll/*" element = { < PayrollRouter / > }/>   
             <Route path = "/tasks/*" element = { < TasksRouter / > }/>    
             <Route path = "/helpdesk" element = { < Helpdesk/> } />
             <Route path="/helpdesk/ticket-details/:ticketId" element={<TicketDetails />} />

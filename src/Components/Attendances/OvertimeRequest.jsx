@@ -134,7 +134,7 @@ const OvertimeRequest = () => {
   return (
     <div className="border border-gray-200 rounded overflow-hidden max-w-6xl ml-auto mr-auto">
       <div className="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-700">Overtime Request</h2>
+        <h2 className="text-lg font-semibold text-gray-700">My Overtime Request</h2>
         <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700" onClick={handleAddNewClick}>Add New</button>
       </div>
       <div className="p-5">
@@ -389,16 +389,6 @@ const OvertimeRequest = () => {
                           Date *
                         </label>
                         <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="date" type="date" value={selectedRequest ? selectedRequest.date : ''} onChange={(e) => setSelectedRequest({ ...selectedRequest, date: e.target.value })} required />
-                      </div>
-                      <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="status">
-                          Status *
-                        </label>
-                        <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="status" value={selectedRequest ? selectedRequest.status : ''} onChange={(e) => setSelectedRequest({ ...selectedRequest, status: e.target.value })}>
-                          <option value="Pending">Pending</option>
-                          <option value="Accepted">Accepted</option>
-                          <option value="Rejected">Rejected</option>
-                        </select>
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
