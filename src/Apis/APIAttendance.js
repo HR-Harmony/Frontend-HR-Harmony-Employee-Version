@@ -77,7 +77,7 @@ export const APIAttendance  = {
 
   createOvertimeRequest: async (overtimeRequestData) => {
     try {
-      const result = await axiosInstance.post('/overtime_requests', overtimeRequestData, {
+      const result = await axiosInstance.post('/employee/overtime_requests', overtimeRequestData, {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
@@ -92,7 +92,7 @@ export const APIAttendance  = {
 
   getAllOvertimeRequests: async () => {
     try {
-      const result = await axiosInstance.get('/overtime_requests', {
+      const result = await axiosInstance.get('/employee/overtime_requests', {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
@@ -118,7 +118,7 @@ export const APIAttendance  = {
 
   updateOvertimeRequest: async (overtimeRequestId, overtimeRequestData) => {
     try {
-      const result = await axiosInstance.put(`/overtime_requests/${overtimeRequestId}`, overtimeRequestData, {
+      const result = await axiosInstance.put(`/employee/overtime_requests/${overtimeRequestId}`, overtimeRequestData, {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
@@ -133,7 +133,7 @@ export const APIAttendance  = {
 
   deleteOvertimeRequest: async (overtimeRequestId) => {
     try {
-      const result = await axiosInstance.delete(`/overtime_requests/${overtimeRequestId}`, {
+      const result = await axiosInstance.delete(`/employee/overtime_requests/${overtimeRequestId}`, {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }

@@ -17,7 +17,7 @@ const LoginSignup = () => {
     setErrorMessage('');
 
     try {
-      const response = await axiosInstance.post('/admin/signin', {
+      const response = await axiosInstance.post('/employee/signin', {
         username,
         password,
       });

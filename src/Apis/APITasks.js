@@ -4,7 +4,7 @@ import axiosInstance from '@/configs/axiosInstance';
 export const APITasks = {
   createTask: async (taskData) => {
     try {
-      const response = await axiosInstance.post('/tasks', taskData, {
+      const response = await axiosInstance.post('/employee/tasks', taskData, {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
@@ -19,7 +19,7 @@ export const APITasks = {
 
   getAllTasks: async () => {
     try {
-      const response = await axiosInstance.get('/tasks', {
+      const response = await axiosInstance.get('/employee/tasks', {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
@@ -47,7 +47,7 @@ export const APITasks = {
 
   updateTaskById: async (id, taskData) => {
     try {
-      const response = await axiosInstance.put(`/tasks/${id}`, taskData, {
+      const response = await axiosInstance.put(`/employee/tasks/${id}`, taskData, {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
@@ -62,7 +62,7 @@ export const APITasks = {
 
   deleteTaskById: async (id) => {
     try {
-      const response = await axiosInstance.delete(`/tasks/${id}`, {
+      const response = await axiosInstance.delete(`/employee/tasks/${id}`, {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }

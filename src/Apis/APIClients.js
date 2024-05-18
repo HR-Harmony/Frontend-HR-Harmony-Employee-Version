@@ -15,7 +15,7 @@ export const APIClients = {
 
   getAllClients: async () => {
     try {
-      const response = await axiosInstance.get('/admin/clients');
+      const response = await axiosInstance.get('/employee/clients');
       return response.data;
     } catch (error) {
       toast.error("Failed to retrieve clients.");

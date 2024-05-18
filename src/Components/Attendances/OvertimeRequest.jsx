@@ -259,22 +259,6 @@ const OvertimeRequest = () => {
                 {/* Form fields */}
                 <form className="mt-4" onSubmit={handleSubmit} ref={formRef}>
                   <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="employee">
-                      Employee *
-                    </label>
-                    <select
-                      id="employee_id"
-                      name="employee_id"
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      required
-                    >
-                      <option value="">Select an employee</option>
-                      {employees.map((employee) => (
-                        <option key={employee.id} value={employee.id}>{`${employee.first_name} ${employee.last_name}`}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="date">
                       Date *
                     </label>
@@ -365,24 +349,6 @@ const OvertimeRequest = () => {
                   </p>
                   {/* Form fields */}
                   <form className="mt-4" onSubmit={handleUpdateSubmit}>
-                    <div className="mb-4">
-                      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="employee">
-                        Employee *
-                      </label>
-                      <select
-                        id="employee_id"
-                        name="employee_id"
-                        value={selectedRequest ? selectedRequest.employee_id : ''}
-                        onChange={(e) => setSelectedRequest({ ...selectedRequest, employee_id: parseInt(e.target.value, 10) })}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        required
-                      >
-                        <option value="">Select an employee</option>
-                        {employees.map((employee) => (
-                          <option key={employee.id} value={employee.id}>{employee.first_name} {employee.last_name}</option>
-                        ))}
-                      </select>
-                    </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="date">

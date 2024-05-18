@@ -4,7 +4,7 @@ import axiosInstance from '@/configs/axiosInstance';
 export const APIProjects = {
   getAllProjects: async () => {
     try {
-      const result = await axiosInstance.get('/projects', {
+      const result = await axiosInstance.get('/employee/projects', {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
@@ -27,7 +27,7 @@ export const APIProjects = {
 
   createProject: async (projectData) => {
     try {
-      const response = await axiosInstance.post('/projects', projectData, {
+      const response = await axiosInstance.post('/employee/projects', projectData, {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
@@ -56,7 +56,7 @@ export const APIProjects = {
 
   editProjectById: async (id, projectData) => {
     try {
-      const response = await axiosInstance.put(`/projects/${id}`, projectData, {
+      const response = await axiosInstance.put(`/employee/projects/${id}`, projectData, {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
@@ -71,7 +71,7 @@ export const APIProjects = {
   
   deleteProjectById: async (id) => {
     try {
-      const response = await axiosInstance.delete(`/projects/${id}`, {
+      const response = await axiosInstance.delete(`/employee/projects/${id}`, {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }

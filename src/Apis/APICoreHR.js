@@ -20,7 +20,7 @@ export const APICoreHR = {
   
   getAllDepartments: async () => {
     try {
-      const result = await axiosInstance.get('/departments', {
+      const result = await axiosInstance.get('/employee/departments', {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }

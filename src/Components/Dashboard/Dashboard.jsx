@@ -85,8 +85,8 @@ const Dashboard = () => {
   return (
     <div>
       <Header />
-      <div className='px-10 py-5 flex flex-col lg:flex-row gap-4'>
-        <div className="lg:w-1/2 px-4 mt-8">
+      <div className='flex flex-col lg:flex-row gap-4'>
+        <div className="lg:w-1/2 mt-8">
           {/* Kontainer kiri */}
           <div className="w-full border border-white-400 shadow-md rounded-lg p-6 mb-4">
             <div className="flex items-center mb-4">
@@ -119,35 +119,35 @@ const Dashboard = () => {
         </div>
 
           {/* Overtime Request & My leave */}
-          <div className='flex flex-col lg:flex-row gap-4'>
-            <div className='lg:w-1/2 border border-white-400 shadow-md rounded-lg p-6 mb-4'>
+          <div className='flex flex-col lg:flex-row gap-2'>
+            <div className='w-1/2 border border-white-400 shadow-md rounded-lg p-6 mb-4'>
               <h1>Overtime Request</h1>
               <h1>2</h1>
             </div>
-            <div className='lg:w-1/2 border border-white-400 shadow-md rounded-lg p-6 mb-4'>
+            <div className='w-1/2 border border-white-400 shadow-md rounded-lg p-6 mb-4'>
               <h1>My leave</h1>
               <h1>1</h1>
             </div>
           </div>
           {/* Tasks Status & Project Status */}
-          <div className='flex flex-col lg:flex-row gap-4'>
-            <div className='lg:w-1/2 border border-white-400 shadow-md rounded-lg p-6 mb-4'>
+          <div className='flex flex-col lg:flex-row gap-2'>
+            <div className='w-1/2 border border-white-400 shadow-md rounded-lg p-6 mb-4'>
               <h2 className="text-xl font-semibold mb-4">Tasks Status</h2>
               <Doughnut data={TasksdoughnutData}/>
             </div>
-            <div className='lg:w-1/2 border border-white-400 shadow-md rounded-lg p-6 mb-4'>
+            <div className='w-1/2 border border-white-400 shadow-md rounded-lg p-6 mb-4'>
               <h2 className="text-xl font-semibold mb-4">Project Status</h2>
               <Doughnut data={ProjectsdoughnutData}/>
             </div>
           </div>
         </div>
-        <div className='lg:w-1/2'>
+        <div className='w-1/2'>
           {/* Kontainer kanan */}
           <div className="border border-white-400 shadow-md rounded-lg p-6 mt-8 h-200">
             <h2 className="text-xl font-semibold mb-4">My Monthly Payroll Report</h2>
             <ReactApexChart options={monthlyPayrollData.options} series={monthlyPayrollData.series} type="line" />
           </div>
-          <div className="border border-white-400 shadow-md rounded-lg p-6 mt-8 h-200">
+          <div className="border border-white-400 shadow-md rounded-lg p-6 mt-4 h-200 mb-10">
             <h2 className="text-xl font-semibold mb-4">My Training Report</h2>
             <ReactApexChart options={monthlyTrainingOptions} series={[{ data: trainingData.monthly }]} type="bar" />
           </div>

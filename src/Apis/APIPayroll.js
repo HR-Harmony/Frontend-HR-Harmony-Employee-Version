@@ -18,7 +18,7 @@ export const APIPayroll = {
 
   getPayrollHistory: async () => {
     try {
-      const result = await axiosInstance.get('/payrolls/history', {
+      const result = await axiosInstance.get('/payrolls', {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
