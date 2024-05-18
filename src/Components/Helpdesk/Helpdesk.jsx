@@ -5,7 +5,6 @@ import ReactQuill from 'react-quill';
 import { useNavigate } from 'react-router-dom';
 import Chart from 'react-apexcharts';
 import { APIHelpdesk } from '@/Apis/APIHelpdesk';
-import { APIEmployees } from '@/Apis/APIEmployees';
 import { APICoreHR } from '@/Apis/APICoreHR';
 import { Transition, Dialog } from '@headlessui/react';
 
@@ -24,7 +23,6 @@ const Helpdesk = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [deleteTicketId, setDeleteTicketId] = useState(null);
-  const [employees, setEmployees] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [description, setDescription] = useState('');
 
@@ -32,19 +30,10 @@ const Helpdesk = () => {
     setIsLoading(true);
     try {
       const response = await APIHelpdesk.viewAllHelpdesks();
-      setTickets(response.helpdesks || []);
+      setTickets(response.helpdesk || []);
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-    }
-  };
-
-  const fetchEmployees = async () => {
-    try {
-      const employeesData = await APIEmployees.getAllEmployees();
-      setEmployees(employeesData.employees || []);
-    } catch (error) {
-
     }
   };
 
@@ -59,7 +48,6 @@ const Helpdesk = () => {
 
   useEffect(() => {
     fetchTickets();
-    fetchEmployees();
     fetchDepartments();
   }, []);
 
