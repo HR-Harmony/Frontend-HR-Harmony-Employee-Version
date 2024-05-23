@@ -18,7 +18,7 @@ export const APIPayroll = {
 
   getPayrollHistory: async () => {
     try {
-      const result = await axiosInstance.get('/payrolls', {
+      const result = await axiosInstance.get('/employee/payrolls', {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
@@ -36,28 +36,32 @@ export const APIPayroll = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
+      toast.success('Updated payroll status successfully');
       return result.data;
     } catch (error) {
+      toast.error('Failed to update payroll status');
       throw new Error(error);
     }
   },
 
   createAdvanceSalary: async (advanceSalaryData) => {
     try {
-      const result = await axiosInstance.post('/advance_salaries', advanceSalaryData, {
+      const result = await axiosInstance.post('/employee/advance_salaries', advanceSalaryData, {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
+      toast.success('Advance salary created successfully');
       return result.data;
     } catch (error) {
+      toast.error('Failed to create advance salary');
       throw new Error(error);
     }
   },
 
   getAllAdvanceSalaries: async () => {
     try {
-      const result = await axiosInstance.get('/advance_salaries', {
+      const result = await axiosInstance.get('/employee/advance_salaries', {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
@@ -83,46 +87,52 @@ export const APIPayroll = {
 
   updateAdvanceSalaryById: async (id, advanceSalaryData) => {
     try {
-      const result = await axiosInstance.put(`/advance_salaries/${id}`, advanceSalaryData, {
+      const result = await axiosInstance.put(`/employee/advance_salaries/${id}`, advanceSalaryData, {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
+      toast.success('Advance salary updated successfully');
       return result.data;
     } catch (error) {
+      toast.error('Failed to update advance salary');
       throw new Error(error);
     }
   },
 
   deleteAdvanceSalaryById: async (id) => {
     try {
-      const result = await axiosInstance.delete(`/advance_salaries/${id}`, {
+      const result = await axiosInstance.delete(`/employee/advance_salaries/${id}`, {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
+      toast.success('Advance salary deleted successfully');
       return result.data;
     } catch (error) {
+      toast.error('Failed to delete advance salary');
       throw new Error(error);
     }
   },
 
   createRequestLoan: async (requestLoanData) => {
     try {
-      const result = await axiosInstance.post('/request_loans', requestLoanData, {
+      const result = await axiosInstance.post('/employee/request_loans', requestLoanData, {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
+      toast.success('Request loan created successfully');
       return result.data;
     } catch (error) {
+      toast.error('Failed to create request loan');
       throw new Error(error);
     }
   },
 
   getAllRequestLoans: async () => {
     try {
-      const result = await axiosInstance.get('/request_loans', {
+      const result = await axiosInstance.get('/employee/request_loans', {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
@@ -135,7 +145,7 @@ export const APIPayroll = {
 
   getRequestLoanById: async (id) => {
     try {
-      const result = await axiosInstance.get(`/request_loans/${id}`, {
+      const result = await axiosInstance.get(`/employee/request_loans/${id}`, {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
@@ -148,26 +158,30 @@ export const APIPayroll = {
 
   updateRequestLoanById: async (id, requestLoanData) => {
     try {
-      const result = await axiosInstance.put(`/request_loans/${id}`, requestLoanData, {
+      const result = await axiosInstance.put(`/employee/request_loans/${id}`, requestLoanData, {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
+      toast.success('Request loan updated successfully');
       return result.data;
     } catch (error) {
+      toast.error('Failed to update request loan');
       throw new Error(error);
     }
   },
 
   deleteRequestLoanById: async (id) => {
     try {
-      const result = await axiosInstance.delete(`/request_loans/${id}`, {
+      const result = await axiosInstance.delete(`/employee/request_loans/${id}`, {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
+      toast.success('Request loan deleted successfully');
       return result.data;
     } catch (error) {
+      toast.error('Failed to delete request loan');
       throw new Error(error);
     }
   }

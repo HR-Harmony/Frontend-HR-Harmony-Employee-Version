@@ -2,7 +2,6 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { TrashIcon, PencilIcon } from '@heroicons/react/solid';
 import { APIPayroll } from '@/Apis/APIPayroll';
-import { APIEmployees } from '@/Apis/APIEmployees';
 import { toast } from 'react-toastify';
 
 const RequestLoan = () => {
@@ -14,23 +13,12 @@ const RequestLoan = () => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [deleteRequestLoanId, setDeleteRequestLoanId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [employees, setEmployees] = useState([]);
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [editData, setEditData] = useState(null);
 
   useEffect(() => {
     fetchRequestLoans();
-    fetchEmployees();
   }, []);
-
-  const fetchEmployees = async () => {
-    try {
-      const response = await APIEmployees.getAllEmployees();
-      setEmployees(response.employees || []);
-    } catch (error) {
-      toast.error("Failed to load employees.");
-    }
-  };
 
   const fetchRequestLoans = async () => {
     setIsLoading(true);
@@ -92,7 +80,6 @@ const RequestLoan = () => {
     event.preventDefault();
     const formData = new FormData(event.target);
     const data = {
-      employee_id: parseInt(formData.get('employeeName')),
       month_and_year: formData.get('monthYear'),
       amount: parseInt(formData.get('amount')),
       one_time_deduct: formData.get('oneTimeDeduct'),
@@ -116,13 +103,11 @@ const RequestLoan = () => {
     event.preventDefault();
     const formData = new FormData(event.target);
     const updatedData = {
-      employee_id: parseInt(formData.get('employeeNameEdit')),
       month_and_year: formData.get('monthYearEdit'),
       amount: parseInt(formData.get('amountEdit')),
       one_time_deduct: formData.get('oneTimeDeductEdit'),
       monthly_installment_amount: parseInt(formData.get('monthlyInstallmentEdit')),
       reason: formData.get('reasonEdit'),
-      status: formData.get('statusEdit')
     };
 
     try {

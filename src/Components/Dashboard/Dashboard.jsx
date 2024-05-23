@@ -1,13 +1,48 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../Header/Header';
 import { FaClock } from 'react-icons/fa';
 import ReactApexChart from 'react-apexcharts';
 import { Doughnut } from 'react-chartjs-2';
-import { Chart, ArcElement } from 'chart.js';
+import { Chart, ArcElement, Tooltip } from 'chart.js';
+import { APIDashboard } from '@/Apis/APIDashboard';
 
 const Dashboard = () => {
-  Chart.register(ArcElement);
+  Chart.register(ArcElement, Tooltip);
+
+  const [dashboardData, setDashboardData] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await APIDashboard.getDashboard();
+        setDashboardData(data);
+      } catch (error) {
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleClockIn = async () => {
+    try {
+      await APIDashboard.clickInDashboard();
+    } catch (error) {
+    }
+  };
+
+  const handleClockOut = async () => {
+    try {
+      await APIDashboard.clickOutDashboard();
+    } catch (error) {
+    }
+  };
+
+  if (!dashboardData) {
+    return <div className="flex items-center justify-center h-screen">
+      <div className="text-xl font-semibold">Loading...</div>
+    </div>;
+  }
 
   const user = {
     name: "John Doe",
@@ -18,22 +53,24 @@ const Dashboard = () => {
     series: [
       {
         name: 'Payroll',
-        data: [4000, 6000, 3500, 5000, 7000, 4500, 8000, 6500, 7500, 9000, 5500, 8500]
+        data: dashboardData.payroll_summary.map(item => item.amount)
       }
     ],
     options: {
       xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        categories: dashboardData.payroll_summary.map(item => item.month)
       }
     }
   };
 
-  const [tasksStatus, setTasksStatus] = useState({
-    completed: 20,
-    pending: 30,
-    onProgress: 40,
-    notStarted: 10
-  });
+  const tasksStatus = {
+    completed: dashboardData.task_summaries.filter(task => task.progress_bar === 100).length,
+    pending: dashboardData.task_summaries.filter(task => task.progress_bar < 100 && task.progress_bar > 0).length,
+    onProgress: dashboardData.task_summaries.filter(task => task.progress_bar > 0 && task.progress_bar < 100).length,
+    notStarted: dashboardData.task_summaries.filter(task => task.progress_bar === 0).length
+  };
+
+  const tasksTooltip = dashboardData.task_summaries.map(task => task.title);
 
   const TasksdoughnutData = {
     labels: ['Completed', 'Pending', 'On Progress', 'Not Started'],
@@ -43,12 +80,14 @@ const Dashboard = () => {
     }]
   };
 
-  const [projectStatus, setProjectStatus] = useState({
-    completed: 50,
-    pending: 10,
-    onProgress: 30,
-    notStarted: 10
-  });
+  const projectStatus = {
+    completed: dashboardData.project_summaries.filter(project => project.project_bar === 100).length,
+    pending: dashboardData.project_summaries.filter(project => project.project_bar < 100 && project.project_bar > 0).length,
+    onProgress: dashboardData.project_summaries.filter(project => project.project_bar > 0 && project.project_bar < 100).length,
+    notStarted: dashboardData.project_summaries.filter(project => project.project_bar === 0).length
+  };
+
+  const projectsTooltip = dashboardData.project_summaries.map(project => project.project_name);
 
   const ProjectsdoughnutData = {
     labels: ['Completed', 'Pending', 'On Progress', 'Not Started'],
@@ -58,10 +97,10 @@ const Dashboard = () => {
     }]
   };
 
-  const [trainingData, setTrainingData] = useState({
-    monthly: [5, 8, 3, 6, 7, 9, 4, 5, 6, 8, 7, 10], // contoh data bulanan
-    yearly: 80 // contoh data tahunan
-  });
+  const trainingData = {
+    monthly: dashboardData.training_summary.map(item => item.total_training),
+    yearly: dashboardData.training_summary.reduce((acc, item) => acc + item.total_training, 0)
+  };
 
   const monthlyTrainingOptions = {
     chart: {
@@ -69,7 +108,7 @@ const Dashboard = () => {
       height: 350
     },
     xaxis: {
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      categories: dashboardData.training_summary.map(item => item.month),
       title: {
         text: 'Month'
       }
@@ -81,75 +120,85 @@ const Dashboard = () => {
     }
   };
 
+  const doughnutOptions = (tooltips) => ({
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: function(tooltipItem) {
+            const index = tooltipItem.dataIndex;
+            return `${tooltipItem.label}: ${tooltips[index]}`;
+          }
+        }
+      }
+    }
+  });
 
   return (
-    <div>
+    <div className="bg-gray-100 min-h-screen">
       <Header />
-      <div className='flex flex-col lg:flex-row gap-4'>
-        <div className="lg:w-1/2 mt-8">
-          {/* Kontainer kiri */}
-          <div className="w-full border border-white-400 shadow-md rounded-lg p-6 mb-4">
-            <div className="flex items-center mb-4">
-                <div className="rounded-full overflow-hidden mr-4">
-                    <img src={user.profilePicture} alt={user.name} className="w-12 h-12" />
-                </div>
+      <div className="container mx-auto p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="lg:col-span-1">
+            <div className="bg-white shadow-lg rounded-lg p-6 mb-4">
+              <div className="flex items-center mb-4">
                 <div>
-                    <h2 className="text-xl font-semibold mb-2">Hello {user.name}</h2>
-                    <p className="text-sm text-gray-600">{user.position}</p>
+                  <h2 className="text-2xl font-semibold mb-1">Hello, {user.name}!</h2>
+                  <p className="text-sm text-gray-500">{user.position}</p>
                 </div>
-            </div>
-            <div className="border-t border-b border-gray-400 py-6 mb-4">
+              </div>
+              <div className="border-t border-b border-gray-200 py-4 mb-4">
                 <h3 className="text-lg font-semibold mb-4">Record Your Attendances</h3>
                 <div className="mb-4 flex gap-4">
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center">
-                        <FaClock className="mr-2" /> Clock In
-                    </button>
-                    <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded flex items-center">
-                        <FaClock className="mr-2" /> Clock Out
-                    </button>
+                  <button className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded flex items-center" onClick={handleClockIn}>
+                    <FaClock className="mr-2" /> Clock In
+                  </button>
+                  <button className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded flex items-center" onClick={handleClockOut}>
+                    <FaClock className="mr-2" /> Clock Out
+                  </button>
                 </div>
-            </div>
-            <div>
+              </div>
+              <div>
                 <Link to="/attendances/attendance-list">
-                    <button className="bg-purple-500 hover:bg-purple-800 text-white font-bold py-2 px-4 rounded w-full">
-                        View My Attendances
-                    </button>
+                  <button className="bg-purple-600 hover:bg-purple-800 text-white font-bold py-2 px-4 rounded w-full">
+                    View My Attendances
+                  </button>
                 </Link>
+              </div>
             </div>
-        </div>
-
-          {/* Overtime Request & My leave */}
-          <div className='flex flex-col lg:flex-row gap-2'>
-            <div className='w-1/2 border border-white-400 shadow-md rounded-lg p-6 mb-4'>
-              <h1>Overtime Request</h1>
-              <h1>2</h1>
+            <div className="bg-white shadow-lg rounded-lg p-6 mb-4">
+              <h1 className="text-lg font-semibold mb-2">Overtime Request</h1>
+              <p className="text-2xl">{dashboardData.total_overtime}</p>
             </div>
-            <div className='w-1/2 border border-white-400 shadow-md rounded-lg p-6 mb-4'>
-              <h1>My leave</h1>
-              <h1>1</h1>
+            <div className="bg-white shadow-lg rounded-lg p-6">
+              <h1 className="text-lg font-semibold mb-2">My Leave</h1>
+              <p className="text-2xl">{dashboardData.total_leave}</p>
             </div>
           </div>
-          {/* Tasks Status & Project Status */}
-          <div className='flex flex-col lg:flex-row gap-2'>
-            <div className='w-1/2 border border-white-400 shadow-md rounded-lg p-6 mb-4'>
-              <h2 className="text-xl font-semibold mb-4">Tasks Status</h2>
-              <Doughnut data={TasksdoughnutData}/>
+          <div className="lg:col-span-3">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div className="bg-white shadow-lg rounded-lg p-6">
+                <h2 className="text-xl font-semibold mb-4">My Monthly Payroll Report</h2>
+                <ReactApexChart options={monthlyPayrollData.options} series={monthlyPayrollData.series} type="line" />
+              </div>
+              <div className="bg-white shadow-lg rounded-lg p-6">
+                <h2 className="text-xl font-semibold mb-4">My Training Report</h2>
+                <ReactApexChart options={monthlyTrainingOptions} series={[{ data: trainingData.monthly }]} type="bar" />
+              </div>
             </div>
-            <div className='w-1/2 border border-white-400 shadow-md rounded-lg p-6 mb-4'>
-              <h2 className="text-xl font-semibold mb-4">Project Status</h2>
-              <Doughnut data={ProjectsdoughnutData}/>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+              <div className="bg-white shadow-lg rounded-lg p-6">
+                <h2 className="text-xl font-semibold mb-4">Tasks Status</h2>
+                <div className="w-2/3 mx-auto">
+                  <Doughnut data={TasksdoughnutData} options={doughnutOptions(tasksTooltip)} />
+                </div>
+              </div>
+              <div className="bg-white shadow-lg rounded-lg p-6">
+                <h2 className="text-xl font-semibold mb-4">Project Status</h2>
+                <div className="w-2/3 mx-auto">
+                  <Doughnut data={ProjectsdoughnutData} options={doughnutOptions(projectsTooltip)} />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div className='w-1/2'>
-          {/* Kontainer kanan */}
-          <div className="border border-white-400 shadow-md rounded-lg p-6 mt-8 h-200">
-            <h2 className="text-xl font-semibold mb-4">My Monthly Payroll Report</h2>
-            <ReactApexChart options={monthlyPayrollData.options} series={monthlyPayrollData.series} type="line" />
-          </div>
-          <div className="border border-white-400 shadow-md rounded-lg p-6 mt-4 h-200 mb-10">
-            <h2 className="text-xl font-semibold mb-4">My Training Report</h2>
-            <ReactApexChart options={monthlyTrainingOptions} series={[{ data: trainingData.monthly }]} type="bar" />
           </div>
         </div>
       </div>
@@ -158,3 +207,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TrashIcon, PencilIcon } from '@heroicons/react/solid';
 import { APIPayroll } from '@/Apis/APIPayroll';
-import { APIEmployees } from '@/Apis/APIEmployees';
 import { toast } from 'react-toastify';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
@@ -15,7 +14,6 @@ const AdvanceSalary = () => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [deleteAdvanceSalaryId, setDeleteAdvanceSalaryId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [employees, setEmployees] = useState([]);
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [editData, setEditData] = useState(null);
 
@@ -32,17 +30,7 @@ const AdvanceSalary = () => {
     }
   };
 
-  const fetchEmployees = async () => {
-    try {
-      const response = await APIEmployees.getAllEmployees();
-      setEmployees(response.employees || []);
-    } catch (error) {
-      toast.error("Failed to load employees.");
-    }
-  };
-
   useEffect(() => {
-    fetchEmployees();
     fetchAdvanceSalaries();
   }, []);
 
@@ -93,7 +81,6 @@ const AdvanceSalary = () => {
     event.preventDefault();
     const formData = new FormData(event.target);
     const data = {
-      employee_id: parseInt(formData.get('employeeName')),
       month_and_year: formData.get('monthYear'),
       amount: parseInt(formData.get('amount')),
       one_time_deduct: formData.get('oneTimeDeduct'),
@@ -122,7 +109,6 @@ const AdvanceSalary = () => {
       one_time_deduct: formData.get('oneTimeDeduct'),
       monthly_installment_amount: parseInt(formData.get('monthlyInstallmentEdit')),
       reason: formData.get('reason'),
-      status: formData.get('status')
     };
 
     try {
@@ -387,16 +373,6 @@ const AdvanceSalary = () => {
                   <form onSubmit={handleEditSubmit}>
                     <div className="mt-2">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <div className="mb-2 md:col-span-2">
-                          <label className="block text-gray-700 text-sm font-bold" htmlFor="employeeName">
-                            Employee *
-                          </label>
-                          <select className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="employeeName" name="employeeName" defaultValue={editData?.employee_id}>
-                            {employees.map((employee) => (
-                              <option key={employee.id} value={employee.id}>{employee.first_name} {employee.last_name}</option>
-                            ))}
-                          </select>
-                        </div>
                         <div>
                           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="monthYear">
                             Month & Year *
@@ -435,16 +411,6 @@ const AdvanceSalary = () => {
                             Reason *
                           </label>
                           <textarea className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="reason" name="reason" defaultValue={editData?.reason}></textarea>
-                        </div>
-                        <div className="md:col-span-2">
-                          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="status">
-                            Status *
-                          </label>
-                          <select className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="status" name="status" defaultValue={editData?.status}>
-                            <option>Pending</option>
-                            <option>Approved</option>
-                            <option>Rejected</option>
-                          </select>
                         </div>
                       </div>
                     </div>
