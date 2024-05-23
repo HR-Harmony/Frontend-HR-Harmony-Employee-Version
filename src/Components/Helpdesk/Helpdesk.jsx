@@ -66,7 +66,6 @@ const Helpdesk = () => {
   const handleViewDetailsClick = (id) => {
     navigate(`/helpdesk/ticket-details/${id}`);
   };
-
   
   const handleEditTicketClick = (ticketId) => {
     const ticket = tickets.find(t => t.id === ticketId);
@@ -273,19 +272,6 @@ const Helpdesk = () => {
                   <option value="Medium">Medium</option>
                   <option value="High">High</option>
                   <option value="Critical">Critical</option>
-                  </select>
-              </div>
-              <div className="mb-4">
-                <label htmlFor="status" className="block text-gray-700 font-bold mb-2">Status</label>
-                <select
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="status"
-                  value={selectedStatus}
-                  onChange={(e) => setSelectedStatus(e.target.value)}
-                  >
-                  <option value="" disabled>Status</option>
-                  <option value="Open">Open</option>
-                  <option value="Closed">Closed</option>
                   </select>
               </div>
               <div className="flex justify-end">

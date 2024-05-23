@@ -32,6 +32,11 @@ export const APIHelpdesk = {
   },
 
   viewHelpdeskById: async (id) => {
+    if (!id) {
+      toast.error("Invalid helpdesk ID.");
+      throw new Error("Invalid helpdesk ID.");
+    }
+    
     try {
       const result = await axiosInstance.get(`/employee/helpdesks/${id}`, {
         headers: {

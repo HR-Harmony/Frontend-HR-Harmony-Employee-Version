@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import ReactQuill from 'react-quill';
-import { ArrowCircleRightIcon, CheckCircleIcon, RefreshIcon, PlayIcon, PauseIcon, PlusIcon, PencilIcon, PencilAltIcon, TrashIcon, EyeIcon } from '@heroicons/react/solid';
+import { ArrowCircleRightIcon, CheckCircleIcon, RefreshIcon, PlayIcon, PauseIcon, PencilAltIcon, TrashIcon } from '@heroicons/react/solid';
 import { Dialog, Transition } from '@headlessui/react';
 import { useNavigate } from 'react-router-dom';
 import { APITasks } from '@/Apis/APITasks';

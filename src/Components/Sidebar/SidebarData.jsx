@@ -63,10 +63,6 @@ const SideBarData = [
             {
                 title:"Projects",
                 path:"/tasks/project-list"
-            },
-            {
-                title:"Calendar",
-                path:"/tasks/calendar"
             }
         ]
     },
