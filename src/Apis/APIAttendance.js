@@ -20,7 +20,7 @@ export const APIAttendance  = {
 
   getAllAttendances: async (queryParams) => {
     try {
-      const result = await axiosInstance.get('/attendances', {
+      const result = await axiosInstance.get('/employee/attendance', {
         params: queryParams,
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
@@ -34,7 +34,7 @@ export const APIAttendance  = {
 
   getAttendanceById: async (attendanceId) => {
     try {
-      const result = await axiosInstance.get(`/attendances/${attendanceId}`, {
+      const result = await axiosInstance.get(`/employee/attendance/${attendanceId}`, {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
@@ -47,7 +47,7 @@ export const APIAttendance  = {
 
   updateAttendance: async (attendanceId, attendanceData) => {
     try {
-      const result = await axiosInstance.put(`/attendances/${attendanceId}`, attendanceData, {
+      const result = await axiosInstance.put(`/employee/attendance/${attendanceId}`, attendanceData, {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
@@ -62,7 +62,7 @@ export const APIAttendance  = {
 
   deleteAttendance: async (attendanceId) => {
     try {
-      const result = await axiosInstance.delete(`/attendances/${attendanceId}`, {
+      const result = await axiosInstance.delete(`/employee/attendance/${attendanceId}`, {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }

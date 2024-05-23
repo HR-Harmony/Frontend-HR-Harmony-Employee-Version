@@ -23,6 +23,7 @@ const OvertimeRequest = () => {
     try {
       const response = await APIAttendance.getAllOvertimeRequests();
       setOvertimeRequests(response.data || []);
+      console.log(response.data);
       setIsLoading(false);
     } catch (error) {
       toast.error("Failed to load overtime requests.");
@@ -171,14 +172,13 @@ const OvertimeRequest = () => {
                 </tr>
               ) : overtimeRequests.length > 0 ? (
                 overtimeRequests.map((request) => {
-                  const employee = employees.find(emp => emp.id === request.employee_id);
                   return (
                     <tr key={request.id}
                         onMouseEnter={() => setVisibleDelete(request.id)}
                         onMouseLeave={() => setVisibleDelete(null)}
                         className="hover:bg-gray-100">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 relative">
-                        {employee ? `${employee.first_name} ${employee.last_name}` : 'Employee Not Found'}
+                        {request ? `${request.full_name_employee}` : 'Employee Not Found'}
                         {visibleDelete === request.id && (
                           <>
                             <button className="absolute right-0 top-0 bottom-0 mr-10" onClick={() => handleEditClick(request.id)}>
