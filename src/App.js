@@ -11,6 +11,8 @@ import TasksRouter from './Components/Tasks/TasksRouter';
 import AttendancesRouter from './Components/Attendances/AttendancesRouter';
 import Helpdesk from './Components/Helpdesk/Helpdesk';
 import TicketDetails from './Components/Helpdesk/TicketDetails';
+import TrainingRouter from './Components/Training/TrainingRouter';
+import LeaveRouter from './Components/LeaveRequest/LeaveRouter';
 
 // eslint-disable-next-line
 function App() {
@@ -46,8 +48,10 @@ function DashboardLayout() {
             <Route path = "/attendances/*" element = { < AttendancesRouter / > }/> 
             <Route path = "/payroll/*" element = { < PayrollRouter / > }/>   
             <Route path = "/tasks/*" element = { < TasksRouter / > }/>    
+            <Route path = "/training/*" element = { < TrainingRouter /> } />
             <Route path = "/helpdesk" element = { < Helpdesk/> } />
             <Route path="/helpdesk/ticket-details/:ticketId" element={<TicketDetails />} />
+            <Route path = "/leave/*" element = { < LeaveRouter/> } />
             </Routes > 
         </div>
     );

@@ -3,7 +3,6 @@ import 'tailwindcss/tailwind.css';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import { useNavigate, useParams } from 'react-router-dom';
-import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';

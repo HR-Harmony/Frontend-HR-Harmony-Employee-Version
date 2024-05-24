@@ -1,7 +1,7 @@
 import { MdDashboard, MdPayments, MdKeyboardArrowDown, MdKeyboardArrowUp, MdEmojiPeople } from "react-icons/md";
 import { FaUsers, FaUserClock, FaSync, FaTasks } from "react-icons/fa";
-import { FaBuildingUser } from "react-icons/fa6";
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
+import { FaUmbrellaBeach } from "react-icons/fa6";
 import { FiHelpCircle } from "react-icons/fi";
 
 const SideBarData = [
@@ -66,7 +66,32 @@ const SideBarData = [
             }
         ]
     },
-    
+    {
+        title: "Training",
+        path: "#",
+        icon: <LiaChalkboardTeacherSolid />,
+        iconClosed: <MdKeyboardArrowDown />,
+        iconOpened: <MdKeyboardArrowUp />,
+        subNav: [
+            {
+                title: "Training Sessions",
+                path: "/training/training-sessions"
+            }
+        ]
+    },
+    {
+        title: "Leave Request",
+        path: "#",
+        icon: <FaUmbrellaBeach/>,
+        iconClosed: <MdKeyboardArrowDown />,
+        iconOpened: <MdKeyboardArrowUp />,
+        subNav: [
+            {
+                title: "Manage Leaves",
+                path: "/leave/manage-leave"
+            },
+        ]
+    },
     {
         title: "Helpdesk",
         path: "/helpdesk",
