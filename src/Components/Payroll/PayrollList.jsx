@@ -138,7 +138,7 @@ const PayrollList = () => {
                           className="hover:bg-gray-100">
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 flex justify-between items-center">
                           <div>
-                            <span>{employee ? `${employee.first_name} ${employee.last_name}` : 'Not Found'}</span>
+                            <span>{employee ? `${employee.full_name_employee}` : 'Not Found'}</span>
                             <span className="text-xs text-gray-500 block">{employee ? employee.email : ''}</span>
                           </div>
                         </td>

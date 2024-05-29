@@ -74,9 +74,10 @@ const PayslipHistory = () => {
                         onMouseLeave={() => setVisibleDelete(null)}
                         className="hover:bg-gray-100">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 relative">
-                        {record.employee_full_name ? `${record.employee_full_name}` : 'Not Found'}
+                        {record.full_name_employee ? `${record.full_name_employee}` : 'Not Found'}
                         {visibleDelete === record.id && (
                           <button className="absolute right-0 top-0 bottom-0 mr-4" onClick={() => handleViewDetails(record.id)}>
+
                             <EyeIcon className="h-5 w-5 text-blue-600 hover:text-blue-800" />
                           </button>
                         )}

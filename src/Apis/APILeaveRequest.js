@@ -11,10 +11,9 @@ export const APILeaveRequest = {
       });
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while fetching leave request types.");
-      throw new Error(error);
     }
   },
+
 
   getLeaveRequestTypeById: async (id) => {
     try {
@@ -36,12 +35,13 @@ export const APILeaveRequest = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Leave request created successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while creating leave request.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
+
   },
 
   getAllLeaveRequests: async () => {
@@ -53,7 +53,6 @@ export const APILeaveRequest = {
       });
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while fetching leave requests.");
       throw new Error(error);
     }
   },
@@ -78,10 +77,10 @@ export const APILeaveRequest = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Leave request updated successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while updating leave request.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   },
@@ -93,10 +92,10 @@ export const APILeaveRequest = {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
-      toast.success("Leave request deleted successfully");
+      toast.success(result.data.message);
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while deleting leave request.");
+      toast.error(error.response.data.message);
       throw new Error(error);
     }
   }
