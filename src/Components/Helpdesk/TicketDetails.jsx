@@ -17,7 +17,6 @@ const TicketDetails = () => {
       try {
         const response = await APIHelpdesk.viewHelpdeskById(id);
         setTicketDetails(response.helpdesk || {});
-        console.log(response.helpdesk);
       } catch (error) {
       }
     };
