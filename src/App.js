@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LoginSignup from './Components/LoginSignup/LoginSignup'
+import ForgetPassword from './Components/ForgetPassword/ForgetPassword';
 import LandingPage from './Components/LandingPage/LandingPage';
 import SideBar from "./Components/Sidebar/Sidebar";
 import Dashboard from "./Components/Dashboard/Dashboard";
@@ -21,6 +22,7 @@ function App() {
             <Routes >
             <Route path = "/" element = { < LandingPage / > }/>  
             <Route path = "/loginsignup" element = { < LoginSignup / > }/>  
+            <Route path = "/reset-password" element = { < ForgetPassword / > }/>  
             <Route path = "/*" element = { < DashboardLayout / > }/>  
             </Routes >
             <ToastContainer
