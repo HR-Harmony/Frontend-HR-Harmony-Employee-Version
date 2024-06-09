@@ -58,17 +58,7 @@ const ProjectDetails = () => {
       }
     };
 
-    const fetchEmployees = async () => {
-      try {
-        const response = await APIEmployees.getAllEmployees();
-        setEmployees(response.data);
-      } catch (error) {
-        toast.error("Failed to fetch employees.");
-      }
-    };
-
     fetchDepartments();
-    fetchEmployees();
   }, []);
 
   useEffect(() => {

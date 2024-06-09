@@ -33,7 +33,7 @@ export const APITasks = {
 
   getTaskById: async (id) => {
     try {
-      const response = await axiosInstance.get(`/tasks/${id}`, {
+      const response = await axiosInstance.get(`employee/tasks/${id}`, {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
@@ -73,4 +73,28 @@ export const APITasks = {
       throw new Error(error);
     }
   },
+
+  getTaskProgressBar: async () => {
+    try {
+      const result = await axiosInstance.get('/employee/tasks/progress-bar', {
+        headers: {
+          'Authorization': `Bearer YOUR_TOKEN_HERE`
+        }
+      });
+      if (result.data.code === 200) {
+        toast.success(result.data.message);
+      } else {
+        toast.error("Failed to retrieve task progress.");
+      }
+      return result.data.task_status;
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Network or server error occurred.");
+      }
+      throw new Error(error);
+    }
+  },
+
 };

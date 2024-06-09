@@ -83,15 +83,10 @@ const LoginSignup = () => {
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
+            <div className="items-center flex justify-center">
               <div className="text-sm">
                 <a href="/reset-password" className="font-medium text-indigo-600 hover:text-indigo-500">
                   Forgot password?
-                </a>
-              </div>
-              <div className="text-sm">
-                <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-                  Create new account
                 </a>
               </div>
             </div>

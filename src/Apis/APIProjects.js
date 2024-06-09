@@ -42,7 +42,7 @@ export const APIProjects = {
 
   getProjectById: async (id) => {
     try {
-      const response = await axiosInstance.get(`/projects/${id}`, {
+      const response = await axiosInstance.get(`employee/projects/${id}`, {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
@@ -80,6 +80,29 @@ export const APIProjects = {
       return response.data;
     } catch (error) {
       toast.error("Failed to delete project.");
+      throw new Error(error);
+    }
+  },
+
+  getProjectProgressBar: async () => {
+    try {
+      const result = await axiosInstance.get('/employee/projects/progress-bar', {
+        headers: {
+          'Authorization': `Bearer YOUR_TOKEN_HERE`
+        }
+      });
+      if (result.data.code === 200) {
+        toast.success(result.data.message);
+      } else {
+        toast.error("Failed to retrieve project progress.");
+      }
+      return result.data.project_status;
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Network or server error occurred.");
+      }
       throw new Error(error);
     }
   },

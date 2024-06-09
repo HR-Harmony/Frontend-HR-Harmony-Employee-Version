@@ -1,5 +1,5 @@
-import { MdDashboard, MdPayments, MdKeyboardArrowDown, MdKeyboardArrowUp, MdEmojiPeople } from "react-icons/md";
-import { FaUsers, FaUserClock, FaSync, FaTasks } from "react-icons/fa";
+import { MdDashboard, MdPayments, MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import { FaUserClock, FaTasks } from "react-icons/fa";
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { FaUmbrellaBeach } from "react-icons/fa6";
 import { FiHelpCircle } from "react-icons/fi";
@@ -38,10 +38,6 @@ const SideBarData = [
             {
                 title: "Pasyslip History",
                 path: "/payroll/payslip-history"
-            },
-            {
-                title: "Advance Salary",
-                path: "/payroll/advance-salary"
             },
             {
                 title: "Request Loan",

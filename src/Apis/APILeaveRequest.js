@@ -4,7 +4,7 @@ import axiosInstance from '@/configs/axiosInstance';
 export const APILeaveRequest = {
   getAllLeaveRequestTypes: async () => {
     try {
-      const result = await axiosInstance.get('/leave_request_types', {
+      const result = await axiosInstance.get('/employee/leave_request_types', {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
@@ -17,7 +17,7 @@ export const APILeaveRequest = {
 
   getLeaveRequestTypeById: async (id) => {
     try {
-      const result = await axiosInstance.get(`/leave_request_types/${id}`, {
+      const result = await axiosInstance.get(`/employee/leave_requests/${id}`, {
         headers: {
           'Authorization': `Bearer YOUR_TOKEN_HERE`
         }

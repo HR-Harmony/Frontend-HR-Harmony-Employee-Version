@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Header.css';
 import headerData from './HeaderData';
-import { FaUserCircle, FaCog, FaSignOutAlt } from 'react-icons/fa'; // Import icon library, misalnya react-icons
+import { FaUserCircle, FaSignOutAlt } from 'react-icons/fa'; // Import icon library, misalnya react-icons
 import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
@@ -17,7 +17,7 @@ const Header = () => {
     // Logika logout disini
     // Contoh: menghapus token dari local storage atau melakukan proses logout lainnya
     // Setelah logout, arahkan pengguna kembali ke halaman landing
-    navigate('/');
+    navigate('/login');
   };
 
   return (
@@ -34,10 +34,6 @@ const Header = () => {
         {showDropdown && (
           <div className="dropdown">
             <ul>
-              <li>
-                <FaCog className="dropdown-icon" />
-                Profile
-              </li>
               <li onClick={handleLogout}> {/* Menambahkan event handler untuk logout */}
                 <FaSignOutAlt className="dropdown-icon" />
                 Logout

@@ -17,20 +17,6 @@ export const APITraining = {
     }
   },
 
-  viewAllTrainers: async () => {
-    try {
-      const result = await axiosInstance.get('/trainers', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
-      return result.data;
-    } catch (error) {
-      toast.error("Error occurred while fetching trainers.");
-      throw new Error(error);
-    }
-  },
-
   viewTrainerById: async (id) => {
     try {
       const result = await axiosInstance.get(`/trainers/${id}`, {

@@ -8,7 +8,6 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { APITasks } from '@/Apis/APITasks';
 import { APIProjects } from '@/Apis/APIProjects';
-import { APIEmployees } from '@/Apis/APIEmployees';
 import { toast } from 'react-toastify';
 
 const TaskDetails = () => {
@@ -34,17 +33,7 @@ const TaskDetails = () => {
       }
     };
 
-    const fetchEmployees = async () => {
-      try {
-        const response = await APIEmployees.getAllEmployees();
-        setEmployees(response.employees || []);
-      } catch (error) {
-        toast.error("Failed to fetch employees.");
-      }
-    };
-
     fetchProjects();
-    fetchEmployees();
   }, []);
 
   useEffect(() => {

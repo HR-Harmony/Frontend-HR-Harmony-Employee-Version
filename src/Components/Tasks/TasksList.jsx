@@ -12,7 +12,13 @@ const TasksList = () => {
   const [progress, setProgress] = useState(0);
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedProject, setSelectedProject] = useState('');
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [taskStatus, setTaskStatus] = useState({
+    Completed: 0,
+    In_Progress: 0,
+    Not_Started: 0,
+    On_Hold: 0,
+    Cancelled: 0
+  });
   const [tasks, setTasks] = useState([]);
   const [projects, setProjects] = useState([]);
   const [description, setDescription] = useState('');
@@ -25,11 +31,6 @@ const TasksList = () => {
 
   const handleHideClick = () => {
     setShowAddForm(false);
-  };
-
-  const handleReset = () => {
-    setShowAddForm(false);
-    setSelectedProject('');
   };
 
   useEffect(() => {
@@ -53,8 +54,18 @@ const TasksList = () => {
     }
   };
 
+  const fetchTaskStatus = async () => {
+    try {
+      const status = await APITasks.getTaskProgressBar();
+      setTaskStatus(status);
+    } catch (error) {
+      toast.error("Failed to retrieve tasks status");
+    }
+  };
+
   useEffect(() => {
     fetchTasks();
+    fetchTaskStatus();
   }, []);
   
   useEffect(() => {
@@ -93,10 +104,6 @@ const TasksList = () => {
     } catch (error) {
       toast.error("Failed to create task");
     }
-  };
-
-  const updateProgress = (newProgress) => {
-    setProgress(newProgress);
   };
   
   const handleViewDetailsClick = (taskId) => {
@@ -168,7 +175,7 @@ const TasksList = () => {
             <div className="flex items-center">
               <CheckCircleIcon className="h-8 w-8 text-white mr-3" />
               <div>
-                <p className="font-bold text-xl">5</p>
+                <p className="font-bold text-xl">{taskStatus.Completed}</p>
                 <p className="text-sm">Total Completed</p>
               </div>
             </div>
@@ -179,7 +186,7 @@ const TasksList = () => {
             <div className="flex items-center">
               <RefreshIcon className="h-8 w-8 text-white mr-3" />
               <div>
-                <p className="font-bold text-xl">4</p>
+                <p className="font-bold text-xl">{taskStatus.In_Progress}</p>
                 <p className="text-sm">Total In Progress</p>
               </div>
             </div>
@@ -190,7 +197,7 @@ const TasksList = () => {
             <div className="flex items-center">
               <PlayIcon className="h-8 w-8 text-white mr-3" />
               <div>
-                <p className="font-bold text-xl">8</p>
+                <p className="font-bold text-xl">{taskStatus.Not_Started}</p>
                 <p className="text-sm">Total Not Started</p>
               </div>
             </div>
@@ -201,7 +208,7 @@ const TasksList = () => {
             <div className="flex items-center">
               <PauseIcon className="h-8 w-8 text-white mr-3" />
               <div>
-                <p className="font-bold text-xl">2</p>
+                <p className="font-bold text-xl">{taskStatus.On_Hold}</p>
                 <p className="text-sm">Total On Hold</p>
               </div>
             </div>

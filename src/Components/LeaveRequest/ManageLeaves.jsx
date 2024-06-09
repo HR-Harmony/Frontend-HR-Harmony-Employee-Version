@@ -296,17 +296,6 @@ const ManageLeaves = () => {
                     </div>
                     <form className="grid grid-cols-1 md:grid-cols-3 gap-4" onSubmit={handleUpdateSubmit}>
                         <div className="md:col-span-1">
-                            <label className="block text-gray-700 text-sm font-bold" htmlFor="employee">
-                                Employee *
-                            </label>
-                            <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="employee" value={editingLeaveRequest.employee_id} onChange={e => setEditingLeaveRequest({...editingLeaveRequest, employee_id: e.target.value})}>
-                                <option value="" disabled>Select Employee</option>
-                                {employees.map(employee => (
-                                    <option key={employee.id} value={employee.id}>{employee.first_name} {employee.last_name}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="md:col-span-1">
                             <label className="block text-gray-700 text-sm font-bold" htmlFor="leaveType">
                                 Leave Type *
                             </label>
@@ -315,17 +304,6 @@ const ManageLeaves = () => {
                                 {leaveTypes.map(leaveType => (
                                     <option key={leaveType.id} value={leaveType.id}>{leaveType.leave_type}</option>
                                 ))}
-                            </select>
-                        </div>
-                        <div className="md:col-span-1">
-                            <label className="block text-gray-700 text-sm font-bold" htmlFor="status">
-                                Status *
-                            </label>
-                            <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="status" value={editingLeaveRequest.status} onChange={e => setEditingLeaveRequest({...editingLeaveRequest, status: e.target.value})}>
-                                <option value="" disabled>Select Status</option>
-                                <option value="Pending">Pending</option>
-                                <option value="Approved">Approved</option>
-                                <option value="Rejected">Rejected</option>
                             </select>
                         </div>
                         <div className="md:col-span-3">
