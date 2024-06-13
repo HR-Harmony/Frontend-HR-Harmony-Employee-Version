@@ -1,22 +1,24 @@
 import React, { useState } from 'react';
 import './Header.css';
 import headerData from './HeaderData';
-import { FaUserCircle, FaSignOutAlt } from 'react-icons/fa'; // Import icon library, misalnya react-icons
+import { FaUserCircle, FaCog, FaSignOutAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { AuthService } from '../../services/AuthService';
 
 const Header = () => {
-  const [showDropdown, setShowDropdown] = useState(false); // State untuk menampilkan atau menyembunyikan dropdown
+  const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
 
   const toggleDropdown = () => {
-    setShowDropdown(!showDropdown); // Toggle state dropdown
+    setShowDropdown(!showDropdown);
   };
   
+  const handleProfile = () => {
+    navigate('/profile');
+  }
 
   const handleLogout = () => {
-    // Logika logout disini
-    // Contoh: menghapus token dari local storage atau melakukan proses logout lainnya
-    // Setelah logout, arahkan pengguna kembali ke halaman landing
+    AuthService.clearCredentialsFromCookie();
     navigate('/login');
   };
 
@@ -34,7 +36,11 @@ const Header = () => {
         {showDropdown && (
           <div className="dropdown">
             <ul>
-              <li onClick={handleLogout}> {/* Menambahkan event handler untuk logout */}
+              <li onClick={handleProfile}>
+                <FaUserCircle className="dropdown-icon" />
+                Profile
+              </li>
+              <li onClick={handleLogout}>
                 <FaSignOutAlt className="dropdown-icon" />
                 Logout
               </li>

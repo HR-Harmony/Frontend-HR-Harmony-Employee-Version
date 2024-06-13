@@ -19,14 +19,9 @@ export const APIHelpdesk = {
 
   viewAllHelpdesks: async () => {
     try {
-      const result = await axiosInstance.get('/employee/helpdesks', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
+      const result = await axiosInstance.get('/employee/helpdesks');
       return result.data;
     } catch (error) {
-      toast.error("Error occurred while fetching helpdesks.");
       throw new Error(error);
     }
   },

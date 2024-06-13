@@ -16,13 +16,18 @@ export const APIDashboard = {
         }
     },
 
+    getProfile: async () => {
+        try {
+            const result = await axiosInstance.get('/profile');
+            return result.data;
+        } catch (error) {
+            throw new Error(error);
+        }
+    },
+
     clickInDashboard: async () => {
         try {
-            const result = await axiosInstance.post('/employee/checkin', {
-                headers: {
-                    'Authorization': `Bearer YOUR_TOKEN_HERE`
-                }
-            });
+            const result = await axiosInstance.post('/employee/checkin');
             toast.success(result.data.message);
             return result.data;
         } catch (error) {
@@ -33,11 +38,7 @@ export const APIDashboard = {
 
     clickOutDashboard: async () => {
         try {
-            const result = await axiosInstance.put('/employee/checkout', {
-                headers: {
-                    'Authorization': `Bearer YOUR_TOKEN_HERE`
-                }
-            });
+            const result = await axiosInstance.put('/employee/checkout');
             toast.success(result.data.message);
             return result.data;
         } catch (error) {

@@ -5,11 +5,7 @@ import axiosInstance from '@/configs/axiosInstance';
 export const APIPayroll = {
   getAllPayrolls: async () => {
     try {
-      const result = await axiosInstance.get('/payrolls', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
+      const result = await axiosInstance.get('/payrolls');
       return result.data;
     } catch (error) {
       throw new Error(error);
@@ -18,11 +14,7 @@ export const APIPayroll = {
 
   getPayrollHistory: async () => {
     try {
-      const result = await axiosInstance.get('/employee/payrolls', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
+      const result = await axiosInstance.get('/employee/payrolls');
       return result.data;
     } catch (error) {
       throw new Error(error);
@@ -44,84 +36,9 @@ export const APIPayroll = {
     }
   },
 
-  createAdvanceSalary: async (advanceSalaryData) => {
-    try {
-      const result = await axiosInstance.post('/employee/advance_salaries', advanceSalaryData, {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
-      toast.success('Advance salary created successfully');
-      return result.data;
-    } catch (error) {
-      toast.error('Failed to create advance salary');
-      throw new Error(error);
-    }
-  },
-
-  getAllAdvanceSalaries: async () => {
-    try {
-      const result = await axiosInstance.get('/employee/advance_salaries', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
-      return result.data;
-    } catch (error) {
-      throw new Error(error);
-    }
-  },
-
-  getAdvanceSalaryById: async (id) => {
-    try {
-      const result = await axiosInstance.get(`/advance_salaries/${id}`, {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
-      return result.data;
-    } catch (error) {
-      throw new Error(error);
-    }
-  },
-
-  updateAdvanceSalaryById: async (id, advanceSalaryData) => {
-    try {
-      const result = await axiosInstance.put(`/employee/advance_salaries/${id}`, advanceSalaryData, {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
-      toast.success('Advance salary updated successfully');
-      return result.data;
-    } catch (error) {
-      toast.error('Failed to update advance salary');
-      throw new Error(error);
-    }
-  },
-
-  deleteAdvanceSalaryById: async (id) => {
-    try {
-      const result = await axiosInstance.delete(`/employee/advance_salaries/${id}`, {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
-      toast.success('Advance salary deleted successfully');
-      return result.data;
-    } catch (error) {
-      toast.error('Failed to delete advance salary');
-      throw new Error(error);
-    }
-  },
-
   createRequestLoan: async (requestLoanData) => {
     try {
-      const result = await axiosInstance.post('/employee/request_loans', requestLoanData, {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
+      const result = await axiosInstance.post('/employee/request_loans', requestLoanData);
       toast.success('Request loan created successfully');
       return result.data;
     } catch (error) {
@@ -132,11 +49,7 @@ export const APIPayroll = {
 
   getAllRequestLoans: async () => {
     try {
-      const result = await axiosInstance.get('/employee/request_loans', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
+      const result = await axiosInstance.get('/employee/request_loans');
       return result.data;
     } catch (error) {
       throw new Error(error);
@@ -145,11 +58,7 @@ export const APIPayroll = {
 
   getRequestLoanById: async (id) => {
     try {
-      const result = await axiosInstance.get(`/employee/request_loans/${id}`, {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
+      const result = await axiosInstance.get(`/employee/request_loans/${id}`);
       return result.data;
     } catch (error) {
       throw new Error(error);

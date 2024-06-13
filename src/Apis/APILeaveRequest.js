@@ -4,11 +4,7 @@ import axiosInstance from '@/configs/axiosInstance';
 export const APILeaveRequest = {
   getAllLeaveRequestTypes: async () => {
     try {
-      const result = await axiosInstance.get('/employee/leave_request_types', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
+      const result = await axiosInstance.get('/employee/leave_request_types');
       return result.data;
     } catch (error) {
     }
@@ -17,11 +13,7 @@ export const APILeaveRequest = {
 
   getLeaveRequestTypeById: async (id) => {
     try {
-      const result = await axiosInstance.get(`/employee/leave_requests/${id}`, {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
+      const result = await axiosInstance.get(`/employee/leave_requests/${id}`);
       return result.data;
     } catch (error) {
       throw new Error(error);
@@ -46,11 +38,7 @@ export const APILeaveRequest = {
 
   getAllLeaveRequests: async () => {
     try {
-      const result = await axiosInstance.get('/employee/leave_requests', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
+      const result = await axiosInstance.get('/employee/leave_requests');
       return result.data;
     } catch (error) {
       throw new Error(error);
@@ -59,11 +47,7 @@ export const APILeaveRequest = {
 
   getLeaveRequestById: async (id) => {
     try {
-      const result = await axiosInstance.get(`/employee/leave_requests/${id}`, {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
+      const result = await axiosInstance.get(`/employee/leave_requests/${id}`);
       return result.data;
     } catch (error) {
       throw new Error(error);

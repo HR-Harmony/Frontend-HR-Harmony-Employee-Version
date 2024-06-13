@@ -64,11 +64,7 @@ export const APIEmployees = {
 
   getRoles: async () => {
     try {
-        const result = await axiosInstance.get('/roles', {
-            headers: {
-                'Authorization': `Bearer YOUR_TOKEN_HERE`
-            }
-        });
+        const result = await axiosInstance.get('/roles');
         return result.data;
     } catch (error) {
         throw new Error(error);
@@ -110,23 +106,17 @@ export const APIEmployees = {
       const response = await axiosInstance.post('/shifts', newShift, {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
         }
       });
       return response.data;
     } catch (error) {
-      console.error("Error creating shift:", error);
       throw new Error(error);
     }
   },
 
   getOfficeShifts: async () => {
     try {
-        const result = await axiosInstance.get('/shifts', {
-            headers: {
-                'Authorization': `Bearer YOUR_TOKEN_HERE`
-            }
-        });
+        const result = await axiosInstance.get('/shifts');
         return result.data;
     } catch (error) {
         throw new Error(error);
@@ -180,11 +170,7 @@ export const APIEmployees = {
   
   getAllExitTypes: async () => {
     try {
-      const result = await axiosInstance.get('/exits', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
+      const result = await axiosInstance.get('/exits');
       return result.data;
     } catch (error) {
       throw new Error(error);
@@ -242,11 +228,7 @@ export const APIEmployees = {
 
   getAllEmployeeExits: async () => {
     try {
-      const result = await axiosInstance.get('/admin/employees/exit', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
+      const result = await axiosInstance.get('/admin/employees/exit');
       return result.data;
     } catch (error) {
       throw new Error(error);

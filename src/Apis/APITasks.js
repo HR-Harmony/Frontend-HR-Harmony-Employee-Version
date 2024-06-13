@@ -19,28 +19,18 @@ export const APITasks = {
 
   getAllTasks: async () => {
     try {
-      const response = await axiosInstance.get('/employee/tasks', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
+      const response = await axiosInstance.get('/employee/tasks');
       return response.data;
     } catch (error) {
-      toast.error("Failed to retrieve tasks.");
       throw new Error(error);
     }
   },
 
   getTaskById: async (id) => {
     try {
-      const response = await axiosInstance.get(`employee/tasks/${id}`, {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
+      const response = await axiosInstance.get(`employee/tasks/${id}`);
       return response.data.task;
     } catch (error) {
-      toast.error("Failed to retrieve task.");
       throw new Error(error);
     }
   },
@@ -76,23 +66,9 @@ export const APITasks = {
 
   getTaskProgressBar: async () => {
     try {
-      const result = await axiosInstance.get('/employee/tasks/progress-bar', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
-      if (result.data.code === 200) {
-        toast.success(result.data.message);
-      } else {
-        toast.error("Failed to retrieve task progress.");
-      }
+      const result = await axiosInstance.get('/employee/tasks/progress-bar');
       return result.data.task_status;
     } catch (error) {
-      if (error.response) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error("Network or server error occurred.");
-      }
       throw new Error(error);
     }
   },
