@@ -44,7 +44,6 @@ const Profile = () => {
       const dataToUpdate = {
           first_name: updatedData.first_name,
           last_name: updatedData.last_name,
-          is_active: updatedData.is_active === 'Active',
           contact_number: updatedData.contact_number,
           gender: updatedData.gender,
           marital_status: updatedData.marital_status,
@@ -54,7 +53,6 @@ const Profile = () => {
           nationality: updatedData.nationality,
           citizenship: updatedData.citizenship,
           bpjs_kesehatan: updatedData.bpjs_kesehatan,
-          basic_salary: parseInt(updatedData.basic_salary, 10),
           address1: updatedData.address1,
           address2: updatedData.address2,
           city: updatedData.city,
@@ -65,7 +63,7 @@ const Profile = () => {
       console.log(dataToUpdate);
 
       try {
-          const response = await APIProfile.editProfile(profile.id, dataToUpdate);
+          const response = await APIProfile.editProfile(dataToUpdate);
           console.log(response)
           fetchProfile();
       } catch (error) {
@@ -79,8 +77,8 @@ const Profile = () => {
       e.preventDefault();
       const dataToUpdate = { bio: updatedData.bio };
       try {
-          const response = await APIProfile.editProfile(profile.id, dataToUpdate);
-          
+          const response = await APIProfile.editProfile(dataToUpdate);
+          fetchProfile();
       } catch (error) {
         throw error;
       }
@@ -96,7 +94,7 @@ const Profile = () => {
       };
 
       try {
-          const response = await APIProfile.editProfile(profile.id, dataToUpdate);
+          const response = await APIProfile.editProfile(dataToUpdate);
           fetchProfile();
       } catch (error) {
         throw error;
@@ -117,7 +115,7 @@ const Profile = () => {
       };
 
       try {
-          const response = await APIProfile.editProfile(profile.id, dataToUpdate);
+          const response = await APIProfile.editProfile(dataToUpdate);
           fetchProfile();
       } catch (error) {
         throw error;
@@ -135,7 +133,7 @@ const Profile = () => {
       };
 
       try {
-          const response = await APIProfile.editProfile(profile.id, dataToUpdate);
+          const response = await APIProfile.editProfile(dataToUpdate);
           fetchProfile();
       } catch (error) {
         throw error;
@@ -151,7 +149,7 @@ const Profile = () => {
       };
 
       try {
-          const response = await APIProfile.editProfile(profile.id, dataToUpdate);
+          const response = await APIProfile.editProfile(dataToUpdate);
           fetchProfile();
       } catch (error) {
         throw error;
@@ -166,7 +164,7 @@ const Profile = () => {
       repeat_password: updatedData.repeat_password,
     };
     try {
-      const response = await APIProfile.editProfile(profile.id, dataToUpdate);
+      const response = await APIProfile.editProfile(dataToUpdate);
       fetchProfile();
     } catch (error) {
       throw error;
@@ -179,8 +177,8 @@ const Profile = () => {
           <div className="px-4 py-2">
               <h2 className="text-xl font-semibold text-gray-800 mb-8">Change Password</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {renderFormField("New Password", "curent_password", "password", updatedData, handleChange)}
-                  {renderFormField("Repeat Password", "new_password", "password", updatedData, handleChange)}
+                  {renderFormField("New Password", "new_password", "password", updatedData, handleChange)}
+                  {renderFormField("Repeat Password", "repeat_password", "password", updatedData, handleChange)}
               </div>
               <div className="flex justify-end bg-white-200 px-4 py-3">
                   <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none" onClick={handleSavePassword}>Change Password</button>
@@ -218,7 +216,6 @@ const Profile = () => {
                                   {renderFormField("First Name", "first_name", "text", updatedData, handleChange)}
                                   {renderFormField("Last Name", "last_name", "text", updatedData, handleChange)}
                                   {renderFormField("Date of Birth", "birthday_date", "date", updatedData, handleChange)}
-                                  {renderSelectField("Status", "is_active", ["Active", "Inactive"], updatedData, handleChange)}
                                   {renderFormField("Contact Number", "contact_number", "number", updatedData, handleChange)}
                                   {renderSelectField("Gender", "gender", ["Male", "Female"], updatedData, handleChange)}
                                   {renderSelectField("Marital Status", "marital_status", ["Married", "Single"], updatedData, handleChange)}
@@ -227,7 +224,6 @@ const Profile = () => {
                                   {renderSelectField("Nationality", "nationality", ["Warga Negara Indonesia", "Warga Negara Asing"], updatedData, handleChange)}
                                   {renderSelectField("Citizenship", "citizenship", ["Indonesia", "Malaysia"], updatedData, handleChange)}
                                   {renderFormField("BPJS Kesehatan", "bpjs_kesehatan", "text", updatedData, handleChange)}
-                                  {renderFormField("Basic Salary", "basic_salary", "text", updatedData, handleChange)}
                                   {renderTextArea("Address 1", "address1", updatedData, handleChange)}
                                   {renderTextArea("Address 2", "address2", updatedData, handleChange)}
                                   {renderFormField("City", "city", "text", updatedData, handleChange)}
