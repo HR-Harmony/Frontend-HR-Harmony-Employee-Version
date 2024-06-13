@@ -163,8 +163,9 @@ const Profile = () => {
       new_password: updatedData.new_password,
       repeat_password: updatedData.repeat_password,
     };
+    
     try {
-      const response = await APIProfile.editProfile(dataToUpdate);
+      const response = await APIProfile.changePassword(dataToUpdate);
       fetchProfile();
     } catch (error) {
       throw error;
