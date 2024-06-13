@@ -12,6 +12,7 @@ export const APIProfile = {
     },
 
     editProfile: async (data) => {
+        console.log(data);
         try {
             const result = await axiosInstance.put('/profile/edit', data);
             toast.success(result.data.message);
