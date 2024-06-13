@@ -20,11 +20,7 @@ export const APIRecruitment = {
 
   getAllJobs: async () => {
     try {
-      const result = await axiosInstance.get('/jobs', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
+      const result = await axiosInstance.get('/jobs');
       return result.data;
     } catch (error) {
       throw new Error(error);
@@ -33,11 +29,7 @@ export const APIRecruitment = {
 
   getJobById: async (id) => {
     try {
-      const result = await axiosInstance.get(`/jobs/${id}`, {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
+      const result = await axiosInstance.get(`/jobs/${id}`);
       return result.data;
     } catch (error) {
       throw new Error(error);

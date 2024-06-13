@@ -6,7 +6,7 @@ import loginIlus from '@/Components/Assets/comp_logo.png';
 import centerImage from '@/Components/Assets/Computerlogin-amico.png';
 import Cookies from 'js-cookie';
 
-const LoginSignup = () => {
+const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -83,7 +83,7 @@ const LoginSignup = () => {
               </div>
             </div>
 
-            <div className="items-center flex justify-center">
+            <div className="flex items-center justify-between">
               <div className="text-sm">
                 <a href="/reset-password" className="font-medium text-indigo-600 hover:text-indigo-500">
                   Forgot password?
@@ -112,4 +112,4 @@ const LoginSignup = () => {
   );
 };
 
-export default LoginSignup;
+export default Login;

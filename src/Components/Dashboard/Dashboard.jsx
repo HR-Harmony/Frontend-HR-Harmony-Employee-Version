@@ -11,6 +11,8 @@ const Dashboard = () => {
   Chart.register(ArcElement, Tooltip);
 
   const [dashboardData, setDashboardData] = useState(null);
+  const [loadingMessage, setLoadingMessage] = useState("Loading...");
+  const [profileData, setProfileData] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,6 +24,18 @@ const Dashboard = () => {
     };
 
     fetchData();
+  }, []);
+
+  const fetchProfile = async () => {
+    try {
+      const data = await APIDashboard.getProfile();
+      setProfileData(data.profile || {});
+    } catch (error) {
+    }
+  };
+
+  useEffect(() => {
+    fetchProfile();
   }, []);
 
   const handleClockIn = async () => {
@@ -39,14 +53,19 @@ const Dashboard = () => {
   };
 
   if (!dashboardData) {
-    return <div className="flex items-center justify-center h-screen">
-      <div className="text-xl font-semibold">Loading...</div>
-    </div>;
+    return (
+      <div className="flex items-center justify-center w-full h-screen bg-gray-100">
+        <div className="text-center">
+          <img src={require('../Assets/comp_logo.png')} alt="Loading" className="h-48 w-48 mx-auto animate-bounce" />
+          <p className="mt-4 text-lg text-gray-700">{loadingMessage}</p>
+        </div>
+      </div>
+    );
   }
 
   const user = {
-    name: "John Doe",
-    position: "Software Developer"
+    name: profileData.full_name || "User",
+    position: profileData.role || "User"
   };
 
   const monthlyPayrollData = {

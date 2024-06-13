@@ -19,11 +19,7 @@ export const APITraining = {
 
   viewTrainerById: async (id) => {
     try {
-      const result = await axiosInstance.get(`/trainers/${id}`, {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
+      const result = await axiosInstance.get(`/trainers/${id}`);
       return result.data;
     } catch (error) {
       throw new Error(error);
@@ -77,11 +73,7 @@ export const APITraining = {
 
   viewAllTrainingSkills: async () => {
     try {
-      const result = await axiosInstance.get('/training_skills', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
+      const result = await axiosInstance.get('/training_skills');
       return result.data;
     } catch (error) {
       throw new Error(error);
@@ -90,11 +82,7 @@ export const APITraining = {
 
   viewTrainingSkillById: async (id) => {
     try {
-      const result = await axiosInstance.get(`/training_skills/${id}`, {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
+      const result = await axiosInstance.get(`/training_skills/${id}`);
       return result.data;
     } catch (error) {
       throw new Error(error);
@@ -148,11 +136,7 @@ export const APITraining = {
 
   viewAllTrainings: async () => {
     try {
-      const result = await axiosInstance.get('/employee/trainings', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
+      const result = await axiosInstance.get('/employee/trainings');
       return result.data;
     } catch (error) {
       throw new Error(error);
@@ -161,11 +145,7 @@ export const APITraining = {
 
   viewTrainingById: async (id) => {
     try {
-      const result = await axiosInstance.get(`/employee/trainings/${id}`, {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
+      const result = await axiosInstance.get(`/employee/trainings/${id}`);
       return result.data;
     } catch (error) {
       throw new Error(error);
@@ -174,11 +154,7 @@ export const APITraining = {
 
   updateTrainingById: async (id, trainingData) => {
     try {
-      const result = await axiosInstance.put(`/trainings/${id}`, trainingData, {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
+      const result = await axiosInstance.put(`/trainings/${id}`, trainingData);
       toast.success("Training updated successfully");
       return result.data;
     } catch (error) {
