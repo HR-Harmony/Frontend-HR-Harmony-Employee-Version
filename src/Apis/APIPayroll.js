@@ -12,9 +12,12 @@ export const APIPayroll = {
     }
   },
 
-  getPayrollHistory: async () => {
+  getPayrollHistory: async (params) => {
     try {
-      const result = await axiosInstance.get('/employee/payrolls');
+      const result = await axiosInstance.get('/employee/payrolls', {
+        params,
+      });
+      
       return result.data;
     } catch (error) {
       throw new Error(error);
@@ -47,9 +50,11 @@ export const APIPayroll = {
     }
   },
 
-  getAllRequestLoans: async () => {
+  getAllRequestLoans: async (params) => {
     try {
-      const result = await axiosInstance.get('/employee/request_loans');
+      const result = await axiosInstance.get('/employee/request_loans', {
+        params,
+      });
       return result.data;
     } catch (error) {
       throw new Error(error);

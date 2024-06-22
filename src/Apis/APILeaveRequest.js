@@ -36,9 +36,11 @@ export const APILeaveRequest = {
 
   },
 
-  getAllLeaveRequests: async () => {
+  getAllLeaveRequests: async (params) => {
     try {
-      const result = await axiosInstance.get('/employee/leave_requests');
+      const result = await axiosInstance.get('/employee/leave_requests', {
+        params,
+      });
       return result.data;
     } catch (error) {
       throw new Error(error);

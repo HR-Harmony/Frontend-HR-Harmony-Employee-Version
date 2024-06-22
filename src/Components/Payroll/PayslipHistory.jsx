@@ -3,27 +3,50 @@ import { EyeIcon } from '@heroicons/react/solid';
 import { useNavigate } from 'react-router-dom';
 import { Fragment } from 'react';
 import { APIPayroll } from '@/Apis/APIPayroll';
+import Pagination from '../Pagination/Pagination';
+import { getPaginatedData } from '../Pagination/Pagination';
 
 const PayslipHistory = () => {
   const navigate = useNavigate();
   const [visibleDelete, setVisibleDelete] = useState(null);
   const [payrollHistory, setPayrollHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [total_count, setTotalCount] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [per_page, setPerPage] = useState(10);
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= Math.ceil(total_count / per_page)) {
+      setCurrentPage(page);
+    }
+  };
+
+  const handlePerPageChange = (newPerPage) => {
+    setPerPage(newPerPage);
+    setCurrentPage(1);
+  };
+
+  const paginatedPayrollHistory = getPaginatedData(payrollHistory, currentPage, per_page);
+
+  const fetchPayrollHistory = async () => {
+    try {
+      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const response = await APIPayroll.getPayrollHistory(params);
+      setPayrollHistory(response.data || []);
+      setTotalCount(response.pagination.total_count || 0);
+      setCurrentPage(response.pagination.page || 1);
+      setPerPage(response.pagination.per_page || 10);
+      setIsLoading(false);
+    } catch (error) {
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchPayrollHistory = async () => {
-      try {
-        const payrollData = await APIPayroll.getPayrollHistory();
-        setPayrollHistory(payrollData.data);
-        console.log(payrollData.data);
-      } catch (error) {
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchPayrollHistory();
-  }, []);
+  }, [currentPage, per_page, searchQuery]);
 
   const handleViewDetails = (employeeId) => {
     navigate(`/payroll/payroll-view/${employeeId}`);
@@ -38,7 +61,7 @@ const PayslipHistory = () => {
         <div className="flex justify-between mb-4">
           <label className="flex items-center">
             Show
-            <select className="mx-2 rounded border border-gray-300">
+            <select value={per_page} onChange={(e) => handlePerPageChange(Number(e.target.value))}>
               <option value="10">10</option>
               <option value="20">20</option>
               <option value="50">50</option>
@@ -63,8 +86,8 @@ const PayslipHistory = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {isLoading ? (
                 <tr><td colSpan="4" className="text-center py-4 text-sm text-gray-500">Loading payslip history data...</td></tr>
-              ) : payrollHistory.length > 0 ? (
-                payrollHistory.map((record) => {
+              ) : paginatedPayrollHistory.length > 0 ? (
+                paginatedPayrollHistory.map((record) => {
                   const salaryMonth = new Date(record.created_at).toLocaleString('default', { month: 'long', year: 'numeric' });
                   const payDate = new Date(record.updated_at).toISOString().split('T')[0];
 
@@ -101,16 +124,15 @@ const PayslipHistory = () => {
             </tbody>
           </table>
         </div>
-        <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
-            Showing 1 to {payrollHistory.length} of {payrollHistory.length} records
-            <div>
-              <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
-                Previous
-              </button>
-              <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
-                Next
-              </button>
-            </div>
+        <div className="text-gray-500 text-sm my-4 flex justify-between items-center px-3 py-3">
+          <span>Showing {((currentPage - 1) * per_page) + 1} to {Math.min(currentPage * per_page, total_count)} of {total_count} records</span>
+          <div className="flex justify-end">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={Math.ceil(total_count / per_page)}
+              onPageChange={handlePageChange}
+            />
+          </div>
         </div>
       </div>
     </div>

@@ -3,28 +3,10 @@ import { toast } from 'react-toastify';
 import axiosInstance from '@/configs/axiosInstance';
 
 export const APIAttendance  = {
-  createAttendance: async (attendanceData) => {
-    try {
-      const result = await axiosInstance.post('/attendances', attendanceData, {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
-      });
-      toast.success("Attendance data added successfully");
-      return result.data;
-    } catch (error) {
-      toast.error("Error adding attendance data.");
-      throw new Error(error);
-    }
-  },
-
-  getAllAttendances: async (queryParams) => {
+  getAllAttendances: async (params) => {
     try {
       const result = await axiosInstance.get('/employee/attendance', {
-        params: queryParams,
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
+        params,
       });
       return result.data;
     } catch (error) {
@@ -90,12 +72,10 @@ export const APIAttendance  = {
     }
   },
 
-  getAllOvertimeRequests: async () => {
+  getAllOvertimeRequests: async (params) => {
     try {
       const result = await axiosInstance.get('/employee/overtime_requests', {
-        headers: {
-          'Authorization': `Bearer YOUR_TOKEN_HERE`
-        }
+        params,
       });
       return result.data;
     } catch (error) {
