@@ -5,6 +5,8 @@ import { Fragment } from 'react';
 import { APIAttendance } from '@/Apis/APIAttendance';
 import { APIEmployees } from '@/Apis/APIEmployees';
 import { toast } from 'react-toastify';
+import Pagination from '../Pagination/Pagination';
+import { getPaginatedData } from '../Pagination/Pagination';
 
 const OvertimeRequest = () => {
   const [visibleDelete, setVisibleDelete] = useState(null);
@@ -17,19 +19,43 @@ const OvertimeRequest = () => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [deleteRequestId, setDeleteRequestId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [total_count, setTotalCount] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [per_page, setPerPage] = useState(10);
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= Math.ceil(total_count / per_page)) {
+      setCurrentPage(page);
+    }
+  };
+
+  const handlePerPageChange = (newPerPage) => {
+    setPerPage(newPerPage);
+    setCurrentPage(1);
+  };
+
+  const paginatedAttendanceData = getPaginatedData(overtimeRequests, currentPage, per_page);
+
 
   const fetchOvertimeRequests = async () => {
     setIsLoading(true);
     try {
-      const response = await APIAttendance.getAllOvertimeRequests();
+      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const response = await APIAttendance.getAllOvertimeRequests(params);
       setOvertimeRequests(response.data || []);
-      console.log(response.data);
+      setTotalCount(response.pagination.total_count || 0);
+      setCurrentPage(response.pagination.page || 1);
+      setPerPage(response.pagination.per_page || 10);
       setIsLoading(false);
     } catch (error) {
-      toast.error("Failed to load overtime requests.");
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchOvertimeRequests();
+  }, [currentPage, per_page, searchQuery]);
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -49,7 +75,6 @@ const OvertimeRequest = () => {
     };
 
     fetchEmployees();
-    fetchOvertimeRequests();
   }, []);
 
   const handleAddNewClick = () => {
@@ -142,7 +167,7 @@ const OvertimeRequest = () => {
         <div className="flex justify-between mb-4">
           <label className="flex items-center">
             Show
-            <select className="mx-2 rounded border border-gray-300">
+            <select value={per_page} onChange={(e) => handlePerPageChange(Number(e.target.value))}>
               <option value="10">10</option>
               <option value="20">20</option>
               <option value="50">50</option>
@@ -170,8 +195,8 @@ const OvertimeRequest = () => {
                 <tr>
                   <td colSpan="6" className="text-center py-4 text-sm text-gray-500">Loading overtimes data...</td>
                 </tr>
-              ) : overtimeRequests.length > 0 ? (
-                overtimeRequests.map((request) => {
+              ) : paginatedAttendanceData.length > 0 ? (
+                paginatedAttendanceData.map((request) => {
                   return (
                     <tr key={request.id}
                         onMouseEnter={() => setVisibleDelete(request.id)}
@@ -210,19 +235,17 @@ const OvertimeRequest = () => {
             </tbody>
           </table>
         </div>
-        <div className="text-gray-500 text-sm my-4 flex justify-between items-center">
-            Showing 1 to {overtimeRequests.length} of {overtimeRequests.length} records
-            <div>
-              <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none">
-                Previous
-              </button>
-              <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
-                Next
-              </button>
+        <div className="text-gray-500 text-sm my-4 flex justify-between items-center px-3 py-3">
+              <span>Showing {((currentPage - 1) * per_page) + 1} to {Math.min(currentPage * per_page, total_count)} of {total_count} records</span>
+              <div className="flex justify-end">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={Math.ceil(total_count / per_page)}
+                  onPageChange={handlePageChange}
+                />
             </div>
-        </div>
+          </div>
       </div>
-
     <Transition appear show={showModal} as={Fragment}>
       <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto" onClose={handleCloseModal}>
         <div className="min-h-screen px-4 text-center">

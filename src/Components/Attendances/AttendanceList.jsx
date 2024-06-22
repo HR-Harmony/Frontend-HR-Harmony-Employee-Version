@@ -1,25 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import 'tailwindcss/tailwind.css';
 import { APIAttendance } from '@/Apis/APIAttendance';
+import Pagination from '../Pagination/Pagination';
+import { getPaginatedData } from '../Pagination/Pagination';
 
 const AttendanceList = () => {
   const [attendances, setAttendances] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [total_count, setTotalCount] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [per_page, setPerPage] = useState(10);
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= Math.ceil(total_count / per_page)) {
+      setCurrentPage(page);
+    }
+  };
+
+  const handlePerPageChange = (newPerPage) => {
+    setPerPage(newPerPage);
+    setCurrentPage(1);
+  };
+
+  const paginatedAttendanceData = getPaginatedData(attendances, currentPage, per_page);
   
   const fetchAttendances = async () => {
-    setIsLoading(true);
     try {
-      const attendancesData = await APIAttendance.getAllAttendances();
-      setAttendances(attendancesData.attendance || []);
+      const params = { page: currentPage, per_page: per_page, search: searchQuery };
+      const response = await APIAttendance.getAllAttendances(params);
+      setAttendances(response.attendance || []);
+      setTotalCount(response.pagination.total_count || 0);
+      setCurrentPage(response.pagination.page || 1);
+      setPerPage(response.pagination.per_page || 10);
     } catch (error) {
-
     }
-    setIsLoading(false);
   };
 
   useEffect(() => {
     fetchAttendances();
-  }, []);
+  }, [currentPage, per_page, searchQuery]);
 
   return (
     <div className="max-w-6xl ml-auto mr-auto">
@@ -32,7 +52,7 @@ const AttendanceList = () => {
             <div className="flex justify-between px-3 mt-3">
               <label className="flex items-center">
                 Show
-                <select className="mx-2 rounded border border-gray-300">
+                <select value={per_page} onChange={(e) => handlePerPageChange(Number(e.target.value))}>
                   <option value="10">10</option>
                   <option value="20">20</option>
                   <option value="50">50</option>
@@ -59,8 +79,8 @@ const AttendanceList = () => {
                     <tr>
                       <td colSpan="5" className="text-center py-4 text-sm text-gray-500">Loading attendances data...</td>
                     </tr>
-                  ) : attendances.length > 0 ? (
-                    attendances.map((attendance) => {
+                  ) : paginatedAttendanceData.length > 0 ? (
+                    paginatedAttendanceData.map((attendance) => {
                       return (
                         <tr key={attendance.id}>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 relative flex justify-between">
@@ -81,16 +101,15 @@ const AttendanceList = () => {
                 </tbody>
               </table>
             </div>
-            <div className="text-gray-500 text-sm my-4 flex justify-between items-center px-3">
-                Showing 1 to {attendances.length} of {attendances.length} records
-                <div>
-                  <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 mb-4 ml-3 rounded focus:outline-none">
-                    Previous
-                  </button>
-                  <button className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none ml-2">
-                    Next
-                  </button>
-                </div>
+            <div className="text-gray-500 text-sm my-4 flex justify-between items-center px-3 py-3">
+              <span>Showing {((currentPage - 1) * per_page) + 1} to {Math.min(currentPage * per_page, total_count)} of {total_count} records</span>
+              <div className="flex justify-end">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={Math.ceil(total_count / per_page)}
+                  onPageChange={handlePageChange}
+                />
+              </div>
             </div>
           </div>
         </div>
