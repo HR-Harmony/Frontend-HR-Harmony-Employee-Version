@@ -5,6 +5,7 @@ import { LockClosedIcon } from '@heroicons/react/solid';
 import loginIlus from '@/Components/Assets/comp_logo.png';
 import centerImage from '@/Components/Assets/Computerlogin-amico.png';
 import Cookies from 'js-cookie';
+import { AuthService } from "../../services/AuthService";
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -22,13 +23,27 @@ const Login = () => {
         password,
       });
 
-      Cookies.set('token', response.data.token, { expires: 7 });
-      navigate('/dashboard');
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        setErrorMessage('Username atau password salah.');
+      if (response.data.code === 200 && !response.data.error) {
+        Cookies.set('token', response.data.token, { expires: 7 });
+        navigate('/dashboard');
       } else {
-        setErrorMessage('Terjadi kesalahan, silakan coba lagi.');
+        setErrorMessage(response.data.message);
+        if (response.data.code === 401) {
+          setTimeout(() => {
+            AuthService.clearCredentialsFromCookie();
+          }, 5000);
+        }
+      }
+    } catch (error) {
+      if (error.response) {
+        setErrorMessage(error.response.data.message);
+        if (error.response.status === 401) {
+          setTimeout(() => {
+            AuthService.clearCredentialsFromCookie();
+          }, 5000);
+        }
+      } else {
+        setErrorMessage("An unexpected error occurred");
       }
     }
   };
